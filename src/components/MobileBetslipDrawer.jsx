@@ -237,9 +237,10 @@ export const MobileBetslipDrawer = ({ isInsideFrame = false }) => {
           {/* TAB 2: MY BETS */}
           {activePanelTab === 'mybets' && (
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-white block">
-                  Open Bets ({myBets.open.length})
+              {/* Subheader matching Singles header on Betslip */}
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-semibold text-white">
+                  Open · {myBets.open.length} {myBets.open.length === 1 ? 'bet' : 'bets'}
                 </span>
                 <button
                   onClick={() => {
@@ -247,33 +248,72 @@ export const MobileBetslipDrawer = ({ isInsideFrame = false }) => {
                     setCurrentPage('bets');
                     setIsMobileDrawerOpen(false);
                   }}
-                  className="text-[11px] text-[#00A3FF] font-bold hover:underline"
+                  className="text-[11px] text-[#00A3FF] font-semibold hover:underline flex items-center gap-1"
                 >
-                  View All (1 open · 7 settled) →
+                  <span>View all ({myBets.settled.length} settled)</span>
+                  <span>→</span>
                 </button>
               </div>
 
               {myBets.open.length === 0 ? (
-                <div className="text-center py-8 text-xs text-[#557086]">No open bets</div>
+                <div className="text-center py-10 space-y-2">
+                  <p className="text-xs text-[#557086]">No open bets</p>
+                  <p className="text-[11px] text-[#557086]">Your placed bets will appear here with live cash out</p>
+                </div>
               ) : (
                 myBets.open.map((bet) => (
-                  <div key={bet.id} className="p-3.5 rounded-2xl bg-[#1a2c38] border border-[#213743] space-y-2.5">
-                    <div className="flex justify-between text-xs">
-                      <span className="font-bold text-white truncate pr-2">{bet.match}</span>
-                      <span className="text-[#00A3FF] font-mono font-bold flex-shrink-0">{bet.odds.toFixed(2)}</span>
+                  <div key={bet.id} className="p-3.5 rounded-2xl bg-[#1a2c38] border border-[#213743] space-y-2.5 shadow-sm">
+                    {/* Row 1: Selection Name + Odds (Exact Bet Slip Card styling) */}
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm font-bold text-white truncate pr-2">
+                        {bet.team || 'Arsenal'}
+                      </div>
+                      <span className="text-sm font-mono font-bold text-[#00A3FF] flex-shrink-0">
+                        {bet.odds.toFixed(2)}
+                      </span>
                     </div>
 
-                    <div className="flex justify-between text-xs font-mono">
-                      <span className="text-[#557086]">Stake: <span className="text-white">${bet.stake.toFixed(2)} ₮</span></span>
-                      <span className="text-[#557086]">Returns: <span className="text-white font-bold">${bet.returns.toFixed(2)} ₮</span></span>
+                    {/* Row 2: Market, Match & Live Info */}
+                    <div className="text-xs text-[#557086] flex items-center justify-between flex-wrap gap-1">
+                      <span className="truncate max-w-[200px]">
+                        {bet.market || 'Match result'} · {bet.match}
+                      </span>
+                      {bet.scoreMinute && (
+                        <span className="text-[#ff3366] font-mono text-[11px] font-medium flex-shrink-0">
+                          {bet.scoreMinute}
+                        </span>
+                      )}
                     </div>
 
+                    {/* Row 3: Inset Box for Stake & Returns matching Bet Slip Input styling */}
+                    <div className="flex items-center justify-between bg-[#0f212e] rounded-xl border border-[#213743] px-3.5 py-2">
+                      <div>
+                        <div className="text-[10px] text-[#557086] font-semibold">Stake</div>
+                        <div className="text-xs font-mono font-bold text-white">
+                          ${bet.stake.toFixed(2)} <span className="text-[#00F5D4] font-bold">₮</span>
+                        </div>
+                      </div>
+
+                      <div className="text-right">
+                        <div className="text-[10px] text-[#557086] font-semibold">Returns</div>
+                        <div className="text-xs font-mono font-bold text-white">
+                          ${bet.returns.toFixed(2)} <span className="text-[#00F5D4] font-bold">₮</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Row 4: Cash Out CTA Button */}
                     <button
                       onClick={() => cashOut(bet.id)}
-                      className="w-full py-2.5 rounded-xl bg-[#f5a623] hover:bg-[#ffb43b] text-black font-extrabold text-xs flex items-center justify-between px-3.5 shadow-md active:scale-95 transition-transform"
+                      className="w-full py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-black text-xs flex items-center justify-between px-4 shadow-md active:scale-95 transition-all"
                     >
-                      <span>Cash Out</span>
-                      <span className="font-mono font-bold">${(bet.cashoutAmount || bet.stake * 1.42).toFixed(2)} ₮</span>
+                      <div className="flex items-center gap-1.5">
+                        <Zap className="w-3.5 h-3.5 fill-black" />
+                        <span>Cash Out</span>
+                      </div>
+                      <span className="font-mono font-black text-sm">
+                        ${(bet.cashoutAmount || bet.stake * 1.42).toFixed(2)} ₮
+                      </span>
                     </button>
                   </div>
                 ))

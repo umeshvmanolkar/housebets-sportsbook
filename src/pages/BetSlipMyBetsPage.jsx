@@ -359,36 +359,39 @@ export const BetSlipMyBetsPage = () => {
                       )}
                     </div>
 
-                    {/* Team Selection */}
-                    <div>
-                      <div className="text-sm font-bold text-white">{bet.team}</div>
-                      <div className="text-xs text-[#b1bad3] flex items-center gap-1 flex-wrap pt-0.5">
-                        <span>{bet.match}</span>
-                        {bet.isLive && (
-                          <>
-                            <span className="text-[#ff3366] font-bold">●</span>
-                            <span className="text-red-400 font-mono font-bold text-xs">{bet.minute || "52'"}</span>
-                            <span className="px-1.5 py-0.2 rounded bg-[#0f212e] text-[#00A3FF] font-mono font-bold text-[10px] border border-[#213743]">
-                              {bet.score || '1-0'}
-                            </span>
-                          </>
-                        )}
-                      </div>
+                    {/* Selection Name + Odds */}
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm font-bold text-white truncate pr-2">{bet.team}</div>
+                      <span className="text-sm font-mono font-bold text-[#00A3FF] flex-shrink-0">
+                        {bet.odds.toFixed(2)}
+                      </span>
                     </div>
 
-                    {/* Metrics Row: Odds, Stake, Returns */}
-                    <div className="grid grid-cols-3 gap-2 p-2 rounded-xl bg-[#0f212e] border border-[#213743] text-center">
-                      <div>
-                        <div className="text-[10px] text-[#557086] font-semibold">Odds</div>
-                        <div className="font-mono text-xs font-bold text-[#00A3FF]">{bet.odds.toFixed(2)}</div>
-                      </div>
+                    {/* Market & Match Title + Live Score */}
+                    <div className="text-xs text-[#557086] flex items-center justify-between flex-wrap gap-1">
+                      <span className="truncate max-w-[210px]">{bet.market || 'Match result'} · {bet.match}</span>
+                      {bet.isLive ? (
+                        <span className="text-[#ff3366] font-mono text-[11px] font-medium flex-shrink-0">
+                          {bet.score || '1-0'} · {bet.minute || "52'"}
+                        </span>
+                      ) : (
+                        <span className="text-[#557086] font-mono text-[11px]">{bet.minute || 'FT'}</span>
+                      )}
+                    </div>
+
+                    {/* Inset Box for Stake & Returns (Matching Bet Slip Theme) */}
+                    <div className="flex items-center justify-between bg-[#0f212e] rounded-xl border border-[#213743] px-3.5 py-2">
                       <div>
                         <div className="text-[10px] text-[#557086] font-semibold">Stake</div>
-                        <div className="font-mono text-xs font-bold text-white">${bet.stake.toFixed(2)}</div>
+                        <div className="text-xs font-mono font-bold text-white">
+                          ${bet.stake.toFixed(2)} <span className="text-[#00F5D4] font-bold">₮</span>
+                        </div>
                       </div>
-                      <div>
+                      <div className="text-right">
                         <div className="text-[10px] text-[#557086] font-semibold">Returns</div>
-                        <div className="font-mono text-xs font-bold text-white">${bet.returns.toFixed(2)}</div>
+                        <div className="text-xs font-mono font-bold text-white">
+                          ${bet.returns.toFixed(2)} <span className="text-[#00F5D4] font-bold">₮</span>
+                        </div>
                       </div>
                     </div>
 
@@ -396,10 +399,15 @@ export const BetSlipMyBetsPage = () => {
                     {bet.result === 'Open' && (
                       <button
                         onClick={() => cashOut(bet.id)}
-                        className="w-full py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-extrabold text-xs shadow-md flex items-center justify-center gap-1.5 active:scale-95 transition-transform"
+                        className="w-full py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-black text-xs flex items-center justify-between px-4 shadow-md active:scale-95 transition-all"
                       >
-                        <Zap className="w-3.5 h-3.5 fill-current" />
-                        <span>Cash Out ${(bet.cashoutAmount || bet.stake * 1.42).toFixed(2)} ₮</span>
+                        <div className="flex items-center gap-1.5">
+                          <Zap className="w-3.5 h-3.5 fill-black" />
+                          <span>Cash Out</span>
+                        </div>
+                        <span className="font-mono font-black text-sm">
+                          ${(bet.cashoutAmount || bet.stake * 1.42).toFixed(2)} ₮
+                        </span>
                       </button>
                     )}
                   </div>
