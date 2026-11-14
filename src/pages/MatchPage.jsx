@@ -120,18 +120,18 @@ export const MatchPage = () => {
             </div>
           </div>
 
-          {/* Teams & Score Row (Symmetric, never breaking onto multiple single-char lines) */}
-          <div className="flex items-center justify-between gap-2 py-1">
-            {/* Home Team */}
-            <div className="flex-1 flex items-center gap-2 sm:gap-3 min-w-0">
+          {/* Teams & Score Row */}
+          <div className="grid grid-cols-12 items-center gap-1.5 sm:gap-4 py-1">
+            {/* Home Team (5 cols) */}
+            <div className="col-span-5 flex items-center gap-2 sm:gap-3 min-w-0">
               <TeamCrest teamName={selectedMatch.homeTeam.name} className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0" />
-              <div className="min-w-0">
-                <h2 className="text-xs sm:text-base font-black text-white truncate">
+              <div className="min-w-0 flex-1">
+                <h2 className="text-xs sm:text-base font-black text-white leading-tight break-words">
                   {selectedMatch.homeTeam.name}
                 </h2>
                 <button
                   onClick={() => toggleFollow({ name: selectedMatch.homeTeam.name, type: 'team' })}
-                  className="text-[10px] text-amber-400 hover:underline flex items-center gap-0.5 mt-0.5"
+                  className="text-[10px] text-amber-400 hover:underline flex items-center gap-0.5 mt-0.5 whitespace-nowrap"
                 >
                   <Star className="w-2.5 h-2.5 fill-amber-400" />
                   <span>{isHomeFollowed ? 'Following' : selectedMatch.homeTeam.shortName || 'Follow'}</span>
@@ -139,22 +139,22 @@ export const MatchPage = () => {
               </div>
             </div>
 
-            {/* Score Center Box */}
-            <div className="px-2 flex-shrink-0 text-center">
-              <div className="font-mono text-xl sm:text-3xl font-black text-white tracking-widest bg-[#0f212e]/90 px-3 py-1.5 rounded-2xl border border-white/10 shadow-inner">
+            {/* Score Center Box (2 cols) */}
+            <div className="col-span-2 px-0.5 flex-shrink-0 text-center flex justify-center">
+              <div className="font-mono text-base sm:text-2xl font-black text-white tracking-widest bg-[#0f212e]/90 px-2 sm:px-4 py-1 sm:py-1.5 rounded-xl border border-white/10 shadow-inner">
                 {selectedMatch.isLive ? `${selectedMatch.homeTeam.score} - ${selectedMatch.awayTeam.score}` : 'vs'}
               </div>
             </div>
 
-            {/* Away Team */}
-            <div className="flex-1 flex items-center justify-end gap-2 sm:gap-3 min-w-0 text-right">
-              <div className="min-w-0">
-                <h2 className="text-xs sm:text-base font-black text-white truncate">
+            {/* Away Team (5 cols) */}
+            <div className="col-span-5 flex items-center justify-end gap-2 sm:gap-3 min-w-0 text-right">
+              <div className="min-w-0 flex-1">
+                <h2 className="text-xs sm:text-base font-black text-white leading-tight break-words">
                   {selectedMatch.awayTeam.name}
                 </h2>
                 <button
                   onClick={() => toggleFollow({ name: selectedMatch.awayTeam.name, type: 'team' })}
-                  className="text-[10px] text-amber-400 hover:underline flex items-center justify-end gap-0.5 mt-0.5"
+                  className="text-[10px] text-amber-400 hover:underline flex items-center justify-end gap-0.5 mt-0.5 whitespace-nowrap"
                 >
                   <span>{isAwayFollowed ? 'Following' : selectedMatch.awayTeam.shortName || 'Follow'}</span>
                   <Star className="w-2.5 h-2.5 fill-amber-400" />
@@ -193,36 +193,70 @@ export const MatchPage = () => {
         {/* Markets Stage */}
         {(!isMobile || mobileTab === 'markets') && (
           <div className={isMobile ? "space-y-4 w-full" : "col-span-8 space-y-4"}>
-            {/* Subnav & Search */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-3">
-              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full scrollbar-none">
-                {marketTabs.map((tab) => {
-                  const isActive = activeMarketTab === tab.id;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => { playClick(); setActiveMarketTab(tab.id); }}
-                      className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
-                        isActive
-                          ? 'bg-[#1475e1] text-white shadow-sm'
-                          : 'bg-[#1a2c38] text-[#b1bad3] hover:text-white'
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  );
-                })}
-              </div>
+            {/* Subnav & Search (On Mobile: Full-width search bar ABOVE the filter tabs) */}
+            {isMobile ? (
+              <div className="space-y-2.5 pb-2 border-b border-white/[0.08]">
+                {/* Full-length Search Bar above filters */}
+                <div className="relative w-full">
+                  <Search className="w-4 h-4 text-[#557086] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Search markets"
+                    className="w-full bg-[#1a2c38] text-xs text-white pl-9 pr-4 py-2.5 rounded-xl border border-[#213743] focus:outline-none focus:border-[#00A3FF]"
+                  />
+                </div>
 
-              <div className="relative min-w-44">
-                <Search className="w-3.5 h-3.5 text-[#557086] absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  placeholder="Search markets"
-                  className="w-full bg-[#1a2c38] text-xs text-white pl-8 pr-3 py-1.5 rounded-xl border border-white/5 focus:outline-none focus:border-[#1475e1]"
-                />
+                {/* Filter Tabs Bar (Horizontal Scroll) */}
+                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full scrollbar-none">
+                  {marketTabs.map((tab) => {
+                    const isActive = activeMarketTab === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => { playClick(); setActiveMarketTab(tab.id); }}
+                        className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+                          isActive
+                            ? 'bg-[#1475e1] text-white shadow-sm'
+                            : 'bg-[#1a2c38] text-[#b1bad3] hover:text-white'
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="flex items-center justify-between gap-3 border-b border-white/[0.08] pb-3">
+                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full scrollbar-none">
+                  {marketTabs.map((tab) => {
+                    const isActive = activeMarketTab === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => { playClick(); setActiveMarketTab(tab.id); }}
+                        className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+                          isActive
+                            ? 'bg-[#1475e1] text-white shadow-sm'
+                            : 'bg-[#1a2c38] text-[#b1bad3] hover:text-white'
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="relative min-w-56">
+                  <Search className="w-3.5 h-3.5 text-[#557086] absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Search markets"
+                    className="w-full bg-[#1a2c38] text-xs text-white pl-8 pr-3 py-2 rounded-xl border border-white/5 focus:outline-none focus:border-[#1475e1]"
+                  />
+                </div>
+              </div>
+            )}
 
             {/* Market 1: 1x2 */}
             <div className="rounded-2xl bg-[#1a2c38] border border-white/[0.08] overflow-hidden shadow-card-elevated">

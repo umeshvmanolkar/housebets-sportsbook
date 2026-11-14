@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { 
   Search, 
   Home, 
@@ -14,7 +14,7 @@ import {
   Settings
 } from 'lucide-react';
 import { useSportsbook } from '../context/SportsbookContext';
-import { MATCHES_DATA } from '../data/mockData';
+import { MATCHES_DATA, PROMO_CARDS } from '../data/mockData';
 import { TeamCrest } from '../components/Logos';
 
 export const SportsHome = () => {
@@ -30,6 +30,19 @@ export const SportsHome = () => {
     playClick,
     isMobile
   } = useSportsbook();
+
+  // Keyboard shortcut for Ctrl + K search focus
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        const input = document.getElementById('main-sports-search');
+        if (input) input.focus();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Your matches (Row view on Desktop, Inset Carousel on Mobile matching screenshot)
   const yourMatches = [
@@ -47,22 +60,103 @@ export const SportsHome = () => {
 
   return (
     <div className="space-y-4 animate-fade-in pb-16 md:pb-6 max-w-7xl mx-auto px-0.5 sm:px-1">
-      {/* 1. Search Bar (Matching Desktop & Mobile References) */}
+      {/* 1. Promo Cards at Top (Strictly matching media_1794670919998_c8594c85.png) */}
+      <div className={
+        isMobile
+          ? "flex gap-2.5 overflow-x-auto pb-1 scrollbar-none snap-x snap-mandatory"
+          : "grid grid-cols-1 md:grid-cols-3 gap-3.5"
+      }>
+        {PROMO_CARDS.map((card) => {
+          return (
+            <div
+              key={card.id}
+              onClick={() => {
+                playClick();
+                setCurrentPage('football');
+              }}
+              className={`${
+                isMobile ? "w-[275px] flex-shrink-0 snap-start" : "w-auto"
+              } p-3 rounded-2xl bg-[#1a2c38] border border-[#213743] hover:border-[#2f4553] shadow-card-elevated flex items-center gap-3.5 cursor-pointer transition-all group overflow-hidden relative`}
+            >
+              {/* Left Graphic Illustration Box */}
+              {card.type === 'gta6' && (
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-[#1d68ed] via-[#1241a8] to-[#0d2259] rounded-xl flex items-center justify-center relative overflow-hidden flex-shrink-0 shadow-inner border border-blue-400/20 group-hover:scale-105 transition-transform">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.25),transparent_60%)]" />
+                  <div className="relative flex flex-col items-center justify-center">
+                    <span className="text-2xl filter drop-shadow">🌴</span>
+                    <span className="font-black text-xs tracking-tighter bg-gradient-to-r from-pink-500 via-rose-400 to-amber-300 bg-clip-text text-transparent filter drop-shadow font-serif">
+                      VI
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {card.type === 'boxing' && (
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-[#2458e6] via-[#1a3d9e] to-[#12245c] rounded-xl flex items-center justify-center relative overflow-hidden flex-shrink-0 shadow-inner border border-blue-400/20 group-hover:scale-105 transition-transform">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.25),transparent_60%)]" />
+                  <div className="relative flex flex-col items-center justify-center">
+                    <span className="text-3xl filter drop-shadow">🥊</span>
+                    <span className="text-[9px] font-black text-purple-200 tracking-wider uppercase font-mono">SF 5</span>
+                  </div>
+                </div>
+              )}
+
+              {card.type === 'cricket' && (
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-[#1d62e6] via-[#1340a6] to-[#0f2868] rounded-xl flex items-center justify-center relative overflow-hidden flex-shrink-0 shadow-inner border border-blue-400/20 group-hover:scale-105 transition-transform">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.25),transparent_60%)]" />
+                  <div className="relative flex flex-col items-center justify-center">
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-200 via-white to-amber-400 p-0.5 shadow-md flex items-center justify-center">
+                      <div className="w-full h-full rounded-full bg-[#0d2a63] flex items-center justify-center text-amber-400 font-black text-sm">
+                        ⮝
+                      </div>
+                    </div>
+                    <span className="text-[8px] font-bold text-amber-300 font-mono tracking-widest mt-0.5">RO-KO</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Text Info */}
+              <div className="space-y-1 min-w-0 flex-1">
+                <span className="inline-block px-1.5 py-0.5 rounded bg-white text-gray-900 font-bold text-[9px] uppercase tracking-wider shadow-sm">
+                  {card.badge}
+                </span>
+                <h3 className="text-xs sm:text-sm font-black text-white group-hover:text-[#00A3FF] transition-colors leading-snug truncate">
+                  {card.title}
+                </h3>
+                <p className="text-[10px] sm:text-[11px] text-[#8a9ca8] leading-tight truncate">
+                  {card.subtitle}
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* 2. Search Bar directly below promo cards (with Ctrl + K shortcut badge) */}
       <div className="relative">
-        <div className="flex items-center gap-3 bg-[#1a2c38] border border-[#213743] rounded-xl px-4 py-3 shadow-inner">
-          <Search className="w-4 h-4 text-[#557086] flex-shrink-0" />
-          <input
-            id="main-sports-search"
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search teams, players or leagues"
-            className="w-full bg-transparent text-xs sm:text-sm text-white placeholder:text-[#557086] focus:outline-none"
-          />
+        <div className="flex items-center justify-between gap-3 bg-[#1a2c38] border border-[#213743] hover:border-[#2f4553] rounded-xl px-4 py-3 shadow-inner transition-colors">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <Search className="w-4 h-4 text-[#557086] flex-shrink-0" />
+            <input
+              id="main-sports-search"
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search Housebets.com"
+              className="w-full bg-transparent text-xs sm:text-sm text-white placeholder:text-[#557086] focus:outline-none"
+            />
+          </div>
+          {!isMobile && (
+            <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-[#213743] text-[10px] text-[#8a9ca8] font-mono border border-white/5 flex-shrink-0 select-none">
+              <span>Ctrl</span>
+              <span>+</span>
+              <span>K</span>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* 2. Sports Navigation Pill Bar (Matching Desktop & Mobile References) */}
+      {/* 3. Sports Navigation Pill Bar (Matching Desktop & Mobile References) */}
       <div className="bg-[#1a2c38] border border-[#213743] rounded-xl p-1.5 flex items-center gap-1.5 overflow-x-auto scrollbar-none">
         {/* Home (Active Cyan Pill) */}
         <button

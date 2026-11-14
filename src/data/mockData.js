@@ -4,29 +4,32 @@ export const PROMO_CARDS = [
   {
     id: 'promo-1',
     title: 'GTA 6 at Housebets',
-    subtitle: 'Bet on GTA specials & release odds here',
-    badge: 'NEW',
-    bgGradient: 'from-[#2e1d44] via-[#1a2c38] to-[#1a2c38]',
-    border: 'border-[#493166]/50',
+    subtitle: 'Bet on GTA specials here!',
+    badge: 'New',
+    accent: 'from-[#0e4480] via-[#163056] to-[#1a2c38]',
+    border: 'border-[#225796]/40',
+    type: 'gta6',
     icon: '🌴'
   },
   {
     id: 'promo-2',
     title: 'Stream Fighters 5 Refund',
-    subtitle: 'Lose your first single bet? 100% Refunded',
-    badge: 'HOT',
-    bgGradient: 'from-[#192b4a] via-[#1a2c38] to-[#1a2c38]',
-    border: 'border-[#294a73]/50',
+    subtitle: 'Lose first bet? Refunded',
+    badge: 'Promotion',
+    accent: 'from-[#1a3a78] via-[#16294d] to-[#1a2c38]',
+    border: 'border-[#2c529e]/40',
+    type: 'boxing',
     icon: '🥊'
   },
   {
     id: 'promo-3',
-    title: 'Zero-Margin Champions League',
-    subtitle: '50% higher payout on all straight singles',
-    badge: 'BOOST',
-    bgGradient: 'from-[#1a2c38] via-[#1a2c38] to-[#3d2c18]',
-    border: 'border-[#614923]/50',
-    icon: '⭐'
+    title: 'RO-KO Special - Odds Boost',
+    subtitle: '50% Odds Boost on Kohli or Rohit',
+    badge: 'Promotion',
+    accent: 'from-[#124b91] via-[#133560] to-[#1a2c38]',
+    border: 'border-[#2162b3]/40',
+    type: 'cricket',
+    icon: '🏏'
   }
 ];
 
