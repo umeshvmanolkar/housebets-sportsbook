@@ -23,6 +23,19 @@ export const SportsbookProvider = ({ children }) => {
   // Device Mode: 'desktop' (1440px) | 'mobile' (390px phone shell) | 'responsive'
   const [viewMode, setViewMode] = useState('responsive');
 
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== 'undefined' ? window.innerWidth : 1200
+  );
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Evaluates to TRUE when simulating 390px iPhone OR when browser viewport < 768px
+  const isMobile = viewMode === 'mobile' || (viewMode === 'responsive' && windowWidth < 768);
+
   // Left Nav Collapsed state on desktop
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
@@ -290,6 +303,7 @@ export const SportsbookProvider = ({ children }) => {
         setSearchQuery,
         viewMode,
         setViewMode,
+        isMobile,
         isSidebarOpen,
         setIsSidebarOpen,
         isBetslipPanelOpen,

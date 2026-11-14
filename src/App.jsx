@@ -69,13 +69,6 @@ const MainLayout = () => {
 
         {/* iPhone Frame */}
         <div className="iphone-frame flex flex-col text-white">
-          {/* Dynamic Island */}
-          <div className="dynamic-island flex items-center justify-between px-3 text-[10px] text-white/70">
-            <span className="text-[9px] font-mono">18:30</span>
-            <div className="w-2.5 h-2.5 rounded-full bg-cyan-500/80" />
-            <span className="text-[9px]">5G</span>
-          </div>
-
           {/* Embedded Header */}
           <Header onOpenContestModal={() => setIsContestModalOpen(true)} />
 
