@@ -14,7 +14,7 @@ import {
   Settings
 } from 'lucide-react';
 import { useSportsbook } from '../context/SportsbookContext';
-import { MATCHES_DATA, PROMO_CARDS } from '../data/mockData';
+import { MATCHES_DATA } from '../data/mockData';
 import { TeamCrest } from '../components/Logos';
 
 export const SportsHome = () => {
@@ -142,42 +142,7 @@ export const SportsHome = () => {
         )}
       </div>
 
-      {/* 3. Promo Banners (1:1 Matching Image 1: GTA 6, Stream Fighters 5, Zero-Margin Champions League) */}
-      <div className={
-        isMobile 
-          ? "flex gap-2.5 overflow-x-auto pb-1 scrollbar-none snap-x snap-mandatory" 
-          : "grid grid-cols-1 md:grid-cols-3 gap-3"
-      }>
-        {PROMO_CARDS.map((promo) => (
-          <div
-            key={promo.id}
-            onClick={() => {
-              playClick();
-              setCurrentPage('football');
-            }}
-            className={`${
-              isMobile ? "w-[265px] flex-shrink-0 snap-start" : "w-auto"
-            } p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r ${promo.bgGradient} border ${promo.border} relative overflow-hidden shadow-card-elevated flex items-center justify-between group cursor-pointer hover:border-white/20 transition-all`}
-          >
-            <div className="space-y-1 z-10 pr-2">
-              <span className="inline-block px-1.5 py-0.5 rounded bg-white/10 text-[9px] font-black uppercase tracking-wider text-gray-200">
-                {promo.badge}
-              </span>
-              <h3 className="text-xs sm:text-sm font-black text-white group-hover:text-[#00A3FF] transition-colors leading-tight">
-                {promo.title}
-              </h3>
-              <p className="text-[10px] sm:text-[11px] text-[#8a9ca8] leading-tight">
-                {promo.subtitle}
-              </p>
-            </div>
-            <div className="text-3xl select-none z-10 flex-shrink-0 pl-1">
-              {promo.icon}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* 4. Favourites Section (Matching Image 4 & Image 5) */}
+      {/* 3. Favourites Section */}
       <div className="space-y-1.5 pt-1">
         <span className="text-xs font-bold text-[#b1bad3] block px-0.5">Favourites</span>
         <div className="flex flex-wrap items-center gap-2">
@@ -444,109 +409,7 @@ export const SportsHome = () => {
         )}
       </div>
 
-      {/* 5. Mobile Only: Featured Matches Section (Strictly matching Image 5) */}
-      {isMobile && (
-        <div className="space-y-2 pt-1">
-          <div className="flex items-center justify-between px-0.5">
-            <h2 className="text-xs font-bold text-white">Featured matches</h2>
-            <div className="flex items-center gap-1.5 text-[#557086]">
-              <button className="p-1 rounded-lg bg-[#1a2c38] text-[#557086] hover:text-white transition-colors">
-                <ChevronLeft className="w-3.5 h-3.5" />
-              </button>
-              <button className="p-1 rounded-lg bg-[#1a2c38] text-[#557086] hover:text-white transition-colors">
-                <ChevronRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-
-          <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-none snap-x snap-mandatory">
-            {yourMatches.map((m) => (
-              <div
-                key={`featured-${m.id}`}
-                className="w-[265px] flex-shrink-0 snap-start bg-[#1a2c38] border border-[#213743] rounded-xl p-3 space-y-2.5 shadow-sm"
-              >
-                {/* Top Meta: League on left, Live badge on right */}
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-[10px] text-[#8a9ca8] font-medium truncate max-w-[140px]">
-                    {m.league}
-                  </span>
-                  {m.isLive ? (
-                    <span className="px-1.5 py-0.5 rounded bg-red-500/20 text-[#f43f5e] font-mono font-bold text-[9px]">
-                      LIVE {m.minute}
-                    </span>
-                  ) : (
-                    <span className="text-[10px] text-[#b1bad3] font-mono">
-                      {m.date.split('|')[1] || m.date}
-                    </span>
-                  )}
-                </div>
-
-                {/* Teams & Scores */}
-                <div
-                  onClick={() => { playClick(); setSelectedMatchId(m.id); setCurrentPage('match'); }}
-                  className="space-y-1.5 cursor-pointer py-0.5"
-                >
-                  <div className="flex items-center justify-between text-xs font-bold text-white">
-                    <div className="flex items-center gap-2">
-                      <TeamCrest teamName={m.homeTeam.name} className="w-4 h-4 flex-shrink-0" />
-                      <span className="truncate">{m.homeTeam.name}</span>
-                    </div>
-                    {m.isLive && <span className="font-mono text-sm font-black">{m.homeTeam.score}</span>}
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-bold text-white">
-                    <div className="flex items-center gap-2">
-                      <TeamCrest teamName={m.awayTeam.name} className="w-4 h-4 flex-shrink-0" />
-                      <span className="truncate">{m.awayTeam.name}</span>
-                    </div>
-                    {m.isLive && <span className="font-mono text-sm font-black">{m.awayTeam.score}</span>}
-                  </div>
-                </div>
-
-                {/* 3 Odds Buttons */}
-                <div className="grid grid-cols-3 gap-1.5 pt-1">
-                  {[
-                    { label: m.homeTeam.shortName || m.homeTeam.name.split(' ')[0], opt: m.matchResult.home },
-                    { label: 'Draw', opt: m.matchResult.draw },
-                    { label: m.awayTeam.shortName || m.awayTeam.name.split(' ')[0], opt: m.matchResult.away }
-                  ].map(({ label, opt }) => {
-                    const isSelected = singlesInSlip.some(s => s.id === opt.id);
-                    return (
-                      <button
-                        key={opt.id}
-                        onClick={() => toggleSelection({
-                          id: opt.id,
-                          matchId: m.id,
-                          matchTitle: `${m.homeTeam.name} v ${m.awayTeam.name}`,
-                          scoreMinute: m.isLive ? `${m.homeTeam.score}-${m.awayTeam.score} ${m.minute}` : m.date,
-                          marketName: 'Match result',
-                          selectionName: opt.label,
-                          odd: opt.odd,
-                          isSuspended: m.isSuspended
-                        })}
-                        className={`py-1.5 px-1 rounded-lg text-center flex flex-col items-center justify-center min-h-[44px] transition-all border ${
-                          isSelected
-                            ? 'bg-[#1475e1] border-[#1475e1] text-white font-extrabold shadow-glow-blue'
-                            : 'bg-[#0f212e] hover:bg-[#213743] text-white border-white/[0.04]'
-                        }`}
-                      >
-                        <span className="text-[10px] text-[#b1bad3] truncate max-w-full font-medium">
-                          {label}
-                        </span>
-                        <span className={`font-mono text-xs font-bold ${isSelected ? 'text-white' : 'text-[#00A3FF]'}`}>
-                          {opt.odd.toFixed(2)}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* 6. Top Matches (Stake-Style Reference Cards: Swipe on Mobile, 3-Column on Desktop) */}
+      {/* 5. Top Matches (Stake-Style Reference Cards: Swipe on Mobile, 3-Column on Desktop) */}
       <div className="space-y-2.5 pt-1">
         <div className="flex items-center justify-between px-0.5">
           <div className="flex items-center gap-2">
