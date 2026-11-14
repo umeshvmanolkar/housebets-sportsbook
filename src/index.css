@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #07090e;
+    color: #f1f5f9;
+    overflow-x: hidden;
+  }
+
+  /* Custom scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0a0d14;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1e2638;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #2e3a54;
+  }
+}
+
+/* Glassmorphism and glow effects */
+.glass-panel {
+  background: rgba(15, 20, 29, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-hover {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-panel-hover:hover {
+  background: rgba(22, 29, 42, 0.9);
+  border-color: rgba(255, 255, 255, 0.16);
+  transform: translateY(-1px);
+}
+
+.neon-border-green {
+  border-color: #00E701;
+  box-shadow: 0 0 15px rgba(0, 231, 1, 0.3);
+}
+
+/* Radar & Pitch styling */
+.soccer-pitch {
+  background: radial-gradient(circle at center, #13281c 0%, #0d1a13 100%);
+  border: 1px solid rgba(0, 231, 1, 0.25);
+  position: relative;
+}
+
+/* Odds flashing */
+@keyframes flashGreen {
+  0% { background-color: rgba(0, 231, 1, 0.35); color: #00E701; }
+  100% { background-color: transparent; }
+}
+
+@keyframes flashRed {
+  0% { background-color: rgba(239, 68, 68, 0.35); color: #ef4444; }
+  100% { background-color: transparent; }
+}
+
+.odds-flash-up {
+  animation: flashGreen 1.2s ease-out;
+}
+
+.odds-flash-down {
+  animation: flashRed 1.2s ease-out;
+}
+
+/* Mobile mockup phone shell */
+.iphone-frame {
+  width: 390px;
+  height: 844px;
+  border-radius: 48px;
+  box-shadow: 0 0 0 12px #1f242e, 0 0 0 14px #2e3646, 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 231, 1, 0.15);
+  overflow: hidden;
+  position: relative;
+}
+
+.dynamic-island {
+  width: 110px;
+  height: 28px;
+  background-color: #000000;
+  border-radius: 20px;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+}
