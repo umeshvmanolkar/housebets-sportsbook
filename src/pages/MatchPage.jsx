@@ -123,15 +123,15 @@ export const MatchPage = () => {
           {/* Teams & Score Row */}
           <div className="grid grid-cols-12 items-center gap-1.5 sm:gap-4 py-1">
             {/* Home Team (5 cols) */}
-            <div className="col-span-5 flex items-center gap-2 sm:gap-3 min-w-0">
-              <TeamCrest teamName={selectedMatch.homeTeam.name} className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0" />
-              <div className="min-w-0 flex-1">
+            <div className="col-span-5 flex items-center gap-2 sm:gap-3.5 min-w-0">
+              <TeamCrest teamName={selectedMatch.homeTeam.name} className="w-8 h-8 sm:w-11 sm:h-11 flex-shrink-0" />
+              <div className="flex flex-col items-start min-w-0">
                 <h2 className="text-xs sm:text-base font-black text-white leading-tight break-words">
                   {selectedMatch.homeTeam.name}
                 </h2>
                 <button
                   onClick={() => toggleFollow({ name: selectedMatch.homeTeam.name, type: 'team' })}
-                  className="text-[10px] text-amber-400 hover:underline flex items-center gap-0.5 mt-0.5 whitespace-nowrap"
+                  className="text-[10px] sm:text-xs text-amber-400 hover:underline inline-flex items-center gap-1 mt-0.5 whitespace-nowrap"
                 >
                   <Star className="w-2.5 h-2.5 fill-amber-400" />
                   <span>{isHomeFollowed ? 'Following' : selectedMatch.homeTeam.shortName || 'Follow'}</span>
@@ -147,20 +147,20 @@ export const MatchPage = () => {
             </div>
 
             {/* Away Team (5 cols) */}
-            <div className="col-span-5 flex items-center justify-end gap-2 sm:gap-3 min-w-0 text-right">
-              <div className="min-w-0 flex-1">
+            <div className="col-span-5 flex items-center justify-end gap-2 sm:gap-3.5 min-w-0">
+              <div className="flex flex-col items-end min-w-0 text-right">
                 <h2 className="text-xs sm:text-base font-black text-white leading-tight break-words">
                   {selectedMatch.awayTeam.name}
                 </h2>
                 <button
                   onClick={() => toggleFollow({ name: selectedMatch.awayTeam.name, type: 'team' })}
-                  className="text-[10px] text-amber-400 hover:underline flex items-center justify-end gap-0.5 mt-0.5 whitespace-nowrap"
+                  className="text-[10px] sm:text-xs text-amber-400 hover:underline inline-flex items-center justify-end gap-1 mt-0.5 whitespace-nowrap"
                 >
                   <span>{isAwayFollowed ? 'Following' : selectedMatch.awayTeam.shortName || 'Follow'}</span>
                   <Star className="w-2.5 h-2.5 fill-amber-400" />
                 </button>
               </div>
-              <TeamCrest teamName={selectedMatch.awayTeam.name} className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0" />
+              <TeamCrest teamName={selectedMatch.awayTeam.name} className="w-8 h-8 sm:w-11 sm:h-11 flex-shrink-0" />
             </div>
           </div>
         </div>
