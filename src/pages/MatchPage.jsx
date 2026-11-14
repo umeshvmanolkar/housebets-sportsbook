@@ -93,13 +93,13 @@ export const MatchPage = () => {
       </div>
 
       {/* Hero Scoreboard Banner (Full width on both Mobile and Desktop) */}
-      <div className="rounded-3xl bg-gradient-to-r from-[#173042] via-[#102433] to-[#0d1e2b] border border-white/10 p-4 sm:p-6 relative overflow-hidden shadow-card-elevated">
-        <div className="relative z-10 space-y-3 sm:space-y-4">
+      <div className={`rounded-3xl bg-gradient-to-r from-[#173042] via-[#102433] to-[#0d1e2b] border border-white/10 ${isMobile ? 'p-3' : 'p-6'} relative overflow-hidden shadow-card-elevated`}>
+        <div className={`relative z-10 ${isMobile ? 'space-y-2.5' : 'space-y-4'}`}>
           {/* Meta row: Date, League & Live Badge */}
-          <div className="flex items-center justify-between text-xs text-[#b1bad3] border-b border-white/[0.08] pb-2.5">
+          <div className="flex items-center justify-between text-xs text-[#b1bad3] border-b border-white/[0.08] pb-2">
             <div className="flex items-center gap-2 min-w-0">
               <span className="font-mono text-[#00A3FF] font-bold flex-shrink-0">{selectedMatch.date}</span>
-              <span className="truncate max-w-[120px] sm:max-w-none">• {selectedMatch.league}</span>
+              <span className={`truncate ${isMobile ? 'max-w-[120px]' : ''}`}>• {selectedMatch.league}</span>
             </div>
 
             <div className="flex items-center gap-2 flex-shrink-0">
@@ -121,17 +121,20 @@ export const MatchPage = () => {
           </div>
 
           {/* Teams & Score Row */}
-          <div className="flex items-center justify-between gap-2 sm:gap-4 py-2 w-full">
+          <div className={`flex items-center justify-between ${isMobile ? 'gap-1.5 py-1' : 'gap-4 py-2'} w-full`}>
             {/* Home Team */}
-            <div className="flex-1 flex items-center gap-2 sm:gap-3.5 min-w-0">
-              <TeamCrest teamName={selectedMatch.homeTeam.name} className="w-8 h-8 sm:w-11 sm:h-11 flex-shrink-0" />
+            <div className={`flex-1 flex items-center ${isMobile ? 'gap-2' : 'gap-3.5'} min-w-0`}>
+              <TeamCrest 
+                teamName={selectedMatch.homeTeam.name} 
+                className={isMobile ? "w-8 h-8 flex-shrink-0" : "w-11 h-11 flex-shrink-0"} 
+              />
               <div className="flex flex-col items-start min-w-0">
-                <h2 className="text-xs sm:text-base font-black text-white leading-tight truncate sm:whitespace-normal">
+                <h2 className={`${isMobile ? 'text-xs max-w-[85px]' : 'text-base'} font-black text-white leading-tight truncate`}>
                   {selectedMatch.homeTeam.name}
                 </h2>
                 <button
                   onClick={() => toggleFollow({ name: selectedMatch.homeTeam.name, type: 'team' })}
-                  className="text-[10px] sm:text-xs text-amber-400 hover:underline inline-flex items-center gap-1 mt-0.5 whitespace-nowrap"
+                  className="text-[10px] text-amber-400 hover:underline inline-flex items-center gap-1 mt-0.5 whitespace-nowrap"
                 >
                   <Star className={`w-2.5 h-2.5 ${isHomeFollowed ? 'fill-amber-400 text-amber-400' : 'text-[#557086]'}`} />
                   <span>{selectedMatch.homeTeam.shortName || 'ARS'}</span>
@@ -140,8 +143,8 @@ export const MatchPage = () => {
             </div>
 
             {/* Score Center Box */}
-            <div className="flex-shrink-0 mx-1.5 sm:mx-4 text-center">
-              <div className="font-mono text-base sm:text-2xl font-black text-white whitespace-nowrap tracking-wider bg-[#0f212e]/95 px-3 sm:px-5 py-1.5 sm:py-2 rounded-xl border border-white/10 shadow-inner flex items-center justify-center gap-1.5">
+            <div className={`flex-shrink-0 ${isMobile ? 'mx-1' : 'mx-4'} text-center`}>
+              <div className={`font-mono ${isMobile ? 'text-sm px-2.5 py-1' : 'text-2xl px-5 py-2'} font-black text-white whitespace-nowrap tracking-wider bg-[#0f212e]/95 rounded-xl border border-white/10 shadow-inner flex items-center justify-center gap-1.5`}>
                 {selectedMatch.isLive ? (
                   <>
                     <span>{selectedMatch.homeTeam.score}</span>
@@ -149,26 +152,29 @@ export const MatchPage = () => {
                     <span>{selectedMatch.awayTeam.score}</span>
                   </>
                 ) : (
-                  <span className="text-xs sm:text-base text-[#b1bad3]">vs</span>
+                  <span className={`${isMobile ? 'text-xs' : 'text-base'} text-[#b1bad3]`}>vs</span>
                 )}
               </div>
             </div>
 
             {/* Away Team */}
-            <div className="flex-1 flex items-center justify-end gap-2 sm:gap-3.5 min-w-0 text-right">
+            <div className={`flex-1 flex items-center justify-end ${isMobile ? 'gap-2' : 'gap-3.5'} min-w-0 text-right`}>
               <div className="flex flex-col items-end min-w-0 text-right">
-                <h2 className="text-xs sm:text-base font-black text-white leading-tight truncate sm:whitespace-normal">
-                  {selectedMatch.awayTeam.name}
+                <h2 className={`${isMobile ? 'text-xs max-w-[85px]' : 'text-base'} font-black text-white leading-tight truncate`}>
+                  {isMobile && selectedMatch.awayTeam.name === 'Brighton & Hove Albion' ? 'Brighton' : selectedMatch.awayTeam.name}
                 </h2>
                 <button
                   onClick={() => toggleFollow({ name: selectedMatch.awayTeam.name, type: 'team' })}
-                  className="text-[10px] sm:text-xs text-amber-400 hover:underline inline-flex items-center justify-end gap-1 mt-0.5 whitespace-nowrap"
+                  className="text-[10px] text-amber-400 hover:underline inline-flex items-center justify-end gap-1 mt-0.5 whitespace-nowrap"
                 >
                   <span>{selectedMatch.awayTeam.shortName || 'BHA'}</span>
                   <Star className={`w-2.5 h-2.5 ${isAwayFollowed ? 'fill-amber-400 text-amber-400' : 'text-[#557086]'}`} />
                 </button>
               </div>
-              <TeamCrest teamName={selectedMatch.awayTeam.name} className="w-8 h-8 sm:w-11 sm:h-11 flex-shrink-0" />
+              <TeamCrest 
+                teamName={selectedMatch.awayTeam.name} 
+                className={isMobile ? "w-8 h-8 flex-shrink-0" : "w-11 h-11 flex-shrink-0"} 
+              />
             </div>
           </div>
         </div>
