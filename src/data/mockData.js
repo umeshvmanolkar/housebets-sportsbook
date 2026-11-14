@@ -3,30 +3,30 @@
 export const PROMO_CARDS = [
   {
     id: 'promo-1',
-    title: 'GTA 6 at Housebets',
-    subtitle: 'Bet on GTA specials & release odds here',
-    badge: 'NEW',
-    bgGradient: 'from-purple-900/60 via-indigo-950/80 to-[#1a2c38]',
-    border: 'border-purple-500/30',
-    icon: '🌴'
+    title: 'Premier League 2-Goal Early Payout',
+    subtitle: 'Team goes 2 ahead? Singles paid out as winner instantly',
+    badge: 'HOT OFFER',
+    bgGradient: 'from-blue-900/60 via-indigo-950/80 to-[#1a2c38]',
+    border: 'border-blue-500/30',
+    icon: '⚽'
   },
   {
     id: 'promo-2',
-    title: 'Stream Fighters 5 Refund',
-    subtitle: 'Lose your first single bet? 100% Refunded',
-    badge: 'HOT',
-    bgGradient: 'from-blue-900/60 via-slate-900 to-[#1a2c38]',
-    border: 'border-blue-500/30',
-    icon: '🥊'
+    title: 'Champions League Bore Draw Refund',
+    subtitle: '0-0 at full time? 100% of your single stake refunded in USDT',
+    badge: '100% REFUND',
+    bgGradient: 'from-cyan-950/80 via-sky-900/60 to-[#1a2c38]',
+    border: 'border-cyan-500/30',
+    icon: '🛡️'
   },
   {
     id: 'promo-3',
-    title: 'Zero-Margin Champions League',
-    subtitle: '50% higher payout on all straight singles',
-    badge: 'BOOST',
+    title: 'Zero-Margin European Football',
+    subtitle: '0% house commission & highest odds on straight singles',
+    badge: 'ODDS BOOST',
     bgGradient: 'from-amber-900/60 via-yellow-950 to-[#1a2c38]',
     border: 'border-amber-500/30',
-    icon: '⭐'
+    icon: '⚡'
   }
 ];
 

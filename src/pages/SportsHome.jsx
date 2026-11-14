@@ -39,11 +39,15 @@ export const SportsHome = () => {
 
   return (
     <div className="space-y-5 animate-fade-in pb-16 md:pb-6 max-w-7xl mx-auto">
-      {/* 1. Stake-Style Promos Carousel (GTA 6, Stream Fighters, Odds Boost) */}
+      {/* 1. Sports Betting Promos & Offers */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
         {PROMO_CARDS.map((promo) => (
           <div
             key={promo.id}
+            onClick={() => {
+              playClick();
+              setCurrentPage('football');
+            }}
             className={`p-4 rounded-2xl bg-gradient-to-br ${promo.bgGradient} border ${promo.border} relative overflow-hidden shadow-card-elevated flex items-center justify-between group cursor-pointer hover:border-white/20 transition-all`}
           >
             <div className="space-y-1 z-10">
