@@ -84,11 +84,11 @@ const MainLayout = () => {
             {renderCurrentPage()}
           </main>
 
-          {/* Floating bar and Mobile Nav Bar */}
-          <MobileNavigation />
+          {/* Floating bar and Mobile Nav Bar inside iPhone frame */}
+          <MobileNavigation isInsideFrame={true} />
 
-          {/* Mobile Bottom Drawer */}
-          <MobileBetslipDrawer />
+          {/* Mobile Bottom Drawer inside iPhone frame */}
+          <MobileBetslipDrawer isInsideFrame={true} />
         </div>
 
         {/* Contest Modal */}

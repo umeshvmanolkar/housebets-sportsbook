@@ -30,7 +30,7 @@ export const SportsHome = () => {
     playClick
   } = useSportsbook();
 
-  // Your matches (Row view matching Housebets reference and user screenshot)
+  // Your matches (Row view on Desktop, Inset Carousel on Mobile matching screenshot)
   const yourMatches = [
     MATCHES_DATA[0], // Arsenal vs Brighton (Live 52', 1-0)
     MATCHES_DATA[4], // Liverpool vs Manchester United (Sun, Oct 18 16:30)
@@ -48,7 +48,7 @@ export const SportsHome = () => {
   ];
 
   return (
-    <div className="space-y-4 animate-fade-in pb-16 md:pb-6 max-w-7xl mx-auto">
+    <div className="space-y-4 animate-fade-in pb-16 md:pb-6 max-w-7xl mx-auto px-0.5 sm:px-1">
       {/* 1. Search Bar */}
       <div className="relative">
         <div className="flex items-center gap-3 bg-[#1a2c38] border border-[#213743] rounded-xl px-4 py-3 shadow-inner">
@@ -165,135 +165,248 @@ export const SportsHome = () => {
         </div>
       </div>
 
-      {/* 4. Your Matches Section (Directly below Favourites, matching screenshot) */}
+      {/* 4. Your Matches Section */}
       <div className="space-y-2 pt-1">
-        <div className="flex items-center justify-between px-0.5">
-          <div className="flex items-center gap-2">
-            <h2 className="text-xs font-bold text-white">Your matches</h2>
-            <span className="text-[10px] text-[#557086] font-mono">3 matches</span>
+        {/* Mobile View: Inset Card Carousel (1:1 matching media_1794667758383_304c73af.png) */}
+        <div className="md:hidden bg-[#1a2c38] border border-[#213743] rounded-2xl p-3 space-y-3 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <h2 className="text-xs font-bold text-white">Your matches</h2>
+              <span className="text-[10px] text-[#557086] font-mono">3 matches</span>
+            </div>
+            <span className="text-[10px] text-[#557086]">Swipe &gt;</span>
           </div>
-          <span className="text-[11px] text-[#b1bad3] font-medium">Match result</span>
-        </div>
 
-        <div className="space-y-2">
-          {yourMatches.map((m) => {
-            return (
+          <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-none snap-x snap-mandatory">
+            {yourMatches.map((m) => (
               <div
                 key={m.id}
-                className="p-3 sm:p-4 rounded-xl bg-[#1a2c38] border border-[#213743] hover:border-[#2f4553] transition-all flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-sm"
+                className="w-[280px] flex-shrink-0 snap-start bg-[#0f212e] border border-[#213743] rounded-xl p-3 space-y-2.5 shadow-sm"
               >
-                {/* Match meta + teams */}
-                <div 
-                  onClick={() => {
-                    playClick();
-                    setSelectedMatchId(m.id);
-                    setCurrentPage('match');
-                  }}
-                  className="flex-1 cursor-pointer flex items-center justify-between md:justify-start gap-4"
-                >
-                  <div className="w-20 flex-shrink-0">
+                {/* Meta Row */}
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5">
                     {m.isLive ? (
-                      <div className="space-y-0.5">
-                        <span className="inline-block px-1.5 py-0.5 rounded bg-red-500/20 text-[#f43f5e] font-mono font-bold text-[10px]">
+                      <>
+                        <span className="px-1.5 py-0.5 rounded bg-red-500/20 text-[#f43f5e] font-mono font-bold text-[9px]">
                           LIVE
                         </span>
-                        <div className="text-[11px] text-[#b1bad3] font-mono font-medium">{m.minute}</div>
-                      </div>
+                        <span className="text-[10px] text-[#b1bad3] font-mono font-medium">{m.minute}</span>
+                        <span className="text-[10px] text-[#557086] truncate max-w-[80px]">· {m.league}</span>
+                      </>
                     ) : (
-                      <div>
-                        <div className="text-xs font-mono font-bold text-white">{m.date.split('|')[0] || m.date.split(' ')[0]}</div>
-                        <div className="text-[10px] text-[#b1bad3]">{m.date.split('|')[1] || m.date.split(' ').slice(1).join(' ')}</div>
-                      </div>
+                      <span className="text-[10px] text-[#b1bad3] font-mono">
+                        {m.date}
+                      </span>
                     )}
                   </div>
 
-                  {/* Teams and Crests */}
-                  <div className="space-y-2 flex-1">
-                    <div className="flex items-center gap-2.5">
-                      <TeamCrest teamName={m.homeTeam.name} className="w-4 h-4 flex-shrink-0" />
-                      <span className="text-xs sm:text-sm font-bold text-white hover:text-[#00A3FF] transition-colors truncate">
-                        {m.homeTeam.name}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2.5">
-                      <TeamCrest teamName={m.awayTeam.name} className="w-4 h-4 flex-shrink-0" />
-                      <span className="text-xs sm:text-sm font-bold text-white hover:text-[#00A3FF] transition-colors truncate">
-                        {m.awayTeam.name}
-                      </span>
-                    </div>
+                  <div className="flex items-center gap-1.5">
+                    <button onClick={() => toggleFollow(m.homeTeam)} className="text-[#557086] hover:text-amber-400 p-0.5">
+                      <Star className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => { playClick(); setSelectedMatchId(m.id); setCurrentPage('match'); }}
+                      className="text-[10px] font-mono text-[#557086] hover:text-white"
+                    >
+                      +{m.moreMarketsCount} &gt;
+                    </button>
                   </div>
-
-                  {/* Live Scores */}
-                  {m.isLive && (
-                    <div className="flex flex-col items-end justify-center gap-2 pr-3 font-mono text-sm font-black text-white">
-                      <span>{m.homeTeam.score}</span>
-                      <span>{m.awayTeam.score}</span>
-                    </div>
-                  )}
                 </div>
 
-                {/* Match Result Odds Chips (Single Betting) */}
-                <div className="flex items-center gap-2">
-                  <div className="grid grid-cols-3 gap-1.5 sm:gap-2 flex-1 md:w-[320px]">
-                    {[
-                      { label: m.homeTeam.shortName || m.homeTeam.name.split(' ')[0], opt: m.matchResult.home },
-                      { label: 'Draw', opt: m.matchResult.draw },
-                      { label: m.awayTeam.shortName || m.awayTeam.name.split(' ')[0], opt: m.matchResult.away }
-                    ].map(({ label, opt }) => {
-                      const isSelected = singlesInSlip.some((s) => s.id === opt.id);
-
-                      return (
-                        <button
-                          key={opt.id}
-                          onClick={() =>
-                            toggleSelection({
-                              id: opt.id,
-                              matchId: m.id,
-                              matchTitle: `${m.homeTeam.name} v ${m.awayTeam.name}`,
-                              scoreMinute: m.isLive ? `${m.homeTeam.score}-${m.awayTeam.score} ${m.minute}` : m.date,
-                              marketName: 'Match result',
-                              selectionName: opt.label,
-                              odd: opt.odd,
-                              isSuspended: m.isSuspended
-                            })
-                          }
-                          className={`px-3 py-2 rounded-lg text-center transition-all flex flex-col items-center justify-center min-h-[46px] border ${
-                            isSelected
-                              ? 'bg-[#1475e1] border-[#1475e1] text-white font-extrabold shadow-glow-blue'
-                              : 'bg-[#0f212e] hover:bg-[#213743] text-white border-white/[0.04]'
-                          }`}
-                        >
-                          <span className="text-[10px] text-[#b1bad3] truncate max-w-full font-medium">
-                            {label}
-                          </span>
-                          <span className={`font-mono text-xs font-bold ${isSelected ? 'text-white' : 'text-[#00A3FF]'}`}>
-                            {opt.odd.toFixed(2)}
-                          </span>
-                        </button>
-                      );
-                    })}
+                {/* Teams & Scores */}
+                <div
+                  onClick={() => { playClick(); setSelectedMatchId(m.id); setCurrentPage('match'); }}
+                  className="space-y-1.5 cursor-pointer py-0.5"
+                >
+                  <div className="flex items-center justify-between text-xs font-bold text-white">
+                    <div className="flex items-center gap-2">
+                      <TeamCrest teamName={m.homeTeam.name} className="w-4 h-4 flex-shrink-0" />
+                      <span className="truncate">{m.homeTeam.name}</span>
+                    </div>
+                    {m.isLive && <span className="font-mono text-sm font-black">{m.homeTeam.score}</span>}
                   </div>
 
-                  {/* More Markets Link */}
-                  <button
+                  <div className="flex items-center justify-between text-xs font-bold text-white">
+                    <div className="flex items-center gap-2">
+                      <TeamCrest teamName={m.awayTeam.name} className="w-4 h-4 flex-shrink-0" />
+                      <span className="truncate">{m.awayTeam.name}</span>
+                    </div>
+                    {m.isLive && <span className="font-mono text-sm font-black">{m.awayTeam.score}</span>}
+                  </div>
+                </div>
+
+                {/* 3 Odds Buttons */}
+                <div className="grid grid-cols-3 gap-1.5 pt-1">
+                  {[
+                    { label: m.homeTeam.shortName || m.homeTeam.name.split(' ')[0], opt: m.matchResult.home },
+                    { label: 'Draw', opt: m.matchResult.draw },
+                    { label: m.awayTeam.shortName || m.awayTeam.name.split(' ')[0], opt: m.matchResult.away }
+                  ].map(({ label, opt }) => {
+                    const isSelected = singlesInSlip.some(s => s.id === opt.id);
+                    return (
+                      <button
+                        key={opt.id}
+                        onClick={() => toggleSelection({
+                          id: opt.id,
+                          matchId: m.id,
+                          matchTitle: `${m.homeTeam.name} v ${m.awayTeam.name}`,
+                          scoreMinute: m.isLive ? `${m.homeTeam.score}-${m.awayTeam.score} ${m.minute}` : m.date,
+                          marketName: 'Match result',
+                          selectionName: opt.label,
+                          odd: opt.odd,
+                          isSuspended: m.isSuspended
+                        })}
+                        className={`py-1.5 px-1 rounded-lg text-center flex flex-col items-center justify-center min-h-[44px] transition-all border ${
+                          isSelected
+                            ? 'bg-[#1475e1] border-[#1475e1] text-white font-extrabold shadow-glow-blue'
+                            : 'bg-[#1a2c38] hover:bg-[#213743] text-white border-white/[0.04]'
+                        }`}
+                      >
+                        <span className="text-[10px] text-[#b1bad3] truncate max-w-full font-medium">
+                          {label}
+                        </span>
+                        <span className={`font-mono text-xs font-bold ${isSelected ? 'text-white' : 'text-[#00A3FF]'}`}>
+                          {opt.odd.toFixed(2)}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop Row View (>= md, matching Desktop Reference) */}
+        <div className="hidden md:block space-y-2">
+          <div className="flex items-center justify-between px-0.5">
+            <div className="flex items-center gap-2">
+              <h2 className="text-xs font-bold text-white">Your matches</h2>
+              <span className="text-[10px] text-[#557086] font-mono">3 matches</span>
+            </div>
+            <span className="text-[11px] text-[#b1bad3] font-medium">Match result</span>
+          </div>
+
+          <div className="space-y-2">
+            {yourMatches.map((m) => {
+              return (
+                <div
+                  key={m.id}
+                  className="p-3 sm:p-4 rounded-xl bg-[#1a2c38] border border-[#213743] hover:border-[#2f4553] transition-all flex items-center justify-between gap-3 shadow-sm"
+                >
+                  {/* Match meta + teams */}
+                  <div 
                     onClick={() => {
                       playClick();
                       setSelectedMatchId(m.id);
                       setCurrentPage('match');
                     }}
-                    className="px-2 py-2 rounded-xl bg-transparent hover:bg-white/5 text-[11px] font-mono text-[#b1bad3] hover:text-white transition-colors"
+                    className="flex-1 cursor-pointer flex items-center gap-4"
                   >
-                    +{m.moreMarketsCount} &gt;
-                  </button>
+                    <div className="w-20 flex-shrink-0">
+                      {m.isLive ? (
+                        <div className="space-y-0.5">
+                          <span className="inline-block px-1.5 py-0.5 rounded bg-red-500/20 text-[#f43f5e] font-mono font-bold text-[10px]">
+                            LIVE
+                          </span>
+                          <div className="text-[11px] text-[#b1bad3] font-mono font-medium">{m.minute}</div>
+                        </div>
+                      ) : (
+                        <div>
+                          <div className="text-xs font-mono font-bold text-white">{m.date.split('|')[0] || m.date.split(' ')[0]}</div>
+                          <div className="text-[10px] text-[#b1bad3]">{m.date.split('|')[1] || m.date.split(' ').slice(1).join(' ')}</div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Teams and Crests */}
+                    <div className="space-y-2 flex-1">
+                      <div className="flex items-center gap-2.5">
+                        <TeamCrest teamName={m.homeTeam.name} className="w-4 h-4 flex-shrink-0" />
+                        <span className="text-xs sm:text-sm font-bold text-white hover:text-[#00A3FF] transition-colors truncate">
+                          {m.homeTeam.name}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2.5">
+                        <TeamCrest teamName={m.awayTeam.name} className="w-4 h-4 flex-shrink-0" />
+                        <span className="text-xs sm:text-sm font-bold text-white hover:text-[#00A3FF] transition-colors truncate">
+                          {m.awayTeam.name}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Live Scores */}
+                    {m.isLive && (
+                      <div className="flex flex-col items-end justify-center gap-2 pr-3 font-mono text-sm font-black text-white">
+                        <span>{m.homeTeam.score}</span>
+                        <span>{m.awayTeam.score}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Match Result Odds Chips */}
+                  <div className="flex items-center gap-2">
+                    <div className="grid grid-cols-3 gap-2 w-[320px]">
+                      {[
+                        { label: m.homeTeam.shortName || m.homeTeam.name.split(' ')[0], opt: m.matchResult.home },
+                        { label: 'Draw', opt: m.matchResult.draw },
+                        { label: m.awayTeam.shortName || m.awayTeam.name.split(' ')[0], opt: m.matchResult.away }
+                      ].map(({ label, opt }) => {
+                        const isSelected = singlesInSlip.some((s) => s.id === opt.id);
+
+                        return (
+                          <button
+                            key={opt.id}
+                            onClick={() =>
+                              toggleSelection({
+                                id: opt.id,
+                                matchId: m.id,
+                                matchTitle: `${m.homeTeam.name} v ${m.awayTeam.name}`,
+                                scoreMinute: m.isLive ? `${m.homeTeam.score}-${m.awayTeam.score} ${m.minute}` : m.date,
+                                marketName: 'Match result',
+                                selectionName: opt.label,
+                                odd: opt.odd,
+                                isSuspended: m.isSuspended
+                              })
+                            }
+                            className={`px-3 py-2 rounded-lg text-center transition-all flex flex-col items-center justify-center min-h-[46px] border ${
+                              isSelected
+                                ? 'bg-[#1475e1] border-[#1475e1] text-white font-extrabold shadow-glow-blue'
+                                : 'bg-[#0f212e] hover:bg-[#213743] text-white border-white/[0.04]'
+                            }`}
+                          >
+                            <span className="text-[10px] text-[#b1bad3] truncate max-w-full font-medium">
+                              {label}
+                            </span>
+                            <span className={`font-mono text-xs font-bold ${isSelected ? 'text-white' : 'text-[#00A3FF]'}`}>
+                              {opt.odd.toFixed(2)}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        playClick();
+                        setSelectedMatchId(m.id);
+                        setCurrentPage('match');
+                      }}
+                      className="px-2 py-2 rounded-xl bg-transparent hover:bg-white/5 text-[11px] font-mono text-[#b1bad3] hover:text-white transition-colors"
+                    >
+                      +{m.moreMarketsCount} &gt;
+                    </button>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      {/* 5. Top Matches (The Stake-Style Reference Cards Carousel) */}
-      <div className="space-y-2.5 pt-2">
+      {/* 5. Top Matches (The Stake-Style Reference Cards Carousel / Grid) */}
+      <div className="space-y-2.5 pt-1">
         <div className="flex items-center justify-between px-0.5">
           <div className="flex items-center gap-2">
             <span className="text-base">⚽</span>
@@ -309,12 +422,12 @@ export const SportsHome = () => {
           </div>
         </div>
 
-        {/* Cards Grid: Matching media_1794666460701_d33e22ab.png 1:1 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+        {/* Cards Grid / Carousel: Horizontal Swipe on Mobile + 3-Column on Desktop */}
+        <div className="flex md:grid overflow-x-auto md:overflow-x-visible md:grid-cols-3 gap-3 pb-2 md:pb-0 scrollbar-none snap-x snap-mandatory">
           {stakeTopMatches.map((m) => (
             <div
               key={m.id}
-              className="bg-[#1a2c38] border border-[#213743] hover:border-[#2f4553] rounded-xl p-3.5 space-y-3 transition-all flex flex-col justify-between shadow-card-elevated group"
+              className="w-[280px] sm:w-[320px] md:w-auto flex-shrink-0 snap-start bg-[#1a2c38] border border-[#213743] hover:border-[#2f4553] rounded-xl p-3.5 space-y-3 transition-all flex flex-col justify-between shadow-card-elevated group"
             >
               {/* Top Meta Row (Time badge, stats, layers, volume, pin) */}
               <div className="flex items-center justify-between text-xs text-[#557086]">

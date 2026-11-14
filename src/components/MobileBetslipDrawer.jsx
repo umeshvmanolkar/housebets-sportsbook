@@ -2,7 +2,7 @@ import React from 'react';
 import { X, Trash2, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 import { useSportsbook } from '../context/SportsbookContext';
 
-export const MobileBetslipDrawer = () => {
+export const MobileBetslipDrawer = ({ isInsideFrame = false }) => {
   const {
     isMobileDrawerOpen,
     setIsMobileDrawerOpen,
@@ -27,8 +27,12 @@ export const MobileBetslipDrawer = () => {
   const totalStake = currentBet ? currentBet.stake : 0;
   const currentReturn = currentBet ? (currentBet.stake * currentBet.odd).toFixed(2) : '0.00';
 
+  const posContainer = isInsideFrame
+    ? 'absolute inset-0 z-50 flex flex-col justify-end bg-black/70 backdrop-blur-xs animate-fade-in'
+    : 'fixed inset-0 z-50 flex flex-col justify-end bg-black/70 backdrop-blur-xs md:hidden animate-fade-in';
+
   return (
-    <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/70 backdrop-blur-xs md:hidden animate-fade-in">
+    <div className={posContainer}>
       {/* Backdrop */}
       <div 
         className="flex-1"
