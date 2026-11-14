@@ -72,31 +72,35 @@ export const SportsHome = () => {
               key={card.id}
               onClick={() => {
                 playClick();
-                setCurrentPage('football');
+                if (card.type === 'soccer') {
+                  setCurrentPage('football');
+                } else if (card.type === 'basketball') {
+                  setSearchQuery('NBA');
+                } else if (card.type === 'cricket') {
+                  setSearchQuery('Cricket');
+                }
               }}
               className={`${
                 isMobile ? "w-[275px] flex-shrink-0 snap-start" : "w-auto"
               } p-3 rounded-2xl bg-[#1a2c38] border border-[#213743] hover:border-[#2f4553] shadow-card-elevated flex items-center gap-3.5 cursor-pointer transition-all group overflow-hidden relative`}
             >
               {/* Left Graphic Illustration Box */}
-              {card.type === 'gta6' && (
+              {card.type === 'soccer' && (
                 <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-[#1d68ed] via-[#1241a8] to-[#0d2259] rounded-xl flex items-center justify-center relative overflow-hidden flex-shrink-0 shadow-inner border border-blue-400/20 group-hover:scale-105 transition-transform">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.25),transparent_60%)]" />
                   <div className="relative flex flex-col items-center justify-center">
-                    <span className="text-2xl filter drop-shadow">🌴</span>
-                    <span className="font-black text-xs tracking-tighter bg-gradient-to-r from-pink-500 via-rose-400 to-amber-300 bg-clip-text text-transparent filter drop-shadow font-serif">
-                      VI
-                    </span>
+                    <span className="text-3xl filter drop-shadow">⚽</span>
+                    <span className="text-[9px] font-black text-amber-300 tracking-wider uppercase font-mono mt-0.5">2-UP</span>
                   </div>
                 </div>
               )}
 
-              {card.type === 'boxing' && (
+              {card.type === 'basketball' && (
                 <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-[#2458e6] via-[#1a3d9e] to-[#12245c] rounded-xl flex items-center justify-center relative overflow-hidden flex-shrink-0 shadow-inner border border-blue-400/20 group-hover:scale-105 transition-transform">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.25),transparent_60%)]" />
                   <div className="relative flex flex-col items-center justify-center">
-                    <span className="text-3xl filter drop-shadow">🥊</span>
-                    <span className="text-[9px] font-black text-purple-200 tracking-wider uppercase font-mono">SF 5</span>
+                    <span className="text-3xl filter drop-shadow">🏀</span>
+                    <span className="text-[9px] font-black text-orange-300 tracking-wider uppercase font-mono mt-0.5">16+ PTS</span>
                   </div>
                 </div>
               )}

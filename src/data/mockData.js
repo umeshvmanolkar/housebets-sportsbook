@@ -3,23 +3,23 @@
 export const PROMO_CARDS = [
   {
     id: 'promo-1',
-    title: 'GTA 6 at Housebets',
-    subtitle: 'Bet on GTA specials here!',
+    title: 'Premier League 2-Up Payout',
+    subtitle: 'Paid out early if team leads by 2 goals',
     badge: 'New',
     accent: 'from-[#0e4480] via-[#163056] to-[#1a2c38]',
     border: 'border-[#225796]/40',
-    type: 'gta6',
-    icon: '🌴'
+    type: 'soccer',
+    icon: '⚽'
   },
   {
     id: 'promo-2',
-    title: 'Stream Fighters 5 Refund',
-    subtitle: 'Lose first bet? Refunded',
+    title: 'NBA 16+ Lead Early Payout',
+    subtitle: 'Paid as winner if team leads by 16+ pts',
     badge: 'Promotion',
     accent: 'from-[#1a3a78] via-[#16294d] to-[#1a2c38]',
     border: 'border-[#2c529e]/40',
-    type: 'boxing',
-    icon: '🥊'
+    type: 'basketball',
+    icon: '🏀'
   },
   {
     id: 'promo-3',
