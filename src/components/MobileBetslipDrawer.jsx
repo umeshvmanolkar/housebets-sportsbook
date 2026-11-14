@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Trash2, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
+import { X, Trash2, AlertTriangle, CheckCircle, XCircle, Zap } from 'lucide-react';
 import { useSportsbook } from '../context/SportsbookContext';
 
 export const MobileBetslipDrawer = ({ isInsideFrame = false }) => {
@@ -12,6 +12,7 @@ export const MobileBetslipDrawer = ({ isInsideFrame = false }) => {
     updateStake,
     oddsChangedNotice,
     acceptChangedOdds,
+    triggerSimulateOddsChange,
     placeSingleBet,
     betFeedback,
     myBets,
@@ -19,6 +20,7 @@ export const MobileBetslipDrawer = ({ isInsideFrame = false }) => {
     activePanelTab,
     setActivePanelTab,
     setCurrentPage,
+    usdtBalance,
     playClick
   } = useSportsbook();
 
@@ -29,8 +31,8 @@ export const MobileBetslipDrawer = ({ isInsideFrame = false }) => {
   const currentReturn = currentBet ? (currentBet.stake * currentBet.odd).toFixed(2) : '0.00';
 
   const posContainer = isInsideFrame
-    ? 'absolute inset-0 z-50 flex flex-col justify-end bg-black/70 backdrop-blur-xs animate-fade-in'
-    : 'fixed inset-0 z-50 flex flex-col justify-end bg-black/70 backdrop-blur-xs md:hidden animate-fade-in';
+    ? 'absolute inset-0 z-50 flex flex-col justify-end bg-black/75 backdrop-blur-xs animate-fade-in'
+    : 'fixed inset-0 z-50 flex flex-col justify-end bg-black/75 backdrop-blur-xs md:hidden animate-fade-in';
 
   return (
     <div className={posContainer}>
@@ -40,74 +42,83 @@ export const MobileBetslipDrawer = ({ isInsideFrame = false }) => {
         onClick={() => setIsMobileDrawerOpen(false)}
       />
 
-      {/* Drawer Surface matching Screenshot 6 */}
-      <div className="bg-[#0b1620] border-t border-white/10 rounded-t-3xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden mb-[52px]">
+      {/* Drawer Surface matching Housebets Mobile Reference */}
+      <div className="bg-[#0f212e] border-t border-[#213743] rounded-t-3xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden mb-[52px]">
         {/* Grab Handle */}
-        <div className="w-10 h-1 bg-white/20 rounded-full mx-auto my-2" />
+        <div className="w-10 h-1 bg-white/20 rounded-full mx-auto mt-2 mb-1" />
 
-        {/* Header Tabs: Bet slip 1 | My bets 1 | Chat | ✕ */}
-        <div className="px-4 py-2 border-b border-white/[0.08] flex items-center justify-between">
+        {/* 1. Header Tabs Row: [ Bet slip (1) ]  My bets (1)  Chat  ✕ */}
+        <div className="px-4 py-2 border-b border-[#213743] flex items-center justify-between bg-[#1a2c38]">
           <div className="flex items-center gap-2">
+            {/* Bet slip tab */}
             <button
               onClick={() => { playClick(); setActivePanelTab('betslip'); }}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                 activePanelTab === 'betslip'
-                  ? 'bg-[#00A3FF] text-white shadow-sm'
-                  : 'text-gray-400'
+                  ? 'bg-[#213743] text-white shadow-sm'
+                  : 'text-[#b1bad3] hover:text-white'
               }`}
             >
               <span>Bet slip</span>
-              <span className={`w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center ${
-                activePanelTab === 'betslip' ? 'bg-white text-[#00A3FF]' : 'bg-[#00A3FF] text-white'
+              <span className={`w-4 h-4 rounded-full text-[10px] font-black flex items-center justify-center ${
+                activePanelTab === 'betslip' ? 'bg-[#00A3FF] text-[#071017]' : 'bg-[#213743] text-gray-300'
               }`}>
                 {singlesInSlip.length}
               </span>
             </button>
 
+            {/* My bets tab */}
             <button
               onClick={() => { playClick(); setActivePanelTab('mybets'); }}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
                 activePanelTab === 'mybets'
-                  ? 'bg-[#00A3FF] text-white shadow-sm'
-                  : 'text-gray-400'
+                  ? 'bg-[#213743] text-white shadow-sm font-bold'
+                  : 'text-[#b1bad3] hover:text-white'
               }`}
             >
               <span>My bets</span>
-              <span className={`w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center ${
-                activePanelTab === 'mybets' ? 'bg-white text-[#00A3FF]' : 'bg-white/10 text-gray-300'
-              }`}>
+              <span className="w-4 h-4 rounded-full text-[10px] font-black flex items-center justify-center bg-[#a0f0ea] text-[#071017]">
                 {myBets.open.length}
               </span>
             </button>
 
+            {/* Chat tab */}
             <button
               onClick={() => { playClick(); setActivePanelTab('chat'); }}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold ${
-                activePanelTab === 'chat' ? 'bg-[#00A3FF] text-white' : 'text-gray-400'
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                activePanelTab === 'chat'
+                  ? 'bg-[#213743] text-white shadow-sm font-bold'
+                  : 'text-[#b1bad3] hover:text-white'
               }`}
             >
               Chat
             </button>
           </div>
 
+          {/* Close button (plain X matching reference) */}
           <button
-            onClick={() => setIsMobileDrawerOpen(false)}
-            className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-gray-300"
+            onClick={() => { playClick(); setIsMobileDrawerOpen(false); }}
+            className="text-[#b1bad3] hover:text-white p-1 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          {activePanelTab === 'betslip' ? (
+        {/* 2. Main Content Area */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-none">
+          {/* TAB 1: BET SLIP */}
+          {activePanelTab === 'betslip' && (
             <>
-              <div className="flex items-center justify-between text-xs text-gray-400">
-                <span className="font-semibold text-gray-300">
+              {/* Singles subheader & Clear all */}
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-semibold text-white">
                   Singles · {singlesInSlip.length} selection
                 </span>
                 {singlesInSlip.length > 0 && (
-                  <button onClick={clearSlip} className="text-gray-400 hover:text-white">
+                  <button 
+                    onClick={clearSlip} 
+                    className="text-[#557086] hover:text-red-400 font-medium transition-colors"
+                  >
                     Clear all
                   </button>
                 )}
@@ -129,47 +140,107 @@ export const MobileBetslipDrawer = ({ isInsideFrame = false }) => {
                 </div>
               )}
 
-              {/* Single Bet Card */}
+              {/* Single Bet Card matching Reference */}
               {currentBet ? (
-                <div className="p-3 rounded-2xl bg-[#112232] border border-white/10 space-y-2.5">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <div className="text-sm font-extrabold text-white">{currentBet.teamName}</div>
-                      <div className="text-[11px] text-gray-400">
-                        {currentBet.marketName} · {currentBet.matchTitle} · <span className="text-red-400 font-mono">{currentBet.scoreMinute}</span>
-                      </div>
+                <div className="p-3.5 rounded-2xl bg-[#1a2c38] border border-[#213743] space-y-2.5 shadow-sm">
+                  {/* Row 1: Selection Name + Odds + Remove X */}
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm font-bold text-white truncate pr-2">
+                      {currentBet.selectionName || currentBet.teamName}
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-[#00A3FF] font-mono">{currentBet.odd.toFixed(2)}</span>
-                      <button onClick={() => removeSelection(currentBet.id)} className="text-gray-400">
-                        <X className="w-4 h-4" />
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <span className="text-sm font-mono font-bold text-[#00A3FF]">
+                        {currentBet.odd.toFixed(2)}
+                      </span>
+                      <button 
+                        onClick={() => removeSelection(currentBet.id)} 
+                        className="text-[#557086] hover:text-white transition-colors"
+                      >
+                        <X className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
 
-                  {/* Stake input */}
-                  <div className="flex items-center bg-[#071017] rounded-xl border border-white/10 px-3 py-2">
-                    <span className="text-xs text-gray-500 font-bold mr-1">$</span>
-                    <input
-                      type="number"
-                      value={currentBet.stake}
-                      onChange={(e) => updateStake(currentBet.id, e.target.value)}
-                      className="w-full bg-transparent text-white font-mono font-bold text-xs focus:outline-none"
-                    />
-                    <div className="text-right text-xs font-mono text-gray-400 whitespace-nowrap">
-                      Returns <span className="text-white font-bold">${currentReturn}</span>
+                  {/* Row 2: Match info and live score minute */}
+                  <div className="text-xs text-[#557086] flex items-center justify-between flex-wrap gap-1">
+                    <span className="truncate max-w-[200px]">
+                      {currentBet.marketName || 'Match result'} · {currentBet.matchTitle}
+                    </span>
+                    {currentBet.scoreMinute && (
+                      <span className="text-[#ff3366] font-mono text-[11px] font-medium flex-shrink-0">
+                        {currentBet.scoreMinute}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Row 3: Stake Input & Returns */}
+                  <div className="flex items-center justify-between gap-3 pt-0.5">
+                    {/* Stake Input Box */}
+                    <div className="flex items-center bg-[#0f212e] rounded-xl border border-[#213743] px-3.5 py-2 flex-1 focus-within:border-[#00A3FF]">
+                      <span className="text-xs text-[#557086] font-mono font-bold mr-1.5">$</span>
+                      <input
+                        type="number"
+                        placeholder="0.00"
+                        value={currentBet.stake || ''}
+                        onChange={(e) => updateStake(currentBet.id, e.target.value)}
+                        className="w-full bg-transparent text-white font-mono font-bold text-xs focus:outline-none placeholder-[#557086]"
+                      />
                     </div>
+
+                    {/* Returns */}
+                    <div className="text-right flex-shrink-0 pl-1">
+                      <div className="text-[10px] text-[#557086] font-semibold">Returns</div>
+                      <div className="text-xs font-mono font-bold text-white">
+                        {currentBet.stake > 0 ? `$${currentReturn} ₮` : '—'}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Quick Stake Pills */}
+                  <div className="grid grid-cols-5 gap-1.5 pt-1">
+                    {[10, 25, 50, 100].map((amt) => (
+                      <button
+                        key={amt}
+                        onClick={() => {
+                          playClick();
+                          updateStake(currentBet.id, amt);
+                        }}
+                        className={`py-1 rounded-lg text-[11px] font-mono font-bold transition-all border ${
+                          currentBet.stake === amt
+                            ? 'bg-[#1475e1] border-[#1475e1] text-white shadow-sm'
+                            : 'bg-[#0f212e] border-[#213743] text-[#b1bad3] hover:text-white hover:bg-[#213743]'
+                        }`}
+                      >
+                        +${amt}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => {
+                        playClick();
+                        updateStake(currentBet.id, 250);
+                      }}
+                      className="py-1 rounded-lg text-[11px] font-mono font-bold bg-[#0f212e] border border-[#213743] text-amber-400 hover:bg-[#213743] transition-all"
+                    >
+                      MAX
+                    </button>
                   </div>
                 </div>
               ) : (
-                <p className="text-xs text-gray-400 text-center py-8">Your bet slip is empty</p>
+                <div className="text-center py-10 space-y-2">
+                  <p className="text-xs text-[#557086]">Your bet slip is empty</p>
+                  <p className="text-[11px] text-[#557086]">Select odds from any live or upcoming match</p>
+                </div>
               )}
             </>
-          ) : (
-            /* My bets tab */
+          )}
+
+          {/* TAB 2: MY BETS */}
+          {activePanelTab === 'mybets' && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-white block">Open Bets ({myBets.open.length})</span>
+                <span className="text-xs font-bold text-white block">
+                  Open Bets ({myBets.open.length})
+                </span>
                 <button
                   onClick={() => {
                     playClick();
@@ -181,46 +252,85 @@ export const MobileBetslipDrawer = ({ isInsideFrame = false }) => {
                   View All (1 open · 7 settled) →
                 </button>
               </div>
-              {myBets.open.map((bet) => (
-                <div key={bet.id} className="p-3 rounded-2xl bg-[#112232] border border-white/10 space-y-2">
-                  <div className="flex justify-between text-xs">
-                    <span className="font-bold text-white">{bet.match}</span>
-                    <span className="text-[#00A3FF] font-mono font-bold">{bet.odds.toFixed(2)}</span>
+
+              {myBets.open.length === 0 ? (
+                <div className="text-center py-8 text-xs text-[#557086]">No open bets</div>
+              ) : (
+                myBets.open.map((bet) => (
+                  <div key={bet.id} className="p-3.5 rounded-2xl bg-[#1a2c38] border border-[#213743] space-y-2.5">
+                    <div className="flex justify-between text-xs">
+                      <span className="font-bold text-white truncate pr-2">{bet.match}</span>
+                      <span className="text-[#00A3FF] font-mono font-bold flex-shrink-0">{bet.odds.toFixed(2)}</span>
+                    </div>
+
+                    <div className="flex justify-between text-xs font-mono">
+                      <span className="text-[#557086]">Stake: <span className="text-white">${bet.stake.toFixed(2)} ₮</span></span>
+                      <span className="text-[#557086]">Returns: <span className="text-white font-bold">${bet.returns.toFixed(2)} ₮</span></span>
+                    </div>
+
+                    <button
+                      onClick={() => cashOut(bet.id)}
+                      className="w-full py-2.5 rounded-xl bg-[#f5a623] hover:bg-[#ffb43b] text-black font-extrabold text-xs flex items-center justify-between px-3.5 shadow-md active:scale-95 transition-transform"
+                    >
+                      <span>Cash Out</span>
+                      <span className="font-mono font-bold">${(bet.cashoutAmount || bet.stake * 1.42).toFixed(2)} ₮</span>
+                    </button>
                   </div>
-                  <div className="flex justify-between text-xs font-mono">
-                    <span className="text-gray-400">Stake: ${bet.stake.toFixed(2)} ₮</span>
-                    <span className="text-white">Returns: ${bet.returns.toFixed(2)} ₮</span>
-                  </div>
-                  <button
-                    onClick={() => cashOut(bet.id)}
-                    className="w-full py-2 rounded-xl bg-amber-500 text-black font-extrabold text-xs flex justify-between px-3"
-                  >
-                    <span>Cash Out</span>
-                    <span>${bet.cashoutAmount.toFixed(2)} ₮</span>
-                  </button>
+                ))
+              )}
+            </div>
+          )}
+
+          {/* TAB 3: CHAT */}
+          {activePanelTab === 'chat' && (
+            <div className="space-y-2.5 py-1">
+              <div className="p-3 rounded-xl bg-[#1a2c38] border border-[#213743] space-y-1 text-xs">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-[#00A3FF]">SportsBettor_99</span>
+                  <span className="text-[10px] text-[#557086]">1m ago</span>
                 </div>
-              ))}
+                <p className="text-white text-xs">Arsenal looking strong in the 2nd half! 2-0 incoming!</p>
+              </div>
+
+              <div className="p-3 rounded-xl bg-[#1a2c38] border border-[#213743] space-y-1 text-xs">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-emerald-400">CryptoWhale_7</span>
+                  <span className="text-[10px] text-[#557086]">3m ago</span>
+                </div>
+                <p className="text-white text-xs">Cashed out my Brighton bet, taking profit before 70'.</p>
+              </div>
+
+              <div className="p-2.5 rounded-xl bg-[#0f212e] border border-[#213743] text-xs text-[#557086] text-center">
+                💬 Live chat active with 1,420 community members
+              </div>
             </div>
           )}
         </div>
 
-        {/* Footer */}
-        {activePanelTab === 'betslip' && currentBet && (
-          <div className="p-3 bg-[#071017] border-t border-white/10 space-y-2">
-            <div className="flex justify-between text-xs font-mono">
-              <span className="text-gray-400">Total stake</span>
-              <span className="text-white font-bold">${totalStake.toFixed(2)} ₮</span>
-            </div>
-            <div className="flex justify-between text-xs font-mono">
-              <span className="text-gray-400">Payout</span>
-              <span className="text-[#00A3FF] font-black text-sm">${currentReturn} ₮</span>
+        {/* 3. Bottom Pinned Summary & Place Bet Button matching Reference */}
+        {activePanelTab === 'betslip' && (
+          <div className="p-3.5 bg-[#0f212e] border-t border-[#213743] space-y-2.5">
+            <div className="flex items-center justify-between text-xs font-mono">
+              <span className="text-[#557086]">
+                Total stake <span className="font-bold text-white ml-1">${totalStake.toFixed(2)}</span>
+                <span className="text-[#00F5D4] ml-1 font-bold">₮</span>
+              </span>
+              <span className="text-[#557086]">
+                Payout <span className="font-bold text-white ml-1">${currentReturn}</span>
+                <span className="text-[#00F5D4] ml-1 font-bold">₮</span>
+              </span>
             </div>
 
             <button
               onClick={placeSingleBet}
-              className="w-full py-3 rounded-xl bg-[#00A3FF] text-white font-black text-xs uppercase tracking-wider shadow-md"
+              disabled={!currentBet || totalStake <= 0}
+              className={`w-full py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md ${
+                currentBet && totalStake > 0
+                  ? 'bg-[#1475e1] hover:bg-[#0092e6] text-white shadow-glow-blue active:scale-95'
+                  : 'bg-[#172b38] text-[#557086] cursor-not-allowed'
+              }`}
             >
-              Place bet
+              Place bet {totalStake > 0 ? `($${totalStake.toFixed(2)} ₮)` : ''}
             </button>
           </div>
         )}
