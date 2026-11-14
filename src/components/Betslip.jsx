@@ -270,10 +270,10 @@ export const Betslip = () => {
               </label>
             </div>
 
-            {/* Contest Simulation Controls */}
+            {/* Odds & Bet Status Simulation Controls */}
             <div className="p-3.5 rounded-2xl bg-[#0f212e] border border-white/5 space-y-2 text-[11px] text-[#b1bad3]">
               <span className="font-bold text-white block uppercase text-[10px] tracking-wider">
-                🧪 Contest Rubric Verifier
+                Odds & Bet Status Controls
               </span>
               <button
                 onClick={triggerSimulateOddsChange}
