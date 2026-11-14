@@ -1,124 +1,106 @@
-# Housebets Sportsbook — Next-Gen Web3 Betting Experience
-> **Contest Submission:** Housebets Contest Labs — Sportsbook Design  
-> **Brief:** *"Housebets Sportsbook is coming. Design it. A clickable prototype: 5 pages, singles only."*  
-> **Target:** First-Prize Winning Architecture & Design Implementation  
-> **Supported Platforms:** 🖥️ Full Desktop (3-Column Layout) + 📱 Mobile (Native iPhone Shell & Responsive)
+# Housebets Sportsbook — Official 1st Prize Submission Prototype
+
+> **Contest:** Housebets Contest Labs — Sportsbook Design  
+> **Brief:** *"We're building a sportsbook. Design the five pages players will use most. Build a clickable prototype: 5 pages, phone and desktop, in our site shell (top bar, left nav, side panel)."*  
+> **Target:** 1st Prize Winning Entry  
+> **Deployment:** Built & Optimized for GitHub Pages (zero-config, works without login)
 
 ---
 
-## 🏆 Project Overview
+## 📸 Reference Alignment & Exact Specification Fulfillment
 
-This project is an ultra-premium, production-grade interactive prototype designed to win **1st Prize** in the Housebets Sportsbook Design Challenge. 
+This clickable prototype is built 1:1 to match the official Housebets starter shell and both desktop & mobile reference screenshots:
 
-While legacy sportsbooks are burdened by cumbersome accumulators, clunky betslips, and latency, this prototype implements the **Singles-Only** mandate with the speed and elegance of high-frequency Web3/DeFi trading terminals.
-
-### Live Demo & GitHub Pages Deployment
-- **Deployment Status:** Pre-configured for GitHub Pages with relative paths (`./`) and zero-configuration asset loading.
-- **Automated Workflow:** Continuous deployment via `.github/workflows/deploy.yml`.
-
----
-
-## 📱 Desktop & Mobile Dual-Experience
-
-Contest judges can review and interact with the prototype in two distinct modes via the **Device Switcher** in the header:
-
-1. **🖥️ Desktop Mode (Full 3-Column Sportsbook):**
-   - **Left Rail:** Comprehensive Sports Navigation, Live Match Count Badges, Top Competitions, and Zero-Margin Specials.
-   - **Center Stage:** Dynamic 5-Page navigation (Lobby, 2D Radar Live Tracker, League Tables, Betslip Terminal, Player Vault).
-   - **Right Rail:** Real-time Singles-Only Betslip Terminal with individual stake presets, live potential return calculations, and active in-play cashout sliders.
-
-2. **📱 Mobile Mode (Interactive Native iPhone Bezel):**
-   - Realistic iPhone device frame with Dynamic Island, simulated 5G status bar, and thumb-friendly ergonomic controls.
-   - Fixed bottom navigation bar with 5 tactile quick tabs.
-   - Slide-up Mobile Betslip Drawer with tactile swipe-to-dismiss and instant 1-tap single bet placement.
+### 1. Site Shell (Desktop 1440px & Phone 390px)
+- **Top Bar:** 
+  - Sidebar toggle, Housebets Cyan Wave Logo, Weekly Prize **$50,000.00** trophy badge, VIP Crown, Search button, Betslip panel toggle, **Log In** button, and solid light-cyan **Register** button.
+- **Left Nav Rail:** 
+  - Slim vertical icon rail (Casino, Sports, Streams, Calendar, Originals, Soccer, Tennis, Basketball, Baseball, Mascot avatar).
+- **Side Panel (Desktop):** 
+  - Slide-in panel on the right with `Bet slip 1` | `My bets 1` | `Chat` tabs, `Singles · 1 selection`, USDT stake input, and instant bet placement.
+- **Phone Bottom Bar (Mobile 390px):** 
+  - Floating bar above bottom navigation: `[ 1 ] Arsenal @ 1.30  ^` in light cyan (`#bbf2f6`), expanding smoothly into the mobile betslip sheet.
 
 ---
 
-## 📑 The 5 Core Pages (Singles Only Architecture)
+## 📑 The 5 Pages Required by the Brief
 
-Every page was meticulously crafted to satisfy the contest prompt while exceeding real-world sportsbook benchmarks:
+### Page 1: Sports Home
+- **Live now** ticker with match minute and score badges.
+- **Starting soon** section with upcoming fixtures.
+- **Top competitions** (Premier League, Champions League, LaLiga, Serie A, Bundesliga).
+- **Sports nav:** `🏠 Home`, `📺 Live 13`, `⚽ Soccer`, `🎾 Tennis`, `🏀 Basketball`, `⚾ Baseball`, `🏈 American Football`, `🎮 Esports`.
+- **Search:** Teams, players, competitions, markets.
+- **Favourites:** `⭐ Premier League ✕`, `🔴 Arsenal ✕`.
+- **Your matches (3 matches):** Row-by-row match result odds boxes with `+115 >` market counters.
+- **Featured matches:** Multi-match carousel with team crests and 1X2 odds.
 
-### 1. 🏟️ Sportsbook Lobby & Discovery Hub (`/lobby`)
-- **Hero Marquee:** Housebets Zero-Margin Specials, Solana sub-second settlement badges.
-- **Live In-Play Grid:** Real-time matches across Soccer, Basketball, and Esports with pulsing match minute indicators (`72'`).
-- **Single-Odds Flash Engine:** Live odds fluctuate dynamically with emerald green (odds up) and crimson red (odds down) animations.
-- **1-Click Wagering:** Click any odd (1, X, 2, Over/Under) to instantly route straight into the singles slip.
+### Page 2: Live
+- Every match in play across Premier League, LaLiga, Serie A, and Bundesliga.
+- Filter by sport and competition (`All 13`, `Soccer 6`, `Tennis 3`, `Basketball 1`, etc.).
+- Live score (`1 - 0`) and live clock (`52'`, `HT`, `58'`).
+- **Suspended state:** Displays `🔒 Suspended` when markets are locked.
+- **Nothing live fallback:** Clean "Starting soon" section.
 
-### 2. ⚡ Live Tracker & In-Play Match Visualizer (`/match-detail`)
-- **2D Match Pitch Radar:** Interactive soccer pitch / court graphic with animated attack coordinates and live dangerous play tracking.
-- **Live Match Statistics:** Real-time possession bars (e.g. Arsenal 54% vs 46% Man City), shots on target, corners, and yellow cards.
-- **Deep Single Markets:** Match Winner 1X2, Next Goal, Over/Under Totals, Asian Handicap, Both Teams to Score (BTTS).
-- **Hubie AI Sharp Assistant:** Embedded AI mascot giving data-driven momentum insights and tactical edge percentages.
+### Page 3: Football
+- Dedicated soccer competition hub: Premier League, Champions League, LaLiga, Serie A, Bundesliga.
+- Match result odds (1, X, 2) on each row.
+- **Follow a team or competition:** Clickable ⭐ star on every team crest and competition header (adds to / removes from Favourites in real-time).
 
-### 3. 🏆 Leagues, Competitions & Fixtures (`/leagues`)
-- **Competition Standings Table:** Points, Goal Difference, Form guide (last 5 matches: W W D L W).
-- **Fixtures Schedule:** Grouped by matchday and date with direct 1X2 single odds.
-- **Multi-League Switcher:** Premier League, UEFA Champions League, NBA, La Liga, and CS2 Blast Premier.
+### Page 4: Match Page (Example: Arsenal v Brighton, live)
+- **Scoreboard:** Arsenal 1 - 0 Brighton & Hove Albion, `● LIVE 52'`.
+- `⭐ Following` badge for Arsenal, `☆ Follow` badge for Brighton.
+- **Market groups:** `Popular 10`, `Goalscorers 9`, `Goals 11`, `Players 11`, `Halves 8`, `Handicaps 5`, `Corners & cards 14`, `Minutes 10`, `Specials 7`, `All markets 85`.
+- **Market accordions:** Match result, Double chance, Total goals, Both teams to score, Anytime goalscorer, Asian handicap.
+- **Odds moving & markets suspended:** Live odds fluctuation and interactive "🔒 Simulate Market Suspended" toggle.
 
-### 4. 🎯 Singles-Only Betslip Terminal (`/betslip-terminal`)
-- **Strictly Singles-Only:** Eliminates accumulator clutter. Every bet is an autonomous single with dedicated stake management.
-- **Tactile Quick Chips:** `+$10`, `+$25`, `+$50`, `+$100` and `MAX`.
-- **Crypto Multi-Currency Engine:** Instant switching between USDT, SOL, BTC, and ETH balances.
-- **Odds Policy Switcher:** Auto-accept higher odds, any odds, or reject fluctuations.
-- **Celebration Effects:** Confetti explosions and synthesized Web Audio sound effects on successful bet executions.
-
-### 5. 👤 Player Vault, Analytics & On-Chain Bets History (`/my-bets`)
-- **Interactive PnL Curve:** SVG cumulative profit and loss growth trajectory (+284.5% ROI).
-- **Audit-Ready Bet Receipts:** Unique Bet IDs (`#HB-90812`), Solana transaction hash simulation with one-click copy, and provably fair timestamps.
-- **Live Cashout Sliders:** Real-time cashout of active in-play single bets directly back to the player's wallet balance.
-- **VIP Rewards Tier:** Diamond VIP progression bar with instant rakeback benefits.
-
----
-
-## 🛠️ Tech Stack & Architecture
-
-- **Framework:** React 18 + Vite 6
-- **Styling:** Tailwind CSS with custom Housebets dark-mode theme (`#07090e`, `#0f141d`, `#00E701`)
-- **Icons:** Lucide React
-- **Celebrations:** Canvas Confetti
-- **Audio:** Native Web Audio API Synthesizer (Zero external audio asset latency)
-- **Deployment:** GitHub Pages ready (`base: './'`)
+### Page 5: Bet Slip + My Bets (Shared Panel / Page)
+- **Tap odds to add to slip:** Selecting any odd highlights it with an active cyan pill background (`#00A3FF`) and checkmark (`✓`).
+- **Singles only:** Strictly single bets with independent stakes.
+- **Decimal odds, stakes in USDT:** Payouts and balances in Tether (₮).
+- **Stake, odds, potential return:** Real-time calculation (`Stake × Odd = Returns`).
+- **Odds changed: player must accept:** Interactive simulation banner (`⚠️ Odds changed: 1.30 ➔ 1.35`) with `[ Accept ]` button.
+- **Selection suspended:** Clear visual lock indicator.
+- **Bet placed & Bet failed:** Demonstrates both the celebratory placement state and the failed submission error state.
+- **My bets:** `Open (1)` with **Cash Out ($28.50)** action, and `Settled (7)` with Won/Lost receipts.
 
 ---
 
-## 🚀 How to Deploy to GitHub Pages
+## 🚫 Out of Scope Compliance Check
 
-### Option 1: Automated Deployment via GitHub Actions (Recommended)
-1. Create a new repository on GitHub (e.g. `housebets-sportsbook-prototype`).
-2. Push this project to your repository:
+To ensure 100% compliance with the contest brief's explicit "Out of scope" rules:
+- ❌ **No multis, accumulators, or bet builders**
+- ❌ **No boosts, free bets, or promotional popups**
+- ❌ **No outrights or specials clutter**
+- ❌ **No extraneous stats widgets or match trackers**
+- ❌ **No AI search gimmicks**
+- Clean, lightning-fast, high-converting core sportsbook design.
+
+---
+
+## 🚀 How to Deploy to GitHub Pages (Ready Out-of-the-Box)
+
+The project has already been built with relative paths (`base: './'`). You can deploy it in 2 minutes:
+
+### Method 1: Push to GitHub & Enable Pages via `/docs` (Easiest)
+1. Initialize your remote repository:
    ```bash
-   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+   git remote add origin https://github.com/<YOUR-USERNAME>/<YOUR-REPO-NAME>.git
    git branch -M main
    git push -u origin main
    ```
-3. In your GitHub repository:
+2. In your repository on GitHub:
    - Go to **Settings** > **Pages**.
-   - Under **Build and deployment** > **Source**, select **GitHub Actions**.
-   - The included `.github/workflows/deploy.yml` workflow will automatically build and publish the site.
+   - Under **Build and deployment** > **Source**, choose **Deploy from a branch**.
+   - Select branch `main` and folder `/docs`.
+   - Click **Save**. Your site will be live immediately!
 
-### Option 2: Deploy using `gh-pages` CLI
+### Method 2: Automated Deployment via GitHub Actions
+- A GitHub Actions workflow is pre-configured at `.github/workflows/deploy.yml`.
+- Under **Settings** > **Pages**, simply choose **GitHub Actions** as the source.
+
+### Run Locally:
 ```bash
-npm run deploy
+npm.cmd run dev
 ```
-*(This builds the project and pushes the `dist` bundle directly to your `gh-pages` branch).*
-
-### Option 3: Local Development & Preview
-```bash
-# Run local dev server
-npm run dev
-
-# Build production bundle
-npm run build
-
-# Preview production build locally
-npm run preview
-```
-
----
-
-## 🎨 Brand & Design System
-
-- **Background:** `#07090e` (Obsidian Base), `#0f141d` (Glass Card)
-- **Primary Accent:** `#00E701` (Housebets Electric Emerald Green)
-- **Glow Effects:** `box-shadow: 0 0 20px rgba(0, 231, 1, 0.25)`
-- **Typography:** Inter (Sans-serif UI) + JetBrains Mono (Odds & Balances)
+Open `http://localhost:5173` in your browser.
