@@ -103,7 +103,12 @@ export const MatchPage = () => {
             </div>
 
             <div className="flex items-center gap-2 flex-shrink-0">
-              {selectedMatch.isLive ? (
+              {selectedMatch.isSuspended ? (
+                <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono text-[10px] font-bold flex items-center gap-1 border border-amber-500/40">
+                  <Lock className="w-2.5 h-2.5" />
+                  SUSPENDED
+                </span>
+              ) : selectedMatch.isLive ? (
                 <span className="px-2 py-0.5 rounded-full bg-red-500/20 text-red-400 font-mono text-[10px] font-bold flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
                   LIVE {selectedMatch.minute}
@@ -295,43 +300,52 @@ export const MatchPage = () => {
                 <ChevronUp className="w-4 h-4 text-gray-500" />
               </div>
 
-              {/* 3 Odds Boxes */}
-              <div className="p-3 grid grid-cols-3 gap-2">
-                {[
-                  { label: selectedMatch.homeTeam.name, opt: selectedMatch.matchResult.home },
-                  { label: 'Draw', opt: selectedMatch.matchResult.draw },
-                  { label: selectedMatch.awayTeam.name, opt: selectedMatch.matchResult.away }
-                ].map(({ label, opt }) => {
-                  const isSelected = singlesInSlip.some((s) => s.id === opt.id);
-                  return (
-                    <button
-                      key={opt.id}
-                      onClick={() =>
-                        toggleSelection({
-                          id: opt.id,
-                          matchId: selectedMatch.id,
-                          matchTitle: `${selectedMatch.homeTeam.name} v ${selectedMatch.awayTeam.name}`,
-                          scoreMinute: selectedMatch.isLive ? `${selectedMatch.homeTeam.score}-${selectedMatch.awayTeam.score} ${selectedMatch.minute}` : selectedMatch.date,
-                          marketName: '1x2',
-                          selectionName: opt.label,
-                          odd: opt.odd,
-                          isSuspended: selectedMatch.isSuspended
-                        })
-                      }
-                      className={`p-2.5 rounded-xl flex flex-col items-center justify-center text-center transition-all border ${
-                        isSelected
-                          ? 'bg-[#1475e1] border-[#1475e1] text-white font-black shadow-glow-blue'
-                          : 'bg-[#213743] hover:bg-[#2a4454] text-white border border-white/5'
-                      }`}
-                    >
-                      <span className="truncate max-w-full text-[11px] font-bold text-[#b1bad3]">{label}</span>
-                      <span className={`font-mono text-xs font-bold mt-0.5 ${isSelected ? 'text-white' : 'text-[#00A3FF]'}`}>
-                        {opt.odd.toFixed(2)}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
+              {/* 3 Odds Boxes OR Suspended Box */}
+              {selectedMatch.isSuspended ? (
+                <div className="p-3">
+                  <div className="py-3 px-4 rounded-xl bg-[#0f212e] border border-amber-500/30 text-amber-300 text-xs font-bold flex items-center justify-center gap-2">
+                    <Lock className="w-4 h-4 text-amber-400" />
+                    <span>Market Suspended · In-Play Check In Progress</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-3 grid grid-cols-3 gap-2">
+                  {[
+                    { label: selectedMatch.homeTeam.name, opt: selectedMatch.matchResult.home },
+                    { label: 'Draw', opt: selectedMatch.matchResult.draw },
+                    { label: selectedMatch.awayTeam.name, opt: selectedMatch.matchResult.away }
+                  ].map(({ label, opt }) => {
+                    const isSelected = singlesInSlip.some((s) => s.id === opt.id);
+                    return (
+                      <button
+                        key={opt.id}
+                        onClick={() =>
+                          toggleSelection({
+                            id: opt.id,
+                            matchId: selectedMatch.id,
+                            matchTitle: `${selectedMatch.homeTeam.name} v ${selectedMatch.awayTeam.name}`,
+                            scoreMinute: selectedMatch.isLive ? `${selectedMatch.homeTeam.score}-${selectedMatch.awayTeam.score} ${selectedMatch.minute}` : selectedMatch.date,
+                            marketName: '1x2',
+                            selectionName: opt.label,
+                            odd: opt.odd,
+                            isSuspended: selectedMatch.isSuspended
+                          })
+                        }
+                        className={`p-2.5 rounded-xl flex flex-col items-center justify-center text-center transition-all border ${
+                          isSelected
+                            ? 'bg-[#1475e1] border-[#1475e1] text-white font-black shadow-glow-blue'
+                            : 'bg-[#213743] hover:bg-[#2a4454] text-white border border-white/5'
+                        }`}
+                      >
+                        <span className="truncate max-w-full text-[11px] font-bold text-[#b1bad3]">{label}</span>
+                        <span className={`font-mono text-xs font-bold mt-0.5 ${isSelected ? 'text-white' : 'text-[#00A3FF]'}`}>
+                          {opt.odd.toFixed(2)}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Market 2: Draw No Bet */}
@@ -419,6 +433,29 @@ export const MatchPage = () => {
                   <span className="text-[#b1bad3]">No</span>
                   <span className="font-mono font-bold text-[#00A3FF]">1.68</span>
                 </button>
+              </div>
+            </div>
+
+            {/* Market 4: Next Goal (Demonstrating Suspended State in Match Page) */}
+            <div className="rounded-2xl bg-[#1a2c38] border border-white/[0.08] overflow-hidden shadow-card-elevated">
+              <div className="p-3.5 border-b border-white/[0.05] flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-extrabold text-white uppercase tracking-wider">Next Goal (2nd Goal)</span>
+                  <span className="px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold text-[10px] flex items-center gap-1">
+                    <Lock className="w-2.5 h-2.5" /> Suspended
+                  </span>
+                </div>
+                <span className="text-[10px] text-amber-400 font-mono">VAR Check in progress</span>
+              </div>
+
+              <div className="p-3">
+                <div className="py-2.5 px-4 rounded-xl bg-[#0f212e] border border-amber-500/20 text-amber-300/90 text-xs font-bold flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Lock className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                    <span className="truncate">Selection odds currently suspended by bookmaker</span>
+                  </div>
+                  <span className="text-[10px] text-[#557086] font-mono flex-shrink-0">Locked</span>
+                </div>
               </div>
             </div>
           </div>
