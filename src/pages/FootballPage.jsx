@@ -177,22 +177,26 @@ export const FootballPage = () => {
                           setSelectedMatchId(m.id);
                           setCurrentPage('match');
                         }}
-                        className="space-y-1.5 cursor-pointer py-0.5"
+                        className="space-y-1.5 cursor-pointer py-1"
                       >
-                        <div className="flex items-center justify-between text-xs font-bold text-white">
-                          <div className="flex items-center gap-2 min-w-0 pr-2">
-                            <TeamCrest teamName={m.homeTeam.name} className="w-4 h-4 flex-shrink-0" />
-                            <span className="truncate">{m.homeTeam.name}</span>
-                          </div>
-                          {m.isLive && <span className="font-mono text-sm font-black flex-shrink-0">{m.homeTeam.score}</span>}
+                        <div className="flex items-center gap-2 text-xs font-bold text-white">
+                          <TeamCrest teamName={m.homeTeam.name} className="w-4 h-4 flex-shrink-0" />
+                          <span className="truncate">{m.homeTeam.name}</span>
+                          {m.isLive && (
+                            <span className="font-mono text-sm font-black text-white ml-1.5 flex-shrink-0">
+                              {m.homeTeam.score}
+                            </span>
+                          )}
                         </div>
 
-                        <div className="flex items-center justify-between text-xs font-bold text-white">
-                          <div className="flex items-center gap-2 min-w-0 pr-2">
-                            <TeamCrest teamName={m.awayTeam.name} className="w-4 h-4 flex-shrink-0" />
-                            <span className="truncate">{m.awayTeam.name}</span>
-                          </div>
-                          {m.isLive && <span className="font-mono text-sm font-black flex-shrink-0">{m.awayTeam.score}</span>}
+                        <div className="flex items-center gap-2 text-xs font-bold text-white">
+                          <TeamCrest teamName={m.awayTeam.name} className="w-4 h-4 flex-shrink-0" />
+                          <span className="truncate">{m.awayTeam.name}</span>
+                          {m.isLive && (
+                            <span className="font-mono text-sm font-black text-white ml-1.5 flex-shrink-0">
+                              {m.awayTeam.score}
+                            </span>
+                          )}
                         </div>
                       </div>
 

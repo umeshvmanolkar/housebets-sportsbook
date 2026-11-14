@@ -121,43 +121,51 @@ export const MatchPage = () => {
           </div>
 
           {/* Teams & Score Row */}
-          <div className="grid grid-cols-12 items-center gap-1.5 sm:gap-4 py-1">
-            {/* Home Team (5 cols) */}
-            <div className="col-span-5 flex items-center gap-2 sm:gap-3.5 min-w-0">
+          <div className="flex items-center justify-between gap-2 sm:gap-4 py-2 w-full">
+            {/* Home Team */}
+            <div className="flex-1 flex items-center gap-2 sm:gap-3.5 min-w-0">
               <TeamCrest teamName={selectedMatch.homeTeam.name} className="w-8 h-8 sm:w-11 sm:h-11 flex-shrink-0" />
               <div className="flex flex-col items-start min-w-0">
-                <h2 className="text-xs sm:text-base font-black text-white leading-tight break-words">
+                <h2 className="text-xs sm:text-base font-black text-white leading-tight truncate sm:whitespace-normal">
                   {selectedMatch.homeTeam.name}
                 </h2>
                 <button
                   onClick={() => toggleFollow({ name: selectedMatch.homeTeam.name, type: 'team' })}
                   className="text-[10px] sm:text-xs text-amber-400 hover:underline inline-flex items-center gap-1 mt-0.5 whitespace-nowrap"
                 >
-                  <Star className="w-2.5 h-2.5 fill-amber-400" />
-                  <span>{isHomeFollowed ? 'Following' : selectedMatch.homeTeam.shortName || 'Follow'}</span>
+                  <Star className={`w-2.5 h-2.5 ${isHomeFollowed ? 'fill-amber-400 text-amber-400' : 'text-[#557086]'}`} />
+                  <span>{selectedMatch.homeTeam.shortName || 'ARS'}</span>
                 </button>
               </div>
             </div>
 
-            {/* Score Center Box (2 cols) */}
-            <div className="col-span-2 px-0.5 flex-shrink-0 text-center flex justify-center">
-              <div className="font-mono text-base sm:text-2xl font-black text-white tracking-widest bg-[#0f212e]/90 px-2 sm:px-4 py-1 sm:py-1.5 rounded-xl border border-white/10 shadow-inner">
-                {selectedMatch.isLive ? `${selectedMatch.homeTeam.score} - ${selectedMatch.awayTeam.score}` : 'vs'}
+            {/* Score Center Box */}
+            <div className="flex-shrink-0 mx-1.5 sm:mx-4 text-center">
+              <div className="font-mono text-base sm:text-2xl font-black text-white whitespace-nowrap tracking-wider bg-[#0f212e]/95 px-3 sm:px-5 py-1.5 sm:py-2 rounded-xl border border-white/10 shadow-inner flex items-center justify-center gap-1.5">
+                {selectedMatch.isLive ? (
+                  <>
+                    <span>{selectedMatch.homeTeam.score}</span>
+                    <span className="text-[#557086] font-normal">-</span>
+                    <span>{selectedMatch.awayTeam.score}</span>
+                  </>
+                ) : (
+                  <span className="text-xs sm:text-base text-[#b1bad3]">vs</span>
+                )}
               </div>
             </div>
 
-            {/* Away Team (5 cols) */}
-            <div className="col-span-5 flex items-center justify-end gap-2 sm:gap-3.5 min-w-0">
+            {/* Away Team */}
+            <div className="flex-1 flex items-center justify-end gap-2 sm:gap-3.5 min-w-0 text-right">
               <div className="flex flex-col items-end min-w-0 text-right">
-                <h2 className="text-xs sm:text-base font-black text-white leading-tight break-words">
+                <h2 className="text-xs sm:text-base font-black text-white leading-tight truncate sm:whitespace-normal">
                   {selectedMatch.awayTeam.name}
                 </h2>
                 <button
                   onClick={() => toggleFollow({ name: selectedMatch.awayTeam.name, type: 'team' })}
                   className="text-[10px] sm:text-xs text-amber-400 hover:underline inline-flex items-center justify-end gap-1 mt-0.5 whitespace-nowrap"
                 >
-                  <span>{isAwayFollowed ? 'Following' : selectedMatch.awayTeam.shortName || 'Follow'}</span>
-                  <Star className="w-2.5 h-2.5 fill-amber-400" />
+                  <span>{selectedMatch.awayTeam.shortName || 'BHA'}</span>
+                  <Star className={`w-2.5 h-2.5 ${isAwayFollowed ? 'fill-amber-400 text-amber-400' : 'text-[#557086]'}`} />
                 </button>
               </div>
               <TeamCrest teamName={selectedMatch.awayTeam.name} className="w-8 h-8 sm:w-11 sm:h-11 flex-shrink-0" />
