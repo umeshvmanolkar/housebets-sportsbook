@@ -1,23 +1,16 @@
 import React from 'react';
 import { 
-  Menu, 
+  PanelLeft, 
+  PanelRight, 
   Search, 
-  SlidersHorizontal, 
-  Smartphone, 
-  Monitor, 
-  Maximize2,
-  Trophy,
-  Crown
+  Crown 
 } from 'lucide-react';
 import { useSportsbook } from '../context/SportsbookContext';
 import { HousebetsLogo } from './Logos';
 
-export const Header = ({ onOpenContestModal }) => {
+export const Header = () => {
   const {
-    currentPage,
     setCurrentPage,
-    viewMode,
-    setViewMode,
     isSidebarOpen,
     setIsSidebarOpen,
     isBetslipPanelOpen,
@@ -27,121 +20,90 @@ export const Header = ({ onOpenContestModal }) => {
   } = useSportsbook();
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#1a2c38] border-b border-white/[0.08] px-3 sm:px-5 py-2.5 shadow-md">
+    <header className="sticky top-0 z-40 w-full bg-[#0b1a24] border-b border-[#132a37] px-4 py-2.5 select-none shadow-sm">
       <div className="max-w-[1780px] mx-auto flex items-center justify-between gap-3">
-        {/* Left: Sidebar Toggle + Casino/Sports Pill + Official Housebets Logo */}
-        <div className="flex items-center gap-2 sm:gap-4">
+        {/* Left: Sidebar Toggle + Official Housebets Logo */}
+        <div className="flex items-center gap-3">
           <button
             onClick={() => { playClick(); setIsSidebarOpen(!isSidebarOpen); }}
-            className="w-9 h-9 rounded-xl bg-[#0f212e] hover:bg-[#213743] text-gray-300 hover:text-white flex items-center justify-center border border-white/5 transition-colors"
+            className="w-9 h-9 rounded-xl bg-[#102a38] hover:bg-[#163547] text-[#8aa6b5] hover:text-white flex items-center justify-center border border-[#1b3d4f] transition-colors"
             title="Toggle Sidebar"
           >
-            <Menu className="w-4 h-4" />
+            <PanelLeft className="w-4 h-4" />
           </button>
 
-          {/* Stake-style Casino / Sports toggle */}
-          <div className="hidden sm:flex items-center bg-[#0f212e] p-1 rounded-xl border border-white/5 text-xs font-bold">
-            <button
-              onClick={playClick}
-              className="px-3.5 py-1.5 rounded-lg text-gray-400 hover:text-white transition-colors"
-            >
-              Casino
-            </button>
-            <button
-              onClick={() => { playClick(); setCurrentPage('home'); }}
-              className="px-4 py-1.5 rounded-lg bg-[#1475e1] text-white shadow-sm flex items-center gap-1.5"
-            >
-              <span>Sports</span>
-            </button>
-          </div>
-
-          {/* Official Housebets Logo */}
           <button
             onClick={() => { playClick(); setCurrentPage('home'); }}
-            className="flex items-center hover:opacity-90 transition-opacity ml-1"
+            className="flex items-center hover:opacity-90 transition-opacity"
           >
             <HousebetsLogo />
           </button>
         </div>
 
-        {/* Center: Device Switcher (Desktop 1440px vs 390px Phone Shell) */}
-        <div className="flex items-center bg-[#0f212e] p-1 rounded-xl border border-white/5 text-xs font-semibold">
-          <button
-            onClick={() => { playClick(); setViewMode('desktop'); }}
-            title="Desktop 1440px Mode"
-            className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all ${
-              viewMode === 'desktop' ? 'bg-[#213743] text-white font-bold shadow-sm' : 'text-gray-400 hover:text-white'
-            }`}
-          >
-            <Monitor className="w-3.5 h-3.5 text-[#00A3FF]" />
-            <span className="hidden md:inline">1440px Desktop</span>
-          </button>
+        {/* Center: Weekly Prize Badge + Crown Button */}
+        <div className="hidden md:flex items-center gap-2">
+          <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-[#102a38] border border-[#1b3d4f]">
+            <span className="text-base leading-none">🏆</span>
+            <div className="flex flex-col text-left">
+              <span className="text-[10px] text-[#7392a3] font-semibold leading-tight">Weekly Prize</span>
+              <span className="text-xs font-black text-[#f5a623] font-mono leading-tight">$50,000.00</span>
+            </div>
+          </div>
 
-          <button
-            onClick={() => { playClick(); setViewMode('mobile'); }}
-            title="Mobile 390px Phone Shell Mode"
-            className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all ${
-              viewMode === 'mobile' ? 'bg-[#1475e1] text-white font-bold shadow-sm' : 'text-gray-400 hover:text-white'
-            }`}
+          <button 
+            onClick={playClick}
+            className="w-9 h-9 rounded-xl bg-[#102a38] hover:bg-[#163547] text-[#7392a3] hover:text-[#00F5D4] flex items-center justify-center border border-[#1b3d4f] transition-colors"
+            title="VIP Club & Crown"
           >
-            <Smartphone className="w-3.5 h-3.5" />
-            <span className="hidden md:inline">390px Phone</span>
-          </button>
-
-          <button
-            onClick={() => { playClick(); setViewMode('responsive'); }}
-            title="Responsive Mode"
-            className={`px-2 py-1.5 rounded-lg flex items-center gap-1 transition-all ${
-              viewMode === 'responsive' ? 'bg-[#213743] text-white font-bold' : 'text-gray-400 hover:text-white'
-            }`}
-          >
-            <Maximize2 className="w-3.5 h-3.5" />
+            <Crown className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Right: Search, Betslip Toggle, Login & Register buttons */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {/* Contest specs pill */}
+        {/* Right: Search, Betslip Toggle, Log In & Register buttons */}
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* Search Icon Button */}
           <button
-            onClick={() => { playClick(); onOpenContestModal(); }}
-            className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#00A3FF]/10 text-[#00A3FF] border border-[#00A3FF]/30 text-xs font-bold hover:bg-[#00A3FF]/20 transition-all"
+            onClick={() => {
+              playClick();
+              const searchInput = document.getElementById('main-sports-search');
+              if (searchInput) searchInput.focus();
+            }}
+            className="w-9 h-9 rounded-xl bg-[#102a38] hover:bg-[#163547] text-[#8aa6b5] hover:text-white flex items-center justify-center border border-[#1b3d4f] transition-colors"
+            title="Search"
           >
-            <span>Contest Brief</span>
+            <Search className="w-4 h-4" />
           </button>
 
-          {/* Betslip Side Rail Toggle */}
+          {/* Betslip Side Rail Toggle (PanelRight) */}
           <button
             onClick={() => { playClick(); setIsBetslipPanelOpen(!isBetslipPanelOpen); }}
-            className={`px-3 py-2 rounded-xl flex items-center gap-2 border transition-all text-xs font-bold ${
+            className={`relative w-9 h-9 rounded-xl flex items-center justify-center border transition-all ${
               isBetslipPanelOpen
                 ? 'bg-[#1475e1] text-white border-[#1475e1]'
-                : 'bg-[#0f212e] hover:bg-[#213743] text-gray-200 border-white/5'
+                : 'bg-[#102a38] hover:bg-[#163547] text-[#8aa6b5] hover:text-white border-[#1b3d4f]'
             }`}
             title="Toggle Betslip"
           >
-            <SlidersHorizontal className="w-4 h-4" />
-            <span className="hidden xl:inline">Betslip</span>
+            <PanelRight className="w-4 h-4" />
             {singlesInSlip.length > 0 && (
-              <span className={`w-4 h-4 rounded-full text-[10px] font-black flex items-center justify-center ${
-                isBetslipPanelOpen ? 'bg-white text-[#1475e1]' : 'bg-[#1475e1] text-white'
-              }`}>
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#00F5D4] text-[#061822] text-[10px] font-black flex items-center justify-center shadow-sm">
                 {singlesInSlip.length}
               </span>
             )}
           </button>
 
-          {/* Sign In Button (Stake style) */}
+          {/* Log In Button */}
           <button
             onClick={playClick}
-            className="px-4 py-2 rounded-xl text-gray-200 hover:text-white font-bold text-xs hover:bg-white/5 transition-colors"
+            className="px-4 py-2 rounded-xl bg-[#102a38] hover:bg-[#163547] text-white font-bold text-xs sm:text-sm border border-[#1b3d4f] transition-colors"
           >
-            Sign In
+            Log In
           </button>
 
-          {/* Register Button (Stake-style vibrant blue button) */}
+          {/* Register Button */}
           <button
             onClick={playClick}
-            className="px-5 py-2 rounded-xl bg-[#1475e1] hover:bg-[#005cd6] text-white font-extrabold text-xs shadow-glow-blue transition-all"
+            className="px-4 py-2 rounded-xl bg-[#98f5e1] hover:bg-[#82ecd7] text-[#061822] font-black text-xs sm:text-sm shadow-sm transition-all"
           >
             Register
           </button>

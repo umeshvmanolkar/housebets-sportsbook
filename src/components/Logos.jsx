@@ -3,8 +3,9 @@ import React from 'react';
 // Housebets Official Logo with 3D Wave
 export const HousebetsLogo = ({ className = "h-8" }) => (
   <div className={`flex items-center gap-2.5 ${className}`}>
-    <span className="text-xl sm:text-2xl font-black tracking-tight text-white font-sans flex items-center">
-      House<span className="text-[#00A3FF]">bets</span>
+    <span className="text-xl sm:text-2xl font-black tracking-tight font-sans flex items-center">
+      <span className="text-[#00F5D4]">House</span>
+      <span className="text-white">bets</span>
     </span>
     {/* Stylized Cyan Wave */}
     <div className="relative w-8 h-8 flex-shrink-0">

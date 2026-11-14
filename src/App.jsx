@@ -126,6 +126,36 @@ const MainLayout = () => {
       {/* Mobile Slide-Up Drawer for responsive mode */}
       <MobileBetslipDrawer />
 
+      {/* Floating Testing Controls Dock for Contest Judges */}
+      <div className="fixed bottom-4 left-4 z-50 hidden sm:flex items-center gap-1.5 bg-[#0b1d28]/95 backdrop-blur-md border border-white/10 rounded-2xl px-2.5 py-1.5 shadow-2xl">
+        <button
+          onClick={() => setViewMode('desktop')}
+          className={`px-2.5 py-1 rounded-xl text-xs flex items-center gap-1.5 transition-all ${
+            viewMode === 'desktop' ? 'bg-[#00F5D4]/20 text-[#00F5D4] font-bold border border-[#00F5D4]/30' : 'text-gray-400 hover:text-white'
+          }`}
+        >
+          <Monitor className="w-3.5 h-3.5" />
+          <span>1440px Desktop</span>
+        </button>
+        <button
+          onClick={() => setViewMode('mobile')}
+          className={`px-2.5 py-1 rounded-xl text-xs flex items-center gap-1.5 transition-all ${
+            viewMode === 'mobile' ? 'bg-[#00F5D4]/20 text-[#00F5D4] font-bold border border-[#00F5D4]/30' : 'text-gray-400 hover:text-white'
+          }`}
+        >
+          <Smartphone className="w-3.5 h-3.5" />
+          <span>390px Phone</span>
+        </button>
+        <div className="h-3.5 w-px bg-white/10 mx-0.5" />
+        <button
+          onClick={() => setIsContestModalOpen(true)}
+          className="px-2 py-1 rounded-xl text-xs text-[#00A3FF] hover:text-white flex items-center gap-1 font-semibold"
+        >
+          <Info className="w-3.5 h-3.5" />
+          <span>Contest Brief</span>
+        </button>
+      </div>
+
       {/* Contest Specs & Rubric Verification Modal */}
       <ContestModal
         isOpen={isContestModalOpen}
