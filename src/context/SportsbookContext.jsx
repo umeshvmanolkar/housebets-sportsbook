@@ -1,54 +1,75 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
-import { LIVE_MATCHES, UPCOMING_FIXTURES, CRYPTO_WALLETS, INITIAL_USER_BETS } from '../data/mockData';
+import { 
+  MATCHES_DATA, 
+  INITIAL_FAVOURITES, 
+  INITIAL_MY_BETS, 
+  FOOTBALL_LEAGUES 
+} from '../data/mockData';
 
 const SportsbookContext = createContext();
 
 export const SportsbookProvider = ({ children }) => {
-  // Navigation & Core Pages (5 Pages)
-  // 'lobby' | 'match-detail' | 'leagues' | 'betslip-terminal' | 'my-bets'
-  const [currentPage, setCurrentPage] = useState('lobby');
-  const [selectedMatchId, setSelectedMatchId] = useState('match-1');
-  const [selectedSport, setSelectedSport] = useState('soccer');
-  const [selectedLeague, setSelectedLeague] = useState('Premier League');
+  // The 5 Core Pages:
+  // 'home' (Sports home)
+  // 'live' (Live now)
+  // 'football' (Football competitions)
+  // 'match' (Match page: Arsenal v Brighton)
+  // 'bets' (Bet slip + My bets shared page/panel)
+  const [currentPage, setCurrentPage] = useState('home');
+  const [selectedMatchId, setSelectedMatchId] = useState('match-ars-bha');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Device Layout Preview Mode: 'desktop' | 'mobile-preview' | 'responsive'
+  // Device Mode: 'desktop' (1440px) | 'mobile' (390px phone shell) | 'responsive'
   const [viewMode, setViewMode] = useState('responsive');
 
-  // Odds Format: 'decimal' | 'american' | 'fractional' | 'implied'
-  const [oddsFormat, setOddsFormat] = useState('decimal');
+  // Left Nav Collapsed state on desktop
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  // Currency & Wallet
-  const [wallets, setWallets] = useState(CRYPTO_WALLETS);
-  const [selectedCurrency, setSelectedCurrency] = useState('USDT');
+  // Right Panel / Betslip open state
+  const [isBetslipPanelOpen, setIsBetslipPanelOpen] = useState(false);
+  const [activePanelTab, setActivePanelTab] = useState('betslip'); // 'betslip' | 'mybets' | 'chat'
 
-  // Live Matches State (allows live updates)
-  const [liveMatches, setLiveMatches] = useState(LIVE_MATCHES);
+  // Mobile Bottom Drawer Open state
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
-  // Singles-Only Betslip
-  // In a singles-only sportsbook, each bet is an independent single with its own stake
+  // Singles-Only Slip Selection (Rules: "Singles only", "Decimal odds, stakes in USDT")
+  // Only 1 or single independent selections
   const [singlesInSlip, setSinglesInSlip] = useState([
     {
-      id: 'sel-initial-1',
-      matchId: 'match-1',
-      matchTitle: 'Arsenal vs Man City',
-      marketName: 'Match Winner',
+      id: 'ars-bha-1',
+      matchId: 'match-ars-bha',
+      teamName: 'Arsenal',
+      matchTitle: 'Arsenal v Brighton & Hove Albion',
+      scoreMinute: '1-0 52\'',
+      marketName: 'Match result',
       selectionName: 'Arsenal',
-      odd: 1.48,
-      stake: 50.0,
-      trend: 'up'
+      odd: 1.30,
+      stake: 20.00,
+      isSuspended: false
     }
   ]);
 
-  const [isMobileBetslipOpen, setIsMobileBetslipOpen] = useState(false);
-  const [quickBetMode, setQuickBetMode] = useState(false);
+  // Odds Changed Simulation (Rules: "Odds changed: player must accept")
+  const [oddsChangedNotice, setOddsChangedNotice] = useState(null); // e.g. { id, oldOdd: 1.30, newOdd: 1.35 }
+
+  // Bet Placed & Bet Failed simulation states (Rules: "Bet placed, bet failed")
+  const [betFeedback, setBetFeedback] = useState(null); // { type: 'success' | 'failed', message: string, betId?: string }
+  const [simulateFailNextBet, setSimulateFailNextBet] = useState(false);
+
+  // Favourites / Followed teams and leagues (Rules: "Follow a team or competition")
+  const [favourites, setFavourites] = useState(INITIAL_FAVOURITES);
+
+  // My Bets (Open & Settled) (Rules: "My bets: open, settled, cash out")
+  const [myBets, setMyBets] = useState(INITIAL_MY_BETS);
+
+  // USDT Wallet balance
+  const [usdtBalance, setUsdtBalance] = useState(1450.00);
+
+  // Sound effects
   const [soundEnabled, setSoundEnabled] = useState(true);
 
-  // Active & Settled User Bets
-  const [userBets, setUserBets] = useState(INITIAL_USER_BETS);
-
-  // Web Audio Synth for Haptic/Sound Effects
-  const playSound = (type = 'click') => {
+  const playClick = () => {
     if (!soundEnabled || typeof window === 'undefined') return;
     try {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -56,271 +77,206 @@ export const SportsbookProvider = ({ children }) => {
       const ctx = new AudioCtx();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-
       osc.connect(gain);
       gain.connect(ctx.destination);
-
-      if (type === 'click') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(440, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.05);
-        gain.gain.setValueAtTime(0.08, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.05);
-      } else if (type === 'odds-up') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(520, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(780, ctx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.05, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.1);
-      } else if (type === 'win') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
-        osc.frequency.setValueAtTime(880, ctx.currentTime + 0.08); // A5
-        gain.gain.setValueAtTime(0.12, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.3);
-      }
-    } catch (e) {
-      // AudioContext policy fallback
-    }
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.04);
+      gain.gain.setValueAtTime(0.06, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.04);
+    } catch (e) {}
   };
 
-  // Convert Odds Formats
-  const formatOdds = (decimal) => {
-    if (!decimal || isNaN(decimal)) return '-';
-    const d = parseFloat(decimal);
-    switch (oddsFormat) {
-      case 'american': {
-        if (d >= 2.0) {
-          const am = Math.round((d - 1) * 100);
-          return `+${am}`;
-        } else {
-          const am = Math.round(-100 / (d - 1));
-          return `${am}`;
-        }
-      }
-      case 'fractional': {
-        // Approximate to common fractions
-        const tolerance = 1.0E-3;
-        let num = 1;
-        let den = 1;
-        const val = d - 1;
-        for (let i = 1; i <= 20; i++) {
-          const candidateNum = Math.round(val * i);
-          if (Math.abs(val - candidateNum / i) < tolerance) {
-            num = candidateNum;
-            den = i;
-            break;
-          }
-        }
-        return `${num}/${den}`;
-      }
-      case 'implied': {
-        const pct = (100 / d).toFixed(1);
-        return `${pct}%`;
-      }
-      case 'decimal':
-      default:
-        return d.toFixed(2);
-    }
-  };
-
-  // Add / Toggle a Single Bet in Slip
-  const toggleSingleBet = (item) => {
-    playSound('click');
+  // Toggle selection in Singles Betslip
+  const toggleSelection = (item) => {
+    playClick();
     setSinglesInSlip((prev) => {
       const exists = prev.find((s) => s.id === item.id);
       if (exists) {
         return prev.filter((s) => s.id !== item.id);
       } else {
-        const newBet = {
-          ...item,
-          stake: item.stake || 25.0
-        };
-        // Auto open mobile betslip drawer if in mobile
-        setIsMobileBetslipOpen(true);
-        return [...prev, newBet];
+        // Auto open desktop side panel or mobile bottom drawer
+        setIsBetslipPanelOpen(true);
+        setActivePanelTab('betslip');
+        return [
+          {
+            id: item.id,
+            matchId: item.matchId,
+            teamName: item.selectionName,
+            matchTitle: item.matchTitle,
+            scoreMinute: item.scoreMinute || '1-0 52\'',
+            marketName: item.marketName || 'Match result',
+            selectionName: item.selectionName,
+            odd: item.odd,
+            stake: 20.00,
+            isSuspended: item.isSuspended || false
+          }
+        ];
       }
     });
   };
 
-  // Update stake for a single bet
-  const updateSingleStake = (id, newStake) => {
-    setSinglesInSlip((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, stake: Math.max(1, parseFloat(newStake) || 0) } : s))
-    );
-  };
-
-  // Remove single bet
-  const removeSingleBet = (id) => {
-    playSound('click');
+  const removeSelection = (id) => {
+    playClick();
     setSinglesInSlip((prev) => prev.filter((s) => s.id !== id));
   };
 
-  // Clear all bets
   const clearSlip = () => {
-    playSound('click');
+    playClick();
     setSinglesInSlip([]);
+    setOddsChangedNotice(null);
   };
 
-  // Place Single Bet (Singles Only Architecture)
-  const placeSingleBet = (singleItem) => {
-    playSound('win');
+  const updateStake = (id, stakeValue) => {
+    setSinglesInSlip((prev) =>
+      prev.map((s) => (s.id === id ? { ...s, stake: Math.max(0, parseFloat(stakeValue) || 0) } : s))
+    );
+  };
+
+  // Accept changed odds
+  const acceptChangedOdds = () => {
+    playClick();
+    if (!oddsChangedNotice) return;
+    setSinglesInSlip((prev) =>
+      prev.map((s) => (s.id === oddsChangedNotice.id ? { ...s, odd: oddsChangedNotice.newOdd } : s))
+    );
+    setOddsChangedNotice(null);
+  };
+
+  // Trigger odds change simulation
+  const triggerSimulateOddsChange = () => {
+    if (singlesInSlip.length === 0) return;
+    const first = singlesInSlip[0];
+    const newOdd = Number((first.odd + 0.08).toFixed(2));
+    setOddsChangedNotice({
+      id: first.id,
+      oldOdd: first.odd,
+      newOdd: newOdd
+    });
+  };
+
+  // Place Single Bet (Strictly Singles Only)
+  const placeSingleBet = () => {
+    if (singlesInSlip.length === 0) return;
+    const bet = singlesInSlip[0];
+
+    // If simulated to fail (demonstrating "Bet placed, bet failed" from contest rules)
+    if (simulateFailNextBet) {
+      setBetFeedback({
+        type: 'failed',
+        message: 'Bet placement failed: Market liquidity update in progress. Please retry.'
+      });
+      setTimeout(() => setBetFeedback(null), 4000);
+      return;
+    }
+
+    if (bet.stake <= 0) return;
+
+    // Deduct USDT
+    setUsdtBalance((b) => Math.max(0, b - bet.stake));
+
+    // Success confetti
     confetti({
       particleCount: 50,
       spread: 60,
       origin: { y: 0.7 },
-      colors: ['#00E701', '#ffffff', '#00ff85']
+      colors: ['#00A3FF', '#ffffff', '#26d0ce']
     });
 
-    const currentWallet = wallets.find((w) => w.symbol === selectedCurrency);
-    const stakeAmount = singleItem.stake;
-
-    // Deduct balance
-    setWallets((prev) =>
-      prev.map((w) =>
-        w.symbol === selectedCurrency ? { ...w, balance: Math.max(0, w.balance - stakeAmount) } : w
-      )
-    );
-
-    const newPlacedBet = {
-      id: `HB-${Math.floor(10000 + Math.random() * 90000)}`,
-      sport: 'soccer',
-      match: singleItem.matchTitle,
-      selection: `${singleItem.selectionName} (${formatOdds(singleItem.odd)})`,
-      market: singleItem.marketName,
-      stake: stakeAmount,
-      currency: selectedCurrency,
-      odds: singleItem.odd,
-      potentialPayout: Number((stakeAmount * singleItem.odd).toFixed(2)),
-      status: 'IN_PLAY',
-      currentCashout: Number((stakeAmount * 0.95).toFixed(2)),
-      txHash: `${Math.random().toString(36).substring(2, 6)}...${Math.random().toString(36).substring(2, 6)} (Solana)`,
-      placedAt: 'Just now',
-      progress: 74
+    const newBetId = `bet-op-${Date.now().toString().slice(-4)}`;
+    const newOpenBet = {
+      id: newBetId,
+      placedDate: 'Just now',
+      team: bet.selectionName,
+      match: bet.matchTitle,
+      statusNote: bet.scoreMinute,
+      isLive: true,
+      odds: bet.odd,
+      stake: bet.stake,
+      returns: Number((bet.stake * bet.odd).toFixed(2)),
+      cashoutAmount: Number((bet.stake * 0.95).toFixed(2)),
+      result: 'Open'
     };
 
-    setUserBets((prev) => [newPlacedBet, ...prev]);
-    // remove from slip
-    removeSingleBet(singleItem.id);
-  };
-
-  // Place All Singles in Slip
-  const placeAllSingles = () => {
-    if (singlesInSlip.length === 0) return;
-    playSound('win');
-    confetti({
-      particleCount: 80,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#00E701', '#ffffff', '#f59e0b']
-    });
-
-    const totalStake = singlesInSlip.reduce((acc, curr) => acc + (curr.stake || 0), 0);
-    setWallets((prev) =>
-      prev.map((w) =>
-        w.symbol === selectedCurrency ? { ...w, balance: Math.max(0, w.balance - totalStake) } : w
-      )
-    );
-
-    const newBets = singlesInSlip.map((item) => ({
-      id: `HB-${Math.floor(10000 + Math.random() * 90000)}`,
-      sport: 'soccer',
-      match: item.matchTitle,
-      selection: `${item.selectionName} (${formatOdds(item.odd)})`,
-      market: item.marketName,
-      stake: item.stake,
-      currency: selectedCurrency,
-      odds: item.odd,
-      potentialPayout: Number((item.stake * item.odd).toFixed(2)),
-      status: 'IN_PLAY',
-      currentCashout: Number((item.stake * 0.96).toFixed(2)),
-      txHash: `${Math.random().toString(36).substring(2, 6)}...${Math.random().toString(36).substring(2, 6)} (Solana)`,
-      placedAt: 'Just now',
-      progress: 74
+    setMyBets((prev) => ({
+      ...prev,
+      open: [newOpenBet, ...prev.open]
     }));
 
-    setUserBets((prev) => [...newBets, ...prev]);
-    setSinglesInSlip([]);
-    setIsMobileBetslipOpen(false);
-  };
-
-  // Cash out a bet
-  const cashOutBet = (betId) => {
-    playSound('win');
-    confetti({
-      particleCount: 40,
-      spread: 50,
-      origin: { y: 0.5 },
-      colors: ['#00E701', '#3b82f6']
+    setBetFeedback({
+      type: 'success',
+      message: `Bet placed successfully! Single on ${bet.selectionName} @ ${bet.odd.toFixed(2)}`,
+      betId: newBetId
     });
 
-    setUserBets((prev) =>
-      prev.map((bet) => {
-        if (bet.id === betId) {
-          // add cashout value to wallet
-          setWallets((wList) =>
-            wList.map((w) =>
-              w.symbol === bet.currency ? { ...w, balance: w.balance + (bet.currentCashout || 0) } : w
-            )
-          );
-          return {
-            ...bet,
-            status: 'CASHED_OUT',
-            payout: bet.currentCashout,
-            settledAt: 'Just now'
-          };
-        }
-        return bet;
-      })
-    );
+    setSinglesInSlip([]);
+    setOddsChangedNotice(null);
+    setIsMobileDrawerOpen(false);
+
+    setTimeout(() => setBetFeedback(null), 4000);
   };
 
-  // Live Odds Fluctuation Engine (Simulates real-time sportsbook market movement)
+  // Cash out open bet
+  const cashOut = (betId) => {
+    playClick();
+    setMyBets((prev) => {
+      const target = prev.open.find((b) => b.id === betId);
+      if (!target) return prev;
+
+      setUsdtBalance((b) => b + target.cashoutAmount);
+
+      return {
+        ...prev,
+        open: prev.open.filter((b) => b.id !== betId),
+        settled: [
+          {
+            ...target,
+            result: `Cashed Out ($${target.cashoutAmount.toFixed(2)})`
+          },
+          ...prev.settled
+        ]
+      };
+    });
+
+    confetti({
+      particleCount: 30,
+      spread: 50,
+      origin: { y: 0.6 },
+      colors: ['#00A3FF', '#f59e0b']
+    });
+  };
+
+  // Toggle Following a Team or Competition
+  const toggleFollow = (item) => {
+    playClick();
+    setFavourites((prev) => {
+      const exists = prev.find((f) => f.id === item.id || f.name === item.name);
+      if (exists) {
+        return prev.filter((f) => f.id !== item.id && f.name !== item.name);
+      } else {
+        return [...prev, { id: item.id || `fav-${Date.now()}`, name: item.name, type: item.type || 'team', icon: item.icon || '⭐' }];
+      }
+    });
+  };
+
+  const isFollowed = (name) => favourites.some((f) => f.name === name);
+
+  // Background odds fluctuation simulator
   useEffect(() => {
-    const interval = setInterval(() => {
-      setLiveMatches((prevMatches) =>
-        prevMatches.map((m) => {
-          if (!m.isLive) return m;
-          // Randomly fluctuate one market
-          const shouldFluctuate = Math.random() > 0.4;
-          if (!shouldFluctuate) return m;
-
-          const updatedMarkets = { ...m.markets };
-          const keys = Object.keys(updatedMarkets);
-          const randomKey = keys[Math.floor(Math.random() * keys.length)];
-          const marketArr = updatedMarkets[randomKey];
-
-          if (marketArr && marketArr.length > 0) {
-            const randomIndex = Math.floor(Math.random() * marketArr.length);
-            const item = marketArr[randomIndex];
-            const delta = (Math.random() * 0.1 - 0.05).toFixed(2);
-            const newOdd = Math.max(1.05, Number((item.odd + parseFloat(delta)).toFixed(2)));
-            const trend = newOdd > item.odd ? 'up' : newOdd < item.odd ? 'down' : 'none';
-
-            updatedMarkets[randomKey] = marketArr.map((opt, idx) =>
-              idx === randomIndex ? { ...opt, odd: newOdd, trend } : opt
-            );
-          }
-
-          return {
-            ...m,
-            markets: updatedMarkets
-          };
-        })
-      );
-    }, 5500);
-
-    return () => clearInterval(interval);
+    const timer = setInterval(() => {
+      // randomly fluctuate live match result
+      const match = MATCHES_DATA[0];
+      if (match && match.matchResult) {
+        const delta = (Math.random() * 0.04 - 0.02);
+        match.matchResult.home.odd = Math.max(1.10, Number((match.matchResult.home.odd + delta).toFixed(2)));
+      }
+    }, 6000);
+    return () => clearInterval(timer);
   }, []);
 
-  const activeWallet = wallets.find((w) => w.symbol === selectedCurrency) || wallets[0];
-  const selectedMatch = liveMatches.find((m) => m.id === selectedMatchId) || liveMatches[0];
+  const selectedMatch = MATCHES_DATA.find((m) => m.id === selectedMatchId) || MATCHES_DATA[0];
 
   return (
     <SportsbookContext.Provider
@@ -329,37 +285,38 @@ export const SportsbookProvider = ({ children }) => {
         setCurrentPage,
         selectedMatchId,
         setSelectedMatchId,
-        selectedSport,
-        setSelectedSport,
-        selectedLeague,
-        setSelectedLeague,
+        selectedMatch,
+        searchQuery,
+        setSearchQuery,
         viewMode,
         setViewMode,
-        oddsFormat,
-        setOddsFormat,
-        formatOdds,
-        wallets,
-        selectedCurrency,
-        setSelectedCurrency,
-        activeWallet,
-        liveMatches,
-        selectedMatch,
+        isSidebarOpen,
+        setIsSidebarOpen,
+        isBetslipPanelOpen,
+        setIsBetslipPanelOpen,
+        activePanelTab,
+        setActivePanelTab,
+        isMobileDrawerOpen,
+        setIsMobileDrawerOpen,
         singlesInSlip,
-        toggleSingleBet,
-        updateSingleStake,
-        removeSingleBet,
+        toggleSelection,
+        removeSelection,
         clearSlip,
+        updateStake,
+        oddsChangedNotice,
+        acceptChangedOdds,
+        triggerSimulateOddsChange,
+        betFeedback,
+        simulateFailNextBet,
+        setSimulateFailNextBet,
         placeSingleBet,
-        placeAllSingles,
-        userBets,
-        cashOutBet,
-        isMobileBetslipOpen,
-        setIsMobileBetslipOpen,
-        quickBetMode,
-        setQuickBetMode,
-        soundEnabled,
-        setSoundEnabled,
-        playSound
+        favourites,
+        toggleFollow,
+        isFollowed,
+        myBets,
+        cashOut,
+        usdtBalance,
+        playClick
       }}
     >
       {children}

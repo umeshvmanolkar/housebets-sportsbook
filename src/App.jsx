@@ -7,12 +7,12 @@ import { MobileNavigation } from './components/MobileNavigation';
 import { MobileBetslipDrawer } from './components/MobileBetslipDrawer';
 import { ContestModal } from './components/ContestModal';
 
-// 5 Core Pages
-import { LobbyPage } from './pages/LobbyPage';
-import { MatchDetailPage } from './pages/MatchDetailPage';
-import { LeaguesPage } from './pages/LeaguesPage';
-import { BetslipTerminalPage } from './pages/BetslipTerminalPage';
-import { MyBetsProfilePage } from './pages/MyBetsProfilePage';
+// The 5 Exact Pages from Contest Brief
+import { SportsHome } from './pages/SportsHome';
+import { LivePage } from './pages/LivePage';
+import { FootballPage } from './pages/FootballPage';
+import { MatchPage } from './pages/MatchPage';
+import { BetSlipMyBetsPage } from './pages/BetSlipMyBetsPage';
 
 import { Smartphone, Monitor, Info } from 'lucide-react';
 
@@ -20,78 +20,78 @@ const MainLayout = () => {
   const { currentPage, viewMode, setViewMode } = useSportsbook();
   const [isContestModalOpen, setIsContestModalOpen] = useState(false);
 
-  // Render Current Page
-  const renderPage = () => {
+  // Render the exact 5 linked pages
+  const renderCurrentPage = () => {
     switch (currentPage) {
-      case 'match-detail':
-        return <MatchDetailPage />;
-      case 'leagues':
-        return <LeaguesPage />;
-      case 'betslip-terminal':
-        return <BetslipTerminalPage />;
-      case 'my-bets':
-        return <MyBetsProfilePage />;
-      case 'lobby':
+      case 'live':
+        return <LivePage />;
+      case 'football':
+        return <FootballPage />;
+      case 'match':
+        return <MatchPage />;
+      case 'bets':
+        return <BetSlipMyBetsPage />;
+      case 'home':
       default:
-        return <LobbyPage />;
+        return <SportsHome />;
     }
   };
 
-  // If Mobile Frame Preview is active, wrap in realistic iPhone mockup
-  if (viewMode === 'mobile-preview') {
+  // 1. Mobile Phone Mode (390px iPhone Device Shell)
+  if (viewMode === 'mobile') {
     return (
-      <div className="min-h-screen bg-[#05070a] flex flex-col items-center justify-center p-4 selection:bg-[#00E701] selection:text-black">
-        {/* Device Switcher Bar on Top of Simulator */}
-        <div className="mb-4 flex items-center gap-3 bg-[#0e131d] border border-white/10 px-4 py-2 rounded-2xl shadow-xl">
+      <div className="min-h-screen bg-[#04090e] flex flex-col items-center justify-center p-3 selection:bg-[#00A3FF] selection:text-white">
+        {/* Device Switcher Bar above phone */}
+        <div className="mb-3 flex items-center gap-3 bg-[#0a141e] border border-white/10 px-4 py-2 rounded-2xl shadow-xl">
           <div className="flex items-center gap-2">
-            <Smartphone className="w-4 h-4 text-[#00E701]" />
-            <span className="text-xs font-bold text-white">Mobile Viewport Simulation (390 × 844)</span>
+            <Smartphone className="w-4 h-4 text-[#00A3FF]" />
+            <span className="text-xs font-bold text-white">iPhone Viewport Simulation (390px)</span>
           </div>
 
           <div className="h-4 w-px bg-white/10" />
 
           <button
             onClick={() => setViewMode('desktop')}
-            className="text-xs text-gray-400 hover:text-white flex items-center gap-1.5 transition-colors"
+            className="text-xs text-gray-400 hover:text-white flex items-center gap-1.5 transition-colors font-medium"
           >
             <Monitor className="w-3.5 h-3.5" />
-            <span>Switch to Desktop View</span>
+            <span>Switch to 1440px Desktop</span>
           </button>
 
           <button
             onClick={() => setIsContestModalOpen(true)}
-            className="text-xs text-[#00E701] font-semibold hover:underline flex items-center gap-1"
+            className="text-xs text-[#00A3FF] font-semibold hover:underline flex items-center gap-1"
           >
             <Info className="w-3.5 h-3.5" />
             <span>Contest Brief</span>
           </button>
         </div>
 
-        {/* The iPhone Mockup Shell */}
-        <div className="iphone-frame bg-[#07090e] border-4 border-[#1c2230] flex flex-col text-white">
+        {/* iPhone Frame */}
+        <div className="iphone-frame flex flex-col text-white">
           {/* Dynamic Island */}
           <div className="dynamic-island flex items-center justify-between px-3 text-[10px] text-white/70">
-            <span className="text-[9px] font-mono">18:00</span>
-            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+            <span className="text-[9px] font-mono">18:30</span>
+            <div className="w-2.5 h-2.5 rounded-full bg-cyan-500/80" />
             <span className="text-[9px]">5G</span>
           </div>
 
-          {/* Mobile Embedded Header */}
+          {/* Embedded Header */}
           <Header onOpenContestModal={() => setIsContestModalOpen(true)} />
 
-          {/* Scrollable Mobile Body */}
-          <main className="flex-1 overflow-y-auto px-3 pt-3 pb-20">
-            {renderPage()}
+          {/* Scrollable Page Body */}
+          <main className="flex-1 overflow-y-auto px-3 pt-3 pb-24">
+            {renderCurrentPage()}
           </main>
 
-          {/* Mobile Bottom Navigation */}
+          {/* Floating bar and Mobile Nav Bar */}
           <MobileNavigation />
 
-          {/* Slide-Up Mobile Betslip Drawer */}
+          {/* Mobile Bottom Drawer */}
           <MobileBetslipDrawer />
         </div>
 
-        {/* Global Contest Modal */}
+        {/* Contest Modal */}
         <ContestModal
           isOpen={isContestModalOpen}
           onClose={() => setIsContestModalOpen(false)}
@@ -100,37 +100,33 @@ const MainLayout = () => {
     );
   }
 
-  // Standard Desktop / Responsive Layout
+  // 2. Desktop Mode (1440px) & Responsive Layout
   return (
-    <div className="min-h-screen bg-[#07090e] text-[#f1f5f9] flex flex-col">
+    <div className="min-h-screen bg-[#071017] text-[#e2e8f0] flex flex-col">
       {/* Top Main Navigation Header */}
       <Header onOpenContestModal={() => setIsContestModalOpen(true)} />
 
-      {/* Main 3-Column Sportsbook Body */}
+      {/* Main Site Shell (Left nav, Center content, Right side panel) */}
       <div className="flex-1 flex max-w-[1720px] w-full mx-auto overflow-hidden">
-        {/* Left Sports Navigation Rail (Desktop) */}
+        {/* Left Nav (Slim Icon Rail) */}
         <Sidebar />
 
-        {/* Center Main Stage (Dynamic Page 1 - 5) */}
-        <main className="flex-1 overflow-y-auto px-4 sm:px-6 py-5">
-          {renderPage()}
+        {/* Center Main Stage (Dynamic 5 Pages) */}
+        <main className="flex-1 overflow-y-auto px-3 sm:px-6 py-4">
+          {renderCurrentPage()}
         </main>
 
-        {/* Right Betslip Rail (Desktop) */}
-        {viewMode !== 'mobile-preview' && (
-          <div className="hidden lg:block">
-            <Betslip />
-          </div>
-        )}
+        {/* Right Side Panel (Betslip + My bets) */}
+        <Betslip />
       </div>
 
-      {/* Mobile Bottom Navigation Bar (Visible on smaller screens in responsive mode) */}
+      {/* Mobile Bottom Floating bar & Navigation for smaller screens in responsive mode */}
       <MobileNavigation />
 
-      {/* Mobile Betslip Bottom Drawer Sheet */}
+      {/* Mobile Slide-Up Drawer for responsive mode */}
       <MobileBetslipDrawer />
 
-      {/* Contest Specs & Architecture Presentation Modal */}
+      {/* Contest Specs & Rubric Verification Modal */}
       <ContestModal
         isOpen={isContestModalOpen}
         onClose={() => setIsContestModalOpen(false)}
