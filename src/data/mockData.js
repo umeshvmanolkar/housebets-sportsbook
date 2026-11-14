@@ -1,23 +1,55 @@
-// Official Housebets Contest Dataset — Exact Fixtures, Leagues & Markets
+// Enhanced Housebets & Stake-Inspired Sportsbook Dataset
+
+export const PROMO_CARDS = [
+  {
+    id: 'promo-1',
+    title: 'GTA 6 at Housebets',
+    subtitle: 'Bet on GTA specials & release odds here',
+    badge: 'NEW',
+    bgGradient: 'from-purple-900/60 via-indigo-950/80 to-[#1a2c38]',
+    border: 'border-purple-500/30',
+    icon: '🌴'
+  },
+  {
+    id: 'promo-2',
+    title: 'Stream Fighters 5 Refund',
+    subtitle: 'Lose your first single bet? 100% Refunded',
+    badge: 'HOT',
+    bgGradient: 'from-blue-900/60 via-slate-900 to-[#1a2c38]',
+    border: 'border-blue-500/30',
+    icon: '🥊'
+  },
+  {
+    id: 'promo-3',
+    title: 'Zero-Margin Champions League',
+    subtitle: '50% higher payout on all straight singles',
+    badge: 'BOOST',
+    bgGradient: 'from-amber-900/60 via-yellow-950 to-[#1a2c38]',
+    border: 'border-amber-500/30',
+    icon: '⭐'
+  }
+];
 
 export const SPORTS_NAV = [
-  { id: 'home', name: 'Home', icon: '🏠', count: null },
-  { id: 'live', name: 'Live', icon: '📺', count: 13, hasLiveDot: true },
-  { id: 'soccer', name: 'Soccer', icon: '⚽', count: 6 },
-  { id: 'tennis', name: 'Tennis', icon: '🎾', count: 3 },
-  { id: 'basketball', name: 'Basketball', icon: '🏀', count: 1 },
-  { id: 'baseball', name: 'Baseball', icon: '⚾', count: 1 },
-  { id: 'american-football', name: 'American Football', icon: '🏈', count: 1 },
-  { id: 'esports', name: 'Esports', icon: '🎮', count: 1 },
+  { id: 'home', name: 'Sports Home', icon: '🏠', count: null },
+  { id: 'live', name: 'Live Betting', icon: '🔴', count: 77, hasLiveDot: true },
+  { id: 'trending', name: 'Trending', icon: '🔥', count: 18 },
+  { id: 'soccer', name: 'Soccer', icon: '⚽', count: 42 },
+  { id: 'tennis', name: 'Tennis', icon: '🎾', count: 14 },
+  { id: 'basketball', name: 'Basketball', icon: '🏀', count: 19 },
+  { id: 'mma', name: 'MMA', icon: '🥊', count: 8 },
+  { id: 'cricket', name: 'Cricket', icon: '🏏', count: 6 },
+  { id: 'esports', name: 'CS2', icon: '🎮', count: 11 },
 ];
 
 export const INITIAL_FAVOURITES = [
-  { id: 'fav-pl', name: 'Premier League', type: 'competition', icon: '⭐' },
-  { id: 'fav-ars', name: 'Arsenal', type: 'team', icon: '🔴' }
+  { id: 'fav-pl', name: 'Premier League', type: 'competition', icon: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
+  { id: 'fav-ars', name: 'Arsenal', type: 'team', icon: '🔴' },
+  { id: 'fav-ucl', name: 'Champions League', type: 'competition', icon: '🌍' }
 ];
 
 export const MATCHES_DATA = [
-  // Match 1: Primary Featured Live Match (Arsenal vs Brighton)
+  // Match 1: Arsenal vs Brighton (Primary Live Match)
   {
     id: 'match-ars-bha',
     sport: 'soccer',
@@ -28,18 +60,18 @@ export const MATCHES_DATA = [
     minute: "52'",
     period: '2nd Half',
     date: 'Live Now',
+    bettorVolume: '29,555',
+    bettorSentiment: '97% of 1x2 bets on Arsenal',
     isSuspended: false,
     homeTeam: {
       name: 'Arsenal',
       shortName: 'ARS',
-      logo: '🔴',
       score: 1,
       isFollowed: true
     },
     awayTeam: {
       name: 'Brighton & Hove Albion',
       shortName: 'BHA',
-      logo: '🔵',
       score: 0,
       isFollowed: false
     },
@@ -48,12 +80,13 @@ export const MATCHES_DATA = [
       draw: { label: 'Draw', odd: 4.60, id: 'ars-bha-x' },
       away: { label: 'Brighton', odd: 11.00, id: 'ars-bha-2' }
     },
+    winProbability: { home: 76, draw: 14, away: 10 },
     moreMarketsCount: 115,
     marketGroups: {
       popular: [
         {
           id: 'grp-match-result',
-          name: 'Match result',
+          name: '1x2 (Full Time)',
           options: [
             { id: 'mr-1', label: 'Arsenal', odd: 1.30 },
             { id: 'mr-x', label: 'Draw', odd: 4.60 },
@@ -61,12 +94,20 @@ export const MATCHES_DATA = [
           ]
         },
         {
+          id: 'grp-draw-no-bet',
+          name: 'Draw No Bet',
+          options: [
+            { id: 'dnb-1', label: 'Arsenal', odd: 1.09 },
+            { id: 'dnb-2', label: 'Brighton', odd: 6.00 }
+          ]
+        },
+        {
           id: 'grp-double-chance',
           name: 'Double chance',
           options: [
             { id: 'dc-1x', label: 'Arsenal or draw', odd: 1.03 },
-            { id: 'dc-12', label: 'Arsenal or Brighton & Hove Albion', odd: 1.18 },
-            { id: 'dc-x2', label: 'Draw or Brighton & Hove Albion', odd: 3.30 }
+            { id: 'dc-12', label: 'Arsenal or Brighton', odd: 1.18 },
+            { id: 'dc-x2', label: 'Draw or Brighton', odd: 3.30 }
           ]
         },
         {
@@ -98,7 +139,7 @@ export const MATCHES_DATA = [
         },
         {
           id: 'grp-total-goals-alt',
-          name: 'Total goals (Alternative lines)',
+          name: 'Alternative total goals',
           options: [
             { id: 'tg-o15', label: 'Over 1.5', odd: 1.40 },
             { id: 'tg-u15', label: 'Under 1.5', odd: 2.75 },
@@ -152,7 +193,151 @@ export const MATCHES_DATA = [
     }
   },
 
-  // Match 2: Aston Villa vs Fulham (Live HT 0-0)
+  // Match 2: Norway vs Wales (Direct from Stake Reference Screenshot!)
+  {
+    id: 'match-nor-wal',
+    sport: 'soccer',
+    league: 'UEFA Nations League',
+    country: 'International',
+    leagueFlag: '🌍',
+    isLive: false,
+    minute: null,
+    date: '14 Nov | 22:30',
+    bettorVolume: '29,555',
+    bettorSentiment: '97% of 1x2 bets on Norway',
+    isSuspended: false,
+    homeTeam: { name: 'Norway', shortName: 'NOR', score: null, isFollowed: true },
+    awayTeam: { name: 'Wales', shortName: 'WAL', score: null, isFollowed: false },
+    matchResult: {
+      home: { label: 'Norway', odd: 1.27, id: 'nor-wal-1' },
+      draw: { label: 'Draw', odd: 6.20, id: 'nor-wal-x' },
+      away: { label: 'Wales', odd: 8.40, id: 'nor-wal-2' }
+    },
+    winProbability: { home: 76, draw: 14, away: 10 },
+    moreMarketsCount: 88
+  },
+
+  // Match 3: Portugal vs Denmark (From Stake Reference Screenshot!)
+  {
+    id: 'match-por-den',
+    sport: 'soccer',
+    league: 'UEFA Nations League',
+    country: 'International',
+    leagueFlag: '🌍',
+    isLive: false,
+    minute: null,
+    date: '14 Nov | 22:30',
+    bettorVolume: '26,808',
+    bettorSentiment: '97% of 1x2 bets on Portugal',
+    isSuspended: false,
+    homeTeam: { name: 'Portugal', shortName: 'POR', score: null, isFollowed: false },
+    awayTeam: { name: 'Denmark', shortName: 'DEN', score: null, isFollowed: false },
+    matchResult: {
+      home: { label: 'Portugal', odd: 1.58, id: 'por-den-1' },
+      draw: { label: 'Draw', odd: 4.30, id: 'por-den-x' },
+      away: { label: 'Denmark', odd: 4.70, id: 'por-den-2' }
+    },
+    winProbability: { home: 65, draw: 22, away: 13 },
+    moreMarketsCount: 64
+  },
+
+  // Match 4: Sweden vs Bosnia and Herzegovina (From Stake Reference Screenshot!)
+  {
+    id: 'match-swe-bih',
+    sport: 'soccer',
+    league: 'UEFA Nations League',
+    country: 'International',
+    leagueFlag: '🌍',
+    isLive: false,
+    minute: null,
+    date: '14 Nov | 22:30',
+    bettorVolume: '22,957',
+    bettorSentiment: '95% of 1x2 bets on Sweden',
+    isSuspended: false,
+    homeTeam: { name: 'Sweden', shortName: 'SWE', score: null, isFollowed: false },
+    awayTeam: { name: 'Bosnia and Herzegovina', shortName: 'BIH', score: null, isFollowed: false },
+    matchResult: {
+      home: { label: 'Sweden', odd: 1.39, id: 'swe-bih-1' },
+      draw: { label: 'Draw', odd: 4.50, id: 'swe-bih-x' },
+      away: { label: 'Bosnia', odd: 6.80, id: 'swe-bih-2' }
+    },
+    winProbability: { home: 71, draw: 19, away: 10 },
+    moreMarketsCount: 52
+  },
+
+  // Match 5: Liverpool vs Manchester United
+  {
+    id: 'match-liv-mun',
+    sport: 'soccer',
+    league: 'Premier League',
+    country: 'England',
+    leagueFlag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
+    isLive: false,
+    minute: null,
+    date: 'Sun, Oct 18 | 16:30',
+    bettorVolume: '41,200',
+    bettorSentiment: '88% of 1x2 bets on Liverpool',
+    isSuspended: false,
+    homeTeam: { name: 'Liverpool', shortName: 'LIV', score: null, isFollowed: true },
+    awayTeam: { name: 'Manchester United', shortName: 'MUN', score: null, isFollowed: false },
+    matchResult: {
+      home: { label: 'Liverpool', odd: 1.65, id: 'liv-mun-1' },
+      draw: { label: 'Draw', odd: 4.00, id: 'liv-mun-x' },
+      away: { label: 'Man Utd', odd: 4.33, id: 'liv-mun-2' }
+    },
+    winProbability: { home: 58, draw: 24, away: 18 },
+    moreMarketsCount: 94
+  },
+
+  // Match 6: Real Madrid vs Bayern Munich
+  {
+    id: 'match-rma-bay',
+    sport: 'soccer',
+    league: 'Champions League',
+    country: 'Europe',
+    leagueFlag: '🌍',
+    isLive: false,
+    minute: null,
+    date: 'Tue, Oct 20 | 20:00',
+    bettorVolume: '38,150',
+    bettorSentiment: '54% of 1x2 bets on Real Madrid',
+    isSuspended: false,
+    homeTeam: { name: 'Real Madrid', shortName: 'RMA', score: null, isFollowed: false },
+    awayTeam: { name: 'Bayern Munich', shortName: 'BAY', score: null, isFollowed: false },
+    matchResult: {
+      home: { label: 'Real Madrid', odd: 2.20, id: 'rma-bay-1' },
+      draw: { label: 'Draw', odd: 3.70, id: 'rma-bay-x' },
+      away: { label: 'Bayern', odd: 2.90, id: 'rma-bay-2' }
+    },
+    winProbability: { home: 44, draw: 27, away: 29 },
+    moreMarketsCount: 104
+  },
+
+  // Match 7: Manchester City vs Tottenham Hotspur
+  {
+    id: 'match-mci-tot',
+    sport: 'soccer',
+    league: 'Premier League',
+    country: 'England',
+    leagueFlag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
+    isLive: false,
+    minute: null,
+    date: 'Sun, Oct 18 | 14:00',
+    bettorVolume: '33,900',
+    bettorSentiment: '91% of 1x2 bets on Man City',
+    isSuspended: false,
+    homeTeam: { name: 'Manchester City', shortName: 'MCI', score: null, isFollowed: false },
+    awayTeam: { name: 'Tottenham Hotspur', shortName: 'TOT', score: null, isFollowed: false },
+    matchResult: {
+      home: { label: 'Man City', odd: 1.50, id: 'mci-tot-1' },
+      draw: { label: 'Draw', odd: 4.50, id: 'mci-tot-x' },
+      away: { label: 'Spurs', odd: 5.25, id: 'mci-tot-2' }
+    },
+    winProbability: { home: 64, draw: 22, away: 14 },
+    moreMarketsCount: 78
+  },
+
+  // Match 8: Aston Villa vs Fulham (Live HT 0-0)
   {
     id: 'match-avl-ful',
     sport: 'soccer',
@@ -163,18 +348,21 @@ export const MATCHES_DATA = [
     minute: 'HT',
     period: 'Half Time',
     date: 'Live Now',
+    bettorVolume: '14,200',
+    bettorSentiment: '62% of 1x2 bets on Aston Villa',
     isSuspended: false,
-    homeTeam: { name: 'Aston Villa', shortName: 'AVL', logo: '🦁', score: 0, isFollowed: false },
-    awayTeam: { name: 'Fulham', shortName: 'FUL', logo: '⚪', score: 0, isFollowed: false },
+    homeTeam: { name: 'Aston Villa', shortName: 'AVL', score: 0, isFollowed: false },
+    awayTeam: { name: 'Fulham', shortName: 'FUL', score: 0, isFollowed: false },
     matchResult: {
       home: { label: 'Aston Villa', odd: 2.25, id: 'avl-ful-1' },
       draw: { label: 'Draw', odd: 2.90, id: 'avl-ful-x' },
       away: { label: 'Fulham', odd: 3.60, id: 'avl-ful-2' }
     },
-    moreMarketsCount: 7
+    winProbability: { home: 42, draw: 35, away: 23 },
+    moreMarketsCount: 42
   },
 
-  // Match 3: Newcastle United vs Everton (Live 58' 2-1, Suspended)
+  // Match 9: Newcastle United vs Everton (Live 58' 2-1, Suspended)
   {
     id: 'match-new-eve',
     sport: 'soccer',
@@ -185,164 +373,18 @@ export const MATCHES_DATA = [
     minute: "58'",
     period: '2nd Half',
     date: 'Live Now',
+    bettorVolume: '18,700',
+    bettorSentiment: '84% of 1x2 bets on Newcastle',
     isSuspended: true,
-    homeTeam: { name: 'Newcastle United', shortName: 'NEW', logo: '🦓', score: 2, isFollowed: false },
-    awayTeam: { name: 'Everton', shortName: 'EVE', logo: '🔵', score: 1, isFollowed: false },
+    homeTeam: { name: 'Newcastle United', shortName: 'NEW', score: 2, isFollowed: false },
+    awayTeam: { name: 'Everton', shortName: 'EVE', score: 1, isFollowed: false },
     matchResult: {
       home: { label: 'Newcastle United', odd: 1.35, id: 'new-eve-1' },
       draw: { label: 'Draw', odd: 4.80, id: 'new-eve-x' },
       away: { label: 'Everton', odd: 8.50, id: 'new-eve-2' }
     },
-    moreMarketsCount: 6
-  },
-
-  // Match 4: Atlético Madrid vs Sevilla (Live 37' 1-0, Suspended)
-  {
-    id: 'match-atm-sev',
-    sport: 'soccer',
-    league: 'LaLiga',
-    country: 'Spain',
-    leagueFlag: '🇪🇸',
-    isLive: true,
-    minute: "37'",
-    period: '1st Half',
-    date: 'Live Now',
-    isSuspended: true,
-    homeTeam: { name: 'Atlético Madrid', shortName: 'ATM', logo: '⚪🔴', score: 1, isFollowed: false },
-    awayTeam: { name: 'Sevilla', shortName: 'SEV', logo: '⚪', score: 0, isFollowed: false },
-    matchResult: {
-      home: { label: 'Atlético Madrid', odd: 1.28, id: 'atm-sev-1' },
-      draw: { label: 'Draw', odd: 5.20, id: 'atm-sev-x' },
-      away: { label: 'Sevilla', odd: 11.50, id: 'atm-sev-2' }
-    },
-    moreMarketsCount: 8
-  },
-
-  // Match 5: Juventus vs Roma (Live 49' 1-1)
-  {
-    id: 'match-juv-rom',
-    sport: 'soccer',
-    league: 'Serie A',
-    country: 'Italy',
-    leagueFlag: '🇮🇹',
-    isLive: true,
-    minute: "49'",
-    period: '2nd Half',
-    date: 'Live Now',
-    isSuspended: false,
-    homeTeam: { name: 'Juventus', shortName: 'JUV', logo: '⚪⚫', score: 1, isFollowed: false },
-    awayTeam: { name: 'Roma', shortName: 'ROM', logo: '🟡🔴', score: 1, isFollowed: false },
-    matchResult: {
-      home: { label: 'Juventus', odd: 2.40, id: 'juv-rom-1' },
-      draw: { label: 'Draw', odd: 3.10, id: 'juv-rom-x' },
-      away: { label: 'Roma', odd: 3.20, id: 'juv-rom-2' }
-    },
-    moreMarketsCount: 6
-  },
-
-  // Match 6: Liverpool vs Manchester United (Sun, Oct 18 - 16:30)
-  {
-    id: 'match-liv-mun',
-    sport: 'soccer',
-    league: 'Premier League',
-    country: 'England',
-    leagueFlag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
-    isLive: false,
-    minute: null,
-    date: 'Sun, Oct 18 · 16:30',
-    isSuspended: false,
-    homeTeam: { name: 'Liverpool', shortName: 'LIV', logo: '🔴', score: null, isFollowed: true },
-    awayTeam: { name: 'Manchester United', shortName: 'MUN', logo: '👹', score: null, isFollowed: false },
-    matchResult: {
-      home: { label: 'Liverpool', odd: 1.65, id: 'liv-mun-1' },
-      draw: { label: 'Draw', odd: 4.00, id: 'liv-mun-x' },
-      away: { label: 'Man Utd', odd: 4.33, id: 'liv-mun-2' }
-    },
-    moreMarketsCount: 10
-  },
-
-  // Match 7: Arsenal vs Inter (Tue, Oct 20 - 20:00)
-  {
-    id: 'match-ars-int',
-    sport: 'soccer',
-    league: 'Champions League',
-    country: 'Europe',
-    leagueFlag: '🌍',
-    isLive: false,
-    minute: null,
-    date: 'Tue, Oct 20 · 20:00',
-    isSuspended: false,
-    homeTeam: { name: 'Arsenal', shortName: 'ARS', logo: '🔴', score: null, isFollowed: true },
-    awayTeam: { name: 'Inter', shortName: 'INT', logo: '🔵⚫', score: null, isFollowed: false },
-    matchResult: {
-      home: { label: 'Arsenal', odd: 1.95, id: 'ars-int-1' },
-      draw: { label: 'Draw', odd: 3.50, id: 'ars-int-x' },
-      away: { label: 'Inter', odd: 4.00, id: 'ars-int-2' }
-    },
-    moreMarketsCount: 8
-  },
-
-  // Match 8: Real Madrid vs Bayern Munich (Tue, Oct 20 - 20:00)
-  {
-    id: 'match-rma-bay',
-    sport: 'soccer',
-    league: 'Champions League',
-    country: 'Europe',
-    leagueFlag: '🌍',
-    isLive: false,
-    minute: null,
-    date: 'Tue, Oct 20 · 20:00',
-    isSuspended: false,
-    homeTeam: { name: 'Real Madrid', shortName: 'RMA', logo: '⚪', score: null, isFollowed: false },
-    awayTeam: { name: 'Bayern Munich', shortName: 'BAY', logo: '🔴', score: null, isFollowed: false },
-    matchResult: {
-      home: { label: 'Real Madrid', odd: 2.20, id: 'rma-bay-1' },
-      draw: { label: 'Draw', odd: 3.70, id: 'rma-bay-x' },
-      away: { label: 'Bayern', odd: 2.90, id: 'rma-bay-2' }
-    },
-    moreMarketsCount: 9
-  },
-
-  // Match 9: Barcelona vs Paris Saint-Germain (Wed, Oct 21 - 20:00)
-  {
-    id: 'match-bar-psg',
-    sport: 'soccer',
-    league: 'Champions League',
-    country: 'Europe',
-    leagueFlag: '🌍',
-    isLive: false,
-    minute: null,
-    date: 'Wed, Oct 21 · 20:00',
-    isSuspended: false,
-    homeTeam: { name: 'Barcelona', shortName: 'BAR', logo: '🔴🔵', score: null, isFollowed: false },
-    awayTeam: { name: 'Paris Saint-Germain', shortName: 'PSG', logo: '🔵🔴', score: null, isFollowed: false },
-    matchResult: {
-      home: { label: 'Barcelona', odd: 2.05, id: 'bar-psg-1' },
-      draw: { label: 'Draw', odd: 3.80, id: 'bar-psg-x' },
-      away: { label: 'PSG', odd: 3.30, id: 'bar-psg-2' }
-    },
-    moreMarketsCount: 8
-  },
-
-  // Match 10: Manchester City vs Tottenham Hotspur (Sun, Oct 18 - 14:00)
-  {
-    id: 'match-mci-tot',
-    sport: 'soccer',
-    league: 'Premier League',
-    country: 'England',
-    leagueFlag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
-    isLive: false,
-    minute: null,
-    date: 'Sun, Oct 18 · 14:00',
-    isSuspended: false,
-    homeTeam: { name: 'Manchester City', shortName: 'MCI', logo: '🔵', score: null, isFollowed: false },
-    awayTeam: { name: 'Tottenham Hotspur', shortName: 'TOT', logo: '⚪', score: null, isFollowed: false },
-    matchResult: {
-      home: { label: 'Man City', odd: 1.50, id: 'mci-tot-1' },
-      draw: { label: 'Draw', odd: 4.50, id: 'mci-tot-x' },
-      away: { label: 'Spurs', odd: 5.25, id: 'mci-tot-2' }
-    },
-    moreMarketsCount: 12
+    winProbability: { home: 78, draw: 15, away: 7 },
+    moreMarketsCount: 36
   }
 ];
 
@@ -350,7 +392,7 @@ export const INITIAL_MY_BETS = {
   open: [
     {
       id: 'bet-op-1',
-      placedDate: 'Oct 17 14:58',
+      placedDate: '14 Nov 14:58',
       team: 'Arsenal',
       match: 'Arsenal v Brighton & Hove Albion',
       statusNote: '52\' 1-0',
@@ -365,7 +407,7 @@ export const INITIAL_MY_BETS = {
   settled: [
     {
       id: 'bet-st-1',
-      placedDate: 'Oct 16 19:30',
+      placedDate: '13 Nov 19:30',
       team: 'Liverpool',
       match: 'Liverpool v Chelsea',
       statusNote: 'FT 2-1',
@@ -377,7 +419,7 @@ export const INITIAL_MY_BETS = {
     },
     {
       id: 'bet-st-2',
-      placedDate: 'Oct 15 20:00',
+      placedDate: '12 Nov 20:00',
       team: 'Real Madrid',
       match: 'Real Madrid v Dortmund',
       statusNote: 'FT 3-1',
@@ -389,19 +431,7 @@ export const INITIAL_MY_BETS = {
     },
     {
       id: 'bet-st-3',
-      placedDate: 'Oct 14 18:45',
-      team: 'Inter',
-      match: 'Young Boys v Inter',
-      statusNote: 'FT 0-1',
-      isLive: false,
-      odds: 1.45,
-      stake: 40.00,
-      returns: 58.00,
-      result: 'Won'
-    },
-    {
-      id: 'bet-st-4',
-      placedDate: 'Oct 12 16:30',
+      placedDate: '11 Nov 16:30',
       team: 'Aston Villa',
       match: 'Aston Villa v Man Utd',
       statusNote: 'FT 0-0',
@@ -410,50 +440,15 @@ export const INITIAL_MY_BETS = {
       stake: 20.00,
       returns: 0.00,
       result: 'Lost'
-    },
-    {
-      id: 'bet-st-5',
-      placedDate: 'Oct 10 19:45',
-      team: 'Bayern Munich',
-      match: 'Frankfurt v Bayern Munich',
-      statusNote: 'FT 3-3',
-      isLive: false,
-      odds: 1.55,
-      stake: 35.00,
-      returns: 0.00,
-      result: 'Lost'
-    },
-    {
-      id: 'bet-st-6',
-      placedDate: 'Oct 08 20:00',
-      team: 'Barcelona',
-      match: 'Alaves v Barcelona',
-      statusNote: 'FT 0-3',
-      isLive: false,
-      odds: 1.60,
-      stake: 60.00,
-      returns: 96.00,
-      result: 'Won'
-    },
-    {
-      id: 'bet-st-7',
-      placedDate: 'Oct 05 17:30',
-      team: 'Arsenal',
-      match: 'Arsenal v Southampton',
-      statusNote: 'FT 3-1',
-      isLive: false,
-      odds: 1.25,
-      stake: 100.00,
-      returns: 125.00,
-      result: 'Won'
     }
   ]
 };
 
 export const FOOTBALL_LEAGUES = [
   { id: 'Premier League', name: 'Premier League', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', count: 10, isFollowed: true },
-  { id: 'Champions League', name: 'Champions League', flag: '🌍', count: 4, isFollowed: false },
+  { id: 'Champions League', name: 'Champions League', flag: '🌍', count: 6, isFollowed: true },
+  { id: 'UEFA Nations League', name: 'UEFA Nations League', flag: '🌍', count: 8, isFollowed: false },
   { id: 'LaLiga', name: 'LaLiga', flag: '🇪🇸', count: 4, isFollowed: false },
   { id: 'Serie A', name: 'Serie A', flag: '🇮🇹', count: 3, isFollowed: false },
-  { id: 'Bundesliga', name: 'Bundesliga', flag: '🇩🇪', count: 3, isFollowed: false },
+  { id: 'Bundesliga', name: 'Bundesliga', flag: '🇩🇪', count: 3, isFollowed: false }
 ];

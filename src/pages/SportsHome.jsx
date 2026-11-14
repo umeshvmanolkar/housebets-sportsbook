@@ -1,14 +1,19 @@
 import React from 'react';
 import { 
   Search, 
-  ChevronRight, 
   ChevronLeft, 
+  ChevronRight, 
+  Flame, 
+  Clock, 
   Star, 
-  X, 
-  Check 
+  Check, 
+  TrendingUp,
+  Users,
+  Pin
 } from 'lucide-react';
 import { useSportsbook } from '../context/SportsbookContext';
-import { SPORTS_NAV, MATCHES_DATA } from '../data/mockData';
+import { PROMO_CARDS, SPORTS_NAV, MATCHES_DATA } from '../data/mockData';
+import { TeamCrest } from '../components/Logos';
 
 export const SportsHome = () => {
   const {
@@ -16,305 +21,218 @@ export const SportsHome = () => {
     setSelectedMatchId,
     searchQuery,
     setSearchQuery,
-    favourites,
-    toggleFollow,
     singlesInSlip,
     toggleSelection,
+    favourites,
+    toggleFollow,
     playClick
   } = useSportsbook();
 
-  const liveMatches = MATCHES_DATA.filter((m) => m.isLive);
-  const upcomingMatches = MATCHES_DATA.filter((m) => !m.isLive);
-  const yourMatches = MATCHES_DATA.slice(0, 3);
-  const featuredMatches = [MATCHES_DATA[0], MATCHES_DATA[5], MATCHES_DATA[7], MATCHES_DATA[9]];
+  const topMatches = [
+    MATCHES_DATA[0], // Arsenal vs Brighton
+    MATCHES_DATA[1], // Norway vs Wales (from Stake screenshot)
+    MATCHES_DATA[2], // Portugal vs Denmark (from Stake screenshot)
+    MATCHES_DATA[3], // Sweden vs Bosnia (from Stake screenshot)
+    MATCHES_DATA[4], // Liverpool vs Man Utd
+    MATCHES_DATA[5]  // Real Madrid vs Bayern
+  ];
 
   return (
-    <div className="space-y-4 animate-fade-in pb-16 md:pb-6">
-      {/* 1. Search Bar (Contest Requirement: "Search: teams, players, competitions, markets") */}
+    <div className="space-y-5 animate-fade-in pb-16 md:pb-6 max-w-7xl mx-auto">
+      {/* 1. Stake-Style Promos Carousel (GTA 6, Stream Fighters, Odds Boost) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+        {PROMO_CARDS.map((promo) => (
+          <div
+            key={promo.id}
+            className={`p-4 rounded-2xl bg-gradient-to-br ${promo.bgGradient} border ${promo.border} relative overflow-hidden shadow-card-elevated flex items-center justify-between group cursor-pointer hover:border-white/20 transition-all`}
+          >
+            <div className="space-y-1 z-10">
+              <span className="px-2 py-0.5 rounded bg-white/10 text-white font-mono text-[9px] font-extrabold uppercase tracking-wider">
+                {promo.badge}
+              </span>
+              <h3 className="text-sm font-extrabold text-white group-hover:text-[#00A3FF] transition-colors">
+                {promo.title}
+              </h3>
+              <p className="text-xs text-[#b1bad3] leading-snug">
+                {promo.subtitle}
+              </p>
+            </div>
+            <span className="text-4xl transform group-hover:scale-110 transition-transform">
+              {promo.icon}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* 2. Stake-Style Search Bar with Ctrl + K badge */}
       <div className="relative">
-        <Search className="w-4 h-4 text-gray-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+        <Search className="w-4 h-4 text-[#557086] absolute left-3.5 top-1/2 -translate-y-1/2" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search teams, players or leagues"
-          className="w-full bg-[#0e1c28] text-xs text-gray-200 pl-10 pr-4 py-2.5 rounded-xl border border-white/[0.08] focus:border-[#00A3FF] focus:outline-none placeholder:text-gray-500 transition-colors"
+          className="w-full bg-[#1a2c38] text-xs text-white pl-10 pr-20 py-3 rounded-xl border border-white/[0.08] focus:border-[#1475e1] focus:outline-none placeholder:text-[#557086] transition-colors"
         />
-      </div>
-
-      {/* 2. Sports Nav Pills (Contest Requirement: "Sports nav") */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
-        {SPORTS_NAV.map((sport) => {
-          const isActive = sport.id === 'home';
-          return (
-            <button
-              key={sport.id}
-              onClick={() => {
-                playClick();
-                if (sport.id === 'live') setCurrentPage('live');
-                else if (sport.id === 'soccer') setCurrentPage('football');
-                else setCurrentPage('home');
-              }}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
-                isActive
-                  ? 'bg-[#0e2738] text-[#00A3FF] border border-[#00A3FF]/40 font-bold'
-                  : 'bg-[#0e1c28] text-gray-300 hover:text-white border border-white/5'
-              }`}
-            >
-              <span>{sport.icon}</span>
-              <span>{sport.name}</span>
-              {sport.count && (
-                <span className={`text-[10px] px-1 py-0.2 rounded font-mono ${
-                  sport.hasLiveDot ? 'bg-red-500/20 text-red-400 font-bold' : 'text-gray-500'
-                }`}>
-                  {sport.count}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* 3. Favourites Chips from Screenshot */}
-      {favourites.length > 0 && (
-        <div className="space-y-1.5">
-          <span className="text-xs font-bold text-gray-400 block px-0.5">Favourites</span>
-          <div className="flex flex-wrap items-center gap-2">
-            {favourites.map((fav) => (
-              <div
-                key={fav.id}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0e1c28] border border-white/10 text-xs font-semibold text-gray-200"
-              >
-                <span>{fav.icon}</span>
-                <span>{fav.name}</span>
-                <button
-                  onClick={() => toggleFollow(fav)}
-                  className="text-gray-500 hover:text-white p-0.5 transition-colors"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            ))}
-          </div>
+        <div className="absolute right-3.5 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-md bg-[#0f212e] border border-white/10 text-[10px] font-mono text-[#557086]">
+          Ctrl + K
         </div>
-      )}
+      </div>
 
-      {/* 4. Your Matches (Contest Requirement: "Match result odds on each row") */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between px-0.5">
+      {/* 3. Subnav Pills: Sports Home | Live Betting | Trending | My Bets */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1">
+        {[
+          { id: 'home', label: 'Sports Home', icon: '⚽', active: true },
+          { id: 'live', label: 'Live Betting', icon: '🔴', active: false },
+          { id: 'trending', label: 'Trending', icon: '🔥', active: false },
+          { id: 'mybets', label: 'My Bets', icon: '🎫', active: false }
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => {
+              playClick();
+              if (tab.id === 'live') setCurrentPage('live');
+              else if (tab.id === 'mybets') setCurrentPage('bets');
+              else setCurrentPage('home');
+            }}
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+              tab.active
+                ? 'bg-[#1a2c38] text-white border border-white/10 shadow-sm'
+                : 'bg-transparent text-[#b1bad3] hover:bg-[#1a2c38]/60 hover:text-white'
+            }`}
+          >
+            <span>{tab.icon}</span>
+            <span>{tab.label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* 4. Top Matches Grid (Exact Match to Stake Reference Screenshot 1) */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between px-1">
           <div className="flex items-center gap-2">
-            <h2 className="text-xs font-bold text-gray-300">Your matches</h2>
-            <span className="text-[10px] text-gray-500 font-mono">3 matches</span>
+            <span className="text-base">⚽</span>
+            <h2 className="text-sm font-extrabold text-white tracking-wide">Top Matches</h2>
           </div>
-          <span className="text-[11px] text-gray-400 font-medium">Match result</span>
+          <div className="flex items-center gap-1.5 text-gray-400">
+            <button className="p-1.5 rounded-lg bg-[#1a2c38] hover:text-white"><ChevronLeft className="w-4 h-4" /></button>
+            <button className="p-1.5 rounded-lg bg-[#1a2c38] hover:text-white"><ChevronRight className="w-4 h-4" /></button>
+          </div>
         </div>
 
-        <div className="space-y-2">
-          {yourMatches.map((m) => {
-            const isMatchSelected = singlesInSlip.some((s) => s.matchId === m.id);
-
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          {topMatches.map((m) => {
             return (
               <div
                 key={m.id}
-                className="p-3 sm:p-4 rounded-2xl bg-[#0e1c28] border border-white/[0.08] hover:border-white/15 transition-all flex flex-col md:flex-row md:items-center justify-between gap-3"
+                className="p-4 rounded-2xl bg-[#1a2c38] border border-white/[0.08] hover:border-white/20 transition-all space-y-3 shadow-card-elevated flex flex-col justify-between group"
               >
-                {/* Match meta + teams */}
-                <div 
+                {/* Meta Row: Time, Volume, Star */}
+                <div className="flex items-center justify-between text-xs text-[#557086] border-b border-white/[0.05] pb-2">
+                  <div className="flex items-center gap-2">
+                    {m.isLive ? (
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-red-500/20 text-red-400 font-mono text-[10px] font-bold">
+                        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                        LIVE {m.minute}
+                      </span>
+                    ) : (
+                      <span className="font-mono text-[11px] text-[#b1bad3]">{m.date}</span>
+                    )}
+                    <span className="text-gray-500">• {m.league}</span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1 font-mono text-[11px] text-[#b1bad3]">
+                      <Users className="w-3.5 h-3.5 text-[#557086]" />
+                      <span>{m.bettorVolume}</span>
+                    </span>
+                    <button
+                      onClick={() => toggleFollow({ name: m.homeTeam.name, type: 'team' })}
+                      className="p-0.5 text-[#557086] hover:text-amber-400 transition-colors"
+                    >
+                      <Star className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Match Teams & Crests (Click navigates to Match Page) */}
+                <div
                   onClick={() => {
                     playClick();
                     setSelectedMatchId(m.id);
                     setCurrentPage('match');
                   }}
-                  className="flex items-center gap-3 sm:gap-4 flex-1 cursor-pointer"
+                  className="space-y-2 cursor-pointer py-1"
                 >
-                  {/* Status / Date */}
-                  <div className="min-w-16 text-center">
-                    {m.isLive ? (
-                      <div className="space-y-0.5">
-                        <span className="px-1.5 py-0.5 rounded bg-red-500 text-white font-mono font-bold text-[9px] uppercase tracking-wider block">
-                          LIVE
-                        </span>
-                        <span className="text-[10px] text-gray-400 font-mono">{m.minute}</span>
-                      </div>
-                    ) : (
-                      <div className="text-[10px] text-gray-400 font-mono leading-tight">
-                        {m.date.split('·')[1]?.trim() || m.date}
-                      </div>
-                    )}
+                  <div className="flex items-center justify-between text-sm font-bold text-white">
+                    <div className="flex items-center gap-2.5">
+                      <TeamCrest teamName={m.homeTeam.name} className="w-6 h-6 flex-shrink-0" />
+                      <span className="group-hover:text-[#00A3FF] transition-colors">{m.homeTeam.name}</span>
+                    </div>
+                    {m.isLive && <span className="font-mono text-base font-black">{m.homeTeam.score}</span>}
                   </div>
 
-                  {/* Teams and Score */}
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center justify-between text-xs font-bold text-white">
-                      <div className="flex items-center gap-2">
-                        <span>{m.homeTeam.logo}</span>
-                        <span>{m.homeTeam.name}</span>
-                      </div>
-                      {m.isLive && <span className="font-mono text-sm">{m.homeTeam.score}</span>}
+                  <div className="flex items-center justify-between text-sm font-bold text-white">
+                    <div className="flex items-center gap-2.5">
+                      <TeamCrest teamName={m.awayTeam.name} className="w-6 h-6 flex-shrink-0" />
+                      <span className="group-hover:text-[#00A3FF] transition-colors">{m.awayTeam.name}</span>
                     </div>
-
-                    <div className="flex items-center justify-between text-xs font-bold text-white">
-                      <div className="flex items-center gap-2">
-                        <span>{m.awayTeam.logo}</span>
-                        <span>{m.awayTeam.name}</span>
-                      </div>
-                      {m.isLive && <span className="font-mono text-sm">{m.awayTeam.score}</span>}
-                    </div>
+                    {m.isLive && <span className="font-mono text-base font-black">{m.awayTeam.score}</span>}
                   </div>
                 </div>
 
-                {/* 3 Match Result Odds Buttons: Home | Draw | Away */}
-                <div className="flex items-center gap-1.5 sm:gap-2">
+                {/* Fire Bettor Sentiment Indicator (from Stake screenshot: "🔥 97% of 1x2 bets on Norway") */}
+                <div className="flex items-center gap-1.5 text-[11px] font-semibold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">
+                  <span>🔥</span>
+                  <span>{m.bettorSentiment}</span>
+                </div>
+
+                {/* Stake-Style High-Contrast Odds Row */}
+                <div className="grid grid-cols-3 gap-1.5 pt-1">
                   {[
-                    { key: 'home', opt: m.matchResult.home },
-                    { key: 'draw', opt: m.matchResult.draw },
-                    { key: 'away', opt: m.matchResult.away }
-                  ].map(({ key, opt }) => {
+                    { label: m.homeTeam.shortName || '1', opt: m.matchResult.home },
+                    { label: 'Draw', opt: m.matchResult.draw },
+                    { label: m.awayTeam.shortName || '2', opt: m.matchResult.away }
+                  ].map(({ label, opt }) => {
                     const isSelected = singlesInSlip.some((s) => s.id === opt.id);
 
                     return (
                       <button
-                        key={key}
+                        key={opt.id}
                         onClick={() =>
                           toggleSelection({
                             id: opt.id,
                             matchId: m.id,
                             matchTitle: `${m.homeTeam.name} v ${m.awayTeam.name}`,
                             scoreMinute: m.isLive ? `${m.homeTeam.score}-${m.awayTeam.score} ${m.minute}` : m.date,
-                            marketName: 'Match result',
+                            marketName: '1x2',
                             selectionName: opt.label,
                             odd: opt.odd,
                             isSuspended: m.isSuspended
                           })
                         }
-                        className={`px-3 py-2 rounded-xl text-xs flex items-center justify-between gap-3 min-w-[95px] sm:min-w-[110px] transition-all font-medium ${
+                        className={`p-2 rounded-xl text-center transition-all flex flex-col justify-between min-h-[50px] ${
                           isSelected
-                            ? 'bg-[#00A3FF] text-white font-black shadow-md'
-                            : 'bg-[#132230] hover:bg-[#182c3f] text-gray-300 border border-white/5'
+                            ? 'bg-[#1475e1] text-white font-extrabold shadow-glow-blue'
+                            : 'bg-[#213743] hover:bg-[#2a4454] text-white border border-white/5'
                         }`}
                       >
-                        <span className="truncate text-[11px]">{opt.label}</span>
-                        <div className="flex items-center gap-1 font-mono font-bold">
+                        <span className={`text-[11px] truncate font-medium ${isSelected ? 'text-white' : 'text-[#b1bad3]'}`}>
+                          {label}
+                        </span>
+                        <div className="flex items-center justify-center gap-1">
                           {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
-                          <span className={isSelected ? 'text-white' : 'text-[#00A3FF]'}>
+                          <span className={`font-mono text-xs font-bold ${isSelected ? 'text-white' : 'text-white group-hover:text-[#00A3FF]'}`}>
                             {opt.odd.toFixed(2)}
                           </span>
                         </div>
                       </button>
                     );
                   })}
-
-                  {/* +Markets count link */}
-                  <button
-                    onClick={() => {
-                      playClick();
-                      setSelectedMatchId(m.id);
-                      setCurrentPage('match');
-                    }}
-                    className="px-2 py-2 rounded-xl bg-transparent hover:bg-white/5 text-[11px] font-mono text-gray-400 hover:text-white transition-colors"
-                  >
-                    +{m.moreMarketsCount} &gt;
-                  </button>
                 </div>
               </div>
             );
           })}
-        </div>
-      </div>
-
-      {/* 5. Featured Matches Carousel (Contest Requirement: "Top competitions") */}
-      <div className="space-y-2 pt-2">
-        <div className="flex items-center justify-between px-0.5">
-          <h2 className="text-xs font-bold text-gray-300">Featured matches</h2>
-          <div className="flex items-center gap-1 text-gray-500">
-            <button className="p-1 hover:text-white transition-colors"><ChevronLeft className="w-4 h-4" /></button>
-            <button className="p-1 hover:text-white transition-colors"><ChevronRight className="w-4 h-4" /></button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {featuredMatches.map((m) => (
-            <div
-              key={m.id}
-              className="p-3.5 rounded-2xl bg-[#0e1c28] border border-white/[0.08] hover:border-white/15 transition-all space-y-2.5 flex flex-col justify-between"
-            >
-              {/* Header */}
-              <div className="flex items-center justify-between text-[11px] text-gray-400">
-                <span>{m.league}</span>
-                {m.isLive ? (
-                  <span className="px-1.5 py-0.2 rounded bg-red-500/20 text-red-400 font-mono font-bold text-[9px]">
-                    LIVE {m.minute}
-                  </span>
-                ) : (
-                  <span className="font-mono text-[10px]">{m.date}</span>
-                )}
-              </div>
-
-              {/* Match Teams */}
-              <div 
-                onClick={() => {
-                  playClick();
-                  setSelectedMatchId(m.id);
-                  setCurrentPage('match');
-                }}
-                className="space-y-1.5 cursor-pointer"
-              >
-                <div className="flex items-center justify-between text-xs font-bold text-white">
-                  <div className="flex items-center gap-2">
-                    <span>{m.homeTeam.logo}</span>
-                    <span className="truncate">{m.homeTeam.name}</span>
-                  </div>
-                  {m.isLive && <span className="font-mono">{m.homeTeam.score}</span>}
-                </div>
-
-                <div className="flex items-center justify-between text-xs font-bold text-white">
-                  <div className="flex items-center gap-2">
-                    <span>{m.awayTeam.logo}</span>
-                    <span className="truncate">{m.awayTeam.name}</span>
-                  </div>
-                  {m.isLive && <span className="font-mono">{m.awayTeam.score}</span>}
-                </div>
-              </div>
-
-              {/* 3 Odds chips */}
-              <div className="grid grid-cols-3 gap-1 pt-1 border-t border-white/5">
-                {[
-                  { label: m.homeTeam.shortName || '1', opt: m.matchResult.home },
-                  { label: 'Draw', opt: m.matchResult.draw },
-                  { label: m.awayTeam.shortName || '2', opt: m.matchResult.away }
-                ].map(({ label, opt }) => {
-                  const isSelected = singlesInSlip.some((s) => s.id === opt.id);
-                  return (
-                    <button
-                      key={opt.id}
-                      onClick={() =>
-                        toggleSelection({
-                          id: opt.id,
-                          matchId: m.id,
-                          matchTitle: `${m.homeTeam.name} v ${m.awayTeam.name}`,
-                          scoreMinute: m.isLive ? `${m.homeTeam.score}-${m.awayTeam.score} ${m.minute}` : m.date,
-                          marketName: 'Match result',
-                          selectionName: opt.label,
-                          odd: opt.odd,
-                          isSuspended: m.isSuspended
-                        })
-                      }
-                      className={`p-1.5 rounded-xl text-center text-xs transition-all ${
-                        isSelected
-                          ? 'bg-[#00A3FF] text-white font-black'
-                          : 'bg-[#132230] text-gray-200 border border-white/5 hover:bg-[#182c3f]'
-                      }`}
-                    >
-                      <span className="text-[9px] text-gray-400 block truncate">{label}</span>
-                      <strong className={`font-mono text-xs ${isSelected ? 'text-white' : 'text-[#00A3FF]'}`}>
-                        {opt.odd.toFixed(2)}
-                      </strong>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     </div>

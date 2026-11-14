@@ -11,58 +11,37 @@
     margin: 0;
     padding: 0;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #071017;
-    color: #e2e8f0;
+    background-color: #0f212e;
+    color: #b1bad3;
     overflow-x: hidden;
   }
 
-  /* Custom scrollbars */
+  /* Custom Stake-like scrollbars */
   ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #09131c;
+    background: #0b1822;
   }
   ::-webkit-scrollbar-thumb {
-    background: #172737;
-    border-radius: 3px;
+    background: #213743;
+    border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #22374c;
+    background: #2f4d5e;
   }
 }
 
-/* Custom Housebets styling */
-.hb-bg-dark {
-  background-color: #071017;
-}
-
-.hb-bg-surface {
-  background-color: #0e1c28;
-}
-
-.hb-bg-card {
-  background-color: #112232;
-}
-
-.hb-border {
-  border-color: rgba(255, 255, 255, 0.08);
-}
-
-.hb-cyan-glow {
-  box-shadow: 0 0 15px rgba(0, 163, 255, 0.35);
-}
-
-/* Mobile Phone Mockup */
+/* Phone Mockup Frame */
 .iphone-frame {
   width: 390px;
   height: 844px;
   border-radius: 46px;
-  box-shadow: 0 0 0 10px #1a2736, 0 0 0 12px #26384d, 0 25px 60px -10px rgba(0, 0, 0, 0.85);
+  box-shadow: 0 0 0 10px #1a2c38, 0 0 0 12px #26384d, 0 25px 60px -10px rgba(0, 0, 0, 0.85);
   overflow: hidden;
   position: relative;
-  background-color: #071017;
+  background-color: #0f212e;
 }
 
 .dynamic-island {
