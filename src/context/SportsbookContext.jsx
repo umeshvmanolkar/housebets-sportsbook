@@ -170,10 +170,29 @@ export const SportsbookProvider = ({ children }) => {
     });
   };
 
+  // Toggle Selection Suspended simulation (Contest Rule: "Every state: suspended, changed, failed")
+  const toggleSimulateSuspended = () => {
+    playClick();
+    if (singlesInSlip.length === 0) return;
+    setSinglesInSlip((prev) =>
+      prev.map((s, idx) => (idx === 0 ? { ...s, isSuspended: !s.isSuspended } : s))
+    );
+  };
+
   // Place Single Bet (Strictly Singles Only)
   const placeSingleBet = () => {
     if (singlesInSlip.length === 0) return;
     const bet = singlesInSlip[0];
+
+    // If selection is suspended
+    if (bet.isSuspended) {
+      setBetFeedback({
+        type: 'failed',
+        message: 'Cannot place bet: Selection is currently suspended by bookmaker.'
+      });
+      setTimeout(() => setBetFeedback(null), 4000);
+      return;
+    }
 
     // If simulated to fail (demonstrating "Bet placed, bet failed" from contest rules)
     if (simulateFailNextBet) {
@@ -320,6 +339,7 @@ export const SportsbookProvider = ({ children }) => {
         oddsChangedNotice,
         acceptChangedOdds,
         triggerSimulateOddsChange,
+        toggleSimulateSuspended,
         betFeedback,
         simulateFailNextBet,
         setSimulateFailNextBet,

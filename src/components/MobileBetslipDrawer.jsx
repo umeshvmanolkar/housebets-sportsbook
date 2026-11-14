@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Trash2, AlertTriangle, CheckCircle, XCircle, Zap } from 'lucide-react';
+import { X, Trash2, AlertTriangle, CheckCircle, XCircle, Zap, Lock } from 'lucide-react';
 import { useSportsbook } from '../context/SportsbookContext';
 
 export const MobileBetslipDrawer = ({ isInsideFrame = false }) => {
@@ -13,6 +13,7 @@ export const MobileBetslipDrawer = ({ isInsideFrame = false }) => {
     oddsChangedNotice,
     acceptChangedOdds,
     triggerSimulateOddsChange,
+    toggleSimulateSuspended,
     placeSingleBet,
     betFeedback,
     myBets,
@@ -145,12 +146,21 @@ export const MobileBetslipDrawer = ({ isInsideFrame = false }) => {
                 <div className="p-3.5 rounded-2xl bg-[#1a2c38] border border-[#213743] space-y-2.5 shadow-sm">
                   {/* Row 1: Selection Name + Odds + Remove X */}
                   <div className="flex items-center justify-between">
-                    <div className="text-sm font-bold text-white truncate pr-2">
-                      {currentBet.selectionName || currentBet.teamName}
+                    <div className="flex items-center gap-1.5 truncate pr-2">
+                      <span className="text-sm font-bold text-white truncate">
+                        {currentBet.selectionName || currentBet.teamName}
+                      </span>
+                      {currentBet.isSuspended && (
+                        <span className="px-1.5 py-0.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold text-[9px] flex items-center gap-0.5 flex-shrink-0">
+                          <Lock className="w-2.5 h-2.5" /> Suspended
+                        </span>
+                      )}
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
-                      <span className="text-sm font-mono font-bold text-[#00A3FF]">
-                        {currentBet.odd.toFixed(2)}
+                      <span className={`text-sm font-mono font-bold ${
+                        currentBet.isSuspended ? 'text-amber-400' : 'text-[#00A3FF]'
+                      }`}>
+                        {currentBet.isSuspended ? '🔒 Susp.' : currentBet.odd.toFixed(2)}
                       </span>
                       <button 
                         onClick={() => removeSelection(currentBet.id)} 
@@ -363,14 +373,23 @@ export const MobileBetslipDrawer = ({ isInsideFrame = false }) => {
 
             <button
               onClick={placeSingleBet}
-              disabled={!currentBet || totalStake <= 0}
-              className={`w-full py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md ${
-                currentBet && totalStake > 0
+              disabled={!currentBet || totalStake <= 0 || currentBet?.isSuspended}
+              className={`w-full py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-1.5 ${
+                currentBet?.isSuspended
+                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 cursor-not-allowed opacity-90'
+                  : currentBet && totalStake > 0
                   ? 'bg-[#1475e1] hover:bg-[#0092e6] text-white shadow-glow-blue active:scale-95'
                   : 'bg-[#172b38] text-[#557086] cursor-not-allowed'
               }`}
             >
-              Place bet {totalStake > 0 ? `($${totalStake.toFixed(2)} ₮)` : ''}
+              {currentBet?.isSuspended ? (
+                <>
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>Selection Suspended</span>
+                </>
+              ) : (
+                <span>Place bet {totalStake > 0 ? `($${totalStake.toFixed(2)} ₮)` : ''}</span>
+              )}
             </button>
           </div>
         )}

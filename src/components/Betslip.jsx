@@ -29,6 +29,7 @@ export const Betslip = () => {
     oddsChangedNotice,
     acceptChangedOdds,
     triggerSimulateOddsChange,
+    toggleSimulateSuspended,
     betFeedback,
     simulateFailNextBet,
     setSimulateFailNextBet,
@@ -171,8 +172,15 @@ export const Betslip = () => {
                     <div className="flex items-center gap-2.5 min-w-0">
                       <TeamCrest teamName={bet.teamName} className="w-7 h-7 flex-shrink-0" />
                       <div className="min-w-0">
-                        <div className="text-sm font-extrabold text-white leading-tight truncate">
-                          {bet.teamName}
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-sm font-extrabold text-white leading-tight truncate">
+                            {bet.teamName}
+                          </span>
+                          {bet.isSuspended && (
+                            <span className="px-1.5 py-0.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold text-[9px] flex items-center gap-0.5">
+                              <Lock className="w-2.5 h-2.5" /> Suspended
+                            </span>
+                          )}
                         </div>
                         <div className="text-[11px] text-[#b1bad3] leading-tight mt-0.5 truncate">
                           {bet.marketName} · <span className="text-red-400 font-mono font-medium">{bet.scoreMinute}</span>
@@ -181,8 +189,12 @@ export const Betslip = () => {
                     </div>
 
                     <div className="flex items-center gap-2 flex-shrink-0">
-                      <span className="font-mono text-sm font-black text-[#00A3FF] bg-[#1a2c38] px-2.5 py-1 rounded-lg border border-[#00A3FF]/20 shadow-sm">
-                        {bet.odd.toFixed(2)}
+                      <span className={`font-mono text-sm font-black px-2.5 py-1 rounded-lg border shadow-sm ${
+                        bet.isSuspended
+                          ? 'text-amber-400 bg-amber-500/10 border-amber-500/30'
+                          : 'text-[#00A3FF] bg-[#1a2c38] border-[#00A3FF]/20'
+                      }`}>
+                        {bet.isSuspended ? '🔒 Susp.' : bet.odd.toFixed(2)}
                       </span>
                       <button
                         onClick={() => removeSelection(bet.id)}
@@ -273,7 +285,7 @@ export const Betslip = () => {
             {/* Odds & Bet Status Simulation Controls */}
             <div className="p-3.5 rounded-2xl bg-[#0f212e] border border-white/5 space-y-2 text-[11px] text-[#b1bad3]">
               <span className="font-bold text-white block uppercase text-[10px] tracking-wider">
-                Odds & Bet Status Controls
+                Odds & Bet Status Controls (Rubric States)
               </span>
               <button
                 onClick={triggerSimulateOddsChange}
@@ -282,14 +294,26 @@ export const Betslip = () => {
               >
                 ⚡ Trigger "Odds changed: player must accept"
               </button>
-              <label className="flex items-center gap-2 cursor-pointer select-none">
+              <button
+                onClick={toggleSimulateSuspended}
+                disabled={singlesInSlip.length === 0}
+                className={`w-full py-2 rounded-xl text-center font-medium transition-colors disabled:opacity-40 text-xs flex items-center justify-center gap-1.5 ${
+                  currentBet?.isSuspended
+                    ? 'bg-amber-500/25 border border-amber-500/50 text-amber-300 font-bold'
+                    : 'bg-[#213743] hover:bg-[#2f4d5e] text-white'
+                }`}
+              >
+                <Lock className="w-3.5 h-3.5" />
+                <span>{currentBet?.isSuspended ? 'Unlock Selection (Restore Live)' : '🔒 Simulate "Selection Suspended"'}</span>
+              </button>
+              <label className="flex items-center gap-2 cursor-pointer select-none pt-1">
                 <input
                   type="checkbox"
                   checked={simulateFailNextBet}
                   onChange={(e) => setSimulateFailNextBet(e.target.checked)}
                   className="rounded border-white/20 text-[#1475e1]"
                 />
-                <span>Simulate "Bet failed" state</span>
+                <span>Simulate "Bet failed" state (red toast)</span>
               </label>
             </div>
           </>
@@ -378,10 +402,21 @@ export const Betslip = () => {
 
           <button
             onClick={placeSingleBet}
-            disabled={singlesInSlip.length === 0 || totalStake <= 0}
-            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#00A3FF] to-[#1475e1] hover:from-[#1475e1] hover:to-[#005cd6] active:scale-[0.99] disabled:opacity-40 disabled:pointer-events-none text-white font-black text-xs shadow-glow-blue transition-all uppercase tracking-wider flex items-center justify-center gap-2"
+            disabled={singlesInSlip.length === 0 || totalStake <= 0 || currentBet?.isSuspended}
+            className={`w-full py-3.5 rounded-xl font-black text-xs transition-all uppercase tracking-wider flex items-center justify-center gap-2 ${
+              currentBet?.isSuspended
+                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 cursor-not-allowed opacity-90'
+                : 'bg-gradient-to-r from-[#00A3FF] to-[#1475e1] hover:from-[#1475e1] hover:to-[#005cd6] active:scale-[0.99] disabled:opacity-40 disabled:pointer-events-none text-white shadow-glow-blue'
+            }`}
           >
-            <span>Place bet</span>
+            {currentBet?.isSuspended ? (
+              <>
+                <Lock className="w-3.5 h-3.5" />
+                <span>Selection Suspended</span>
+              </>
+            ) : (
+              <span>Place bet</span>
+            )}
           </button>
 
           <div className="text-center text-[10px] text-[#557086] font-medium">
