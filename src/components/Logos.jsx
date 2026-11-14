@@ -257,6 +257,22 @@ export const TeamCrest = ({ teamName, className = "w-6 h-6" }) => {
     );
   }
 
+  // 17. Bosnia and Herzegovina Flag
+  if (name.includes('bosnia')) {
+    return (
+      <svg viewBox="0 0 100 75" className={`${className} rounded-sm shadow-sm`} fill="none">
+        <rect width="100" height="75" fill="#002395" />
+        <polygon points="26,0 100,0 100,74" fill="#FECB00" />
+        <circle cx="34" cy="12" r="3" fill="#ffffff" />
+        <circle cx="43" cy="22" r="3" fill="#ffffff" />
+        <circle cx="52" cy="32" r="3" fill="#ffffff" />
+        <circle cx="61" cy="42" r="3" fill="#ffffff" />
+        <circle cx="70" cy="52" r="3" fill="#ffffff" />
+        <circle cx="79" cy="62" r="3" fill="#ffffff" />
+      </svg>
+    );
+  }
+
   // Fallback generic sport crest
   return (
     <div className={`${className} rounded-full bg-[#1a2c38] border border-white/10 flex items-center justify-center font-bold text-xs text-white`}>

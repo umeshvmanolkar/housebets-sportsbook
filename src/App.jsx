@@ -102,7 +102,7 @@ const MainLayout = () => {
 
   // 2. Desktop Mode (1440px) & Responsive Layout
   return (
-    <div className="min-h-screen bg-[#071017] text-[#e2e8f0] flex flex-col">
+    <div className="min-h-screen bg-[#0f212e] text-[#e2e8f0] flex flex-col">
       {/* Top Main Navigation Header */}
       <Header onOpenContestModal={() => setIsContestModalOpen(true)} />
 

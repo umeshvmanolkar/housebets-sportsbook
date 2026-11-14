@@ -203,7 +203,8 @@ export const MATCHES_DATA = [
     isLive: false,
     minute: null,
     date: '14 Nov | 22:30',
-    bettorVolume: '29,555',
+    kickoffBadge: '2h',
+    bettorVolume: '31,022',
     bettorSentiment: '97% of 1x2 bets on Norway',
     isSuspended: false,
     homeTeam: { name: 'Norway', shortName: 'NOR', score: null, isFollowed: true },
@@ -227,15 +228,16 @@ export const MATCHES_DATA = [
     isLive: false,
     minute: null,
     date: '14 Nov | 22:30',
-    bettorVolume: '26,808',
+    kickoffBadge: '5h',
+    bettorVolume: '28,094',
     bettorSentiment: '97% of 1x2 bets on Portugal',
     isSuspended: false,
     homeTeam: { name: 'Portugal', shortName: 'POR', score: null, isFollowed: false },
     awayTeam: { name: 'Denmark', shortName: 'DEN', score: null, isFollowed: false },
     matchResult: {
-      home: { label: 'Portugal', odd: 1.58, id: 'por-den-1' },
+      home: { label: 'Portugal', odd: 1.57, id: 'por-den-1' },
       draw: { label: 'Draw', odd: 4.30, id: 'por-den-x' },
-      away: { label: 'Denmark', odd: 4.70, id: 'por-den-2' }
+      away: { label: 'Denmark', odd: 4.90, id: 'por-den-2' }
     },
     winProbability: { home: 65, draw: 22, away: 13 },
     moreMarketsCount: 64
@@ -251,7 +253,8 @@ export const MATCHES_DATA = [
     isLive: false,
     minute: null,
     date: '14 Nov | 22:30',
-    bettorVolume: '22,957',
+    kickoffBadge: '5h',
+    bettorVolume: '24,152',
     bettorSentiment: '95% of 1x2 bets on Sweden',
     isSuspended: false,
     homeTeam: { name: 'Sweden', shortName: 'SWE', score: null, isFollowed: false },
@@ -259,7 +262,7 @@ export const MATCHES_DATA = [
     matchResult: {
       home: { label: 'Sweden', odd: 1.39, id: 'swe-bih-1' },
       draw: { label: 'Draw', odd: 4.50, id: 'swe-bih-x' },
-      away: { label: 'Bosnia', odd: 6.80, id: 'swe-bih-2' }
+      away: { label: 'Bosnia and ...', odd: 6.80, id: 'swe-bih-2' }
     },
     winProbability: { home: 71, draw: 19, away: 10 },
     moreMarketsCount: 52
