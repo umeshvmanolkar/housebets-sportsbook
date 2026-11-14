@@ -27,6 +27,7 @@ export const SportsHome = () => {
     toggleFollow,
     singlesInSlip,
     toggleSelection,
+    myBets,
     playClick,
     isMobile
   } = useSportsbook();
@@ -206,6 +207,16 @@ export const SportsHome = () => {
         >
           <span>🏀</span>
           <span>Basketball</span>
+        </button>
+
+        {/* My Bets */}
+        <button
+          onClick={() => { playClick(); setCurrentPage('bets'); }}
+          className="px-3.5 py-1.5 rounded-lg text-[#b1bad3] hover:text-white hover:bg-[#0f212e] font-semibold text-xs flex items-center gap-1.5 whitespace-nowrap transition-colors"
+        >
+          <span>📑</span>
+          <span>My Bets</span>
+          <span className="text-[#00A3FF] font-bold font-mono text-[11px]">({myBets.open.length})</span>
         </button>
 
         {!isMobile && (

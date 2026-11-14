@@ -1,325 +1,414 @@
 import React, { useState } from 'react';
 import { 
-  ArrowLeft, 
-  Trash2, 
-  AlertTriangle, 
+  ChevronLeft, 
+  ChevronDown, 
+  ChevronUp,
+  Menu,
   CheckCircle, 
   XCircle, 
   Zap, 
-  Lock, 
-  Clock, 
-  ChevronDown, 
-  SlidersHorizontal 
+  ArrowRight,
+  ExternalLink,
+  DollarSign
 } from 'lucide-react';
 import { useSportsbook } from '../context/SportsbookContext';
 
 export const BetSlipMyBetsPage = () => {
   const {
     setCurrentPage,
-    singlesInSlip,
-    removeSelection,
-    clearSlip,
-    updateStake,
-    oddsChangedNotice,
-    acceptChangedOdds,
-    triggerSimulateOddsChange,
-    betFeedback,
-    simulateFailNextBet,
-    setSimulateFailNextBet,
-    placeSingleBet,
     myBets,
     cashOut,
     usdtBalance,
-    playClick
+    playClick,
+    isMobile
   } = useSportsbook();
 
-  const [activeTab, setActiveTab] = useState('open'); // 'open' | 'settled' | 'slip'
+  const [activeTab, setActiveTab] = useState('open'); // 'open' | 'settled'
   const [dateFilter, setDateFilter] = useState('all');
+  const [selectedSport, setSelectedSport] = useState('all');
+  const [isSportDropdownOpen, setIsSportDropdownOpen] = useState(false);
+  const [expandedBetId, setExpandedBetId] = useState('bet-op-1'); // Default open bet expanded to showcase Cash Out
 
-  const currentBet = singlesInSlip[0];
-  const totalStake = currentBet ? currentBet.stake : 0;
-  const currentReturn = currentBet ? (currentBet.stake * currentBet.odd).toFixed(2) : '0.00';
+  const displayedBets = activeTab === 'open' ? myBets.open : myBets.settled;
+
+  // Filter by sport if selected
+  const filteredBets = displayedBets.filter((bet) => {
+    if (selectedSport === 'all') return true;
+    return bet.sport === selectedSport;
+  });
+
+  const sportsOptions = [
+    { id: 'all', label: 'All sports' },
+    { id: 'soccer', label: 'Soccer' },
+    { id: 'tennis', label: 'Tennis' },
+    { id: 'basketball', label: 'Basketball' },
+    { id: 'cricket', label: 'Cricket' },
+    { id: 'esports', label: 'Esports' }
+  ];
+
+  const currentSportLabel = sportsOptions.find(s => s.id === selectedSport)?.label || 'All sports';
+
+  const toggleExpand = (betId) => {
+    playClick();
+    setExpandedBetId(prev => prev === betId ? null : betId);
+  };
 
   return (
-    <div className="space-y-4 animate-fade-in pb-16 md:pb-6">
-      {/* Top Bar matching Screenshot 6: `< My bets  1 open · 7 settled` */}
+    <div className="space-y-4 animate-fade-in pb-16 md:pb-6 select-none max-w-[1400px]">
+      {/* 1. Top Header Row (Matching Screenshot: <  My bets  1 open · 7 settled) */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
+          {/* Back button */}
           <button
             onClick={() => { playClick(); setCurrentPage('home'); }}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0e1c28] hover:bg-[#142636] border border-white/[0.08] text-xs font-bold text-gray-200 transition-colors"
+            className="w-9 h-9 rounded-xl bg-[#1a2c38] hover:bg-[#213743] border border-[#213743] flex items-center justify-center text-[#b1bad3] hover:text-white transition-colors"
+            title="Back to Sports Home"
           >
-            <ArrowLeft className="w-3.5 h-3.5 text-[#00A3FF]" />
-            <span>My bets</span>
+            <ChevronLeft className="w-4 h-4" />
           </button>
-          <span className="text-xs text-gray-400 font-medium">
+
+          {/* My bets button/pill */}
+          <div className="px-4 py-2 rounded-xl bg-[#1a2c38] border border-[#213743] text-white font-bold text-xs">
+            My bets
+          </div>
+
+          {/* Counts */}
+          <span className="text-xs text-[#557086] font-medium ml-1">
             {myBets.open.length} open · {myBets.settled.length} settled
           </span>
         </div>
 
-        {/* USDT Wallet display */}
-        <div className="text-right font-mono text-xs">
-          <span className="text-gray-400 text-[10px] block">USDT Balance</span>
-          <span className="text-[#00A3FF] font-bold">${usdtBalance.toFixed(2)} ₮</span>
+        {/* USDT Balance display on far right */}
+        <div className="hidden sm:flex items-center gap-2 bg-[#1a2c38] border border-[#213743] px-3.5 py-1.5 rounded-xl">
+          <span className="text-[10px] text-[#557086] font-semibold uppercase">USDT Vault:</span>
+          <span className="text-xs font-bold font-mono text-[#00A3FF]">${usdtBalance.toFixed(2)} ₮</span>
         </div>
       </div>
 
-      {/* Tabs: Open (1) | Settled (7) | Bet Slip (1) */}
-      <div className="flex items-center gap-2 bg-[#0e1c28] p-1 rounded-2xl border border-white/5">
-        <button
-          onClick={() => { playClick(); setActiveTab('open'); }}
-          className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-all ${
-            activeTab === 'open'
-              ? 'bg-[#00A3FF] text-white shadow-sm'
-              : 'text-gray-400 hover:text-white'
-          }`}
-        >
-          Open ({myBets.open.length})
-        </button>
+      {/* 2. Tabs Row: [ Open (1) ]  [ Settled (7) ] */}
+      <div>
+        <div className="bg-[#1a2c38] border border-[#213743] rounded-xl p-1 inline-flex items-center gap-1 shadow-sm">
+          <button
+            onClick={() => { playClick(); setActiveTab('open'); }}
+            className={`px-5 py-2 rounded-lg text-xs font-bold transition-all ${
+              activeTab === 'open'
+                ? 'bg-[#213743] text-white shadow-sm'
+                : 'text-[#b1bad3] hover:text-white'
+            }`}
+          >
+            Open ({myBets.open.length})
+          </button>
 
-        <button
-          onClick={() => { playClick(); setActiveTab('settled'); }}
-          className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-all ${
-            activeTab === 'settled'
-              ? 'bg-[#00A3FF] text-white shadow-sm'
-              : 'text-gray-400 hover:text-white'
-          }`}
-        >
-          Settled ({myBets.settled.length})
-        </button>
-
-        <button
-          onClick={() => { playClick(); setActiveTab('slip'); }}
-          className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-all ml-auto flex items-center gap-1.5 ${
-            activeTab === 'slip'
-              ? 'bg-[#00A3FF] text-white shadow-sm'
-              : 'text-gray-400 hover:text-white'
-          }`}
-        >
-          <span>Bet slip</span>
-          {singlesInSlip.length > 0 && (
-            <span className="w-4 h-4 rounded-full bg-white text-[#00A3FF] text-[10px] font-bold flex items-center justify-center">
-              {singlesInSlip.length}
-            </span>
-          )}
-        </button>
-      </div>
-
-      {/* Date Filter Pills & Sports Filter matching Screenshot 6 */}
-      {activeTab !== 'slip' && (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-3">
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
-            {[
-              { id: 'all', label: 'All time' },
-              { id: 'today', label: 'Today' },
-              { id: '7d', label: 'Last 7 days' },
-              { id: '30d', label: 'Last 30 days' },
-              { id: 'custom', label: 'Custom' }
-            ].map((d) => (
-              <button
-                key={d.id}
-                onClick={() => { playClick(); setDateFilter(d.id); }}
-                className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
-                  dateFilter === d.id
-                    ? 'bg-[#142636] text-white font-bold border border-[#00A3FF]/40'
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                {d.label}
-              </button>
-            ))}
-          </div>
-
-          <button className="flex items-center gap-2 text-xs text-gray-300 bg-[#0e1c28] px-3 py-1.5 rounded-xl border border-white/5">
-            <span>All sports</span>
-            <ChevronDown className="w-3 h-3 text-gray-500" />
+          <button
+            onClick={() => { playClick(); setActiveTab('settled'); }}
+            className={`px-5 py-2 rounded-lg text-xs font-bold transition-all ${
+              activeTab === 'settled'
+                ? 'bg-[#213743] text-white shadow-sm'
+                : 'text-[#b1bad3] hover:text-white'
+            }`}
+          >
+            Settled ({myBets.settled.length})
           </button>
         </div>
-      )}
+      </div>
 
-      {/* Tab 1: Open Bets (Contest Requirement: "My bets: open, settled, cash out") */}
-      {activeTab === 'open' && (
-        <div className="rounded-3xl bg-[#0e1c28] border border-white/[0.08] overflow-hidden shadow-lg">
-          {myBets.open.length === 0 ? (
-            <div className="text-center py-12 text-gray-400 text-xs">No open bets currently</div>
-          ) : (
-            <div className="overflow-x-auto">
+      {/* 3. Filters Row: Date Pills on Left + Sport Dropdown on Right */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+        {/* Date Filter Pills */}
+        <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-1">
+          {[
+            { id: 'all', label: 'All time' },
+            { id: 'today', label: 'Today' },
+            { id: '7d', label: 'Last 7 days' },
+            { id: '30d', label: 'Last 30 days' },
+            { id: 'custom', label: 'Custom' }
+          ].map((d) => (
+            <button
+              key={d.id}
+              onClick={() => { playClick(); setDateFilter(d.id); }}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                dateFilter === d.id
+                  ? 'bg-[#1a2c38] border border-[#213743] text-white font-bold'
+                  : 'text-[#b1bad3] hover:text-white hover:bg-[#1a2c38]/40'
+              }`}
+            >
+              {d.label}
+            </button>
+          ))}
+        </div>
+
+        {/* All sports Dropdown */}
+        <div className="relative">
+          <button
+            onClick={() => { playClick(); setIsSportDropdownOpen(!isSportDropdownOpen); }}
+            className="flex items-center gap-2 bg-[#1a2c38] hover:bg-[#213743] border border-[#213743] px-3.5 py-1.5 rounded-xl text-xs font-semibold text-white transition-colors"
+          >
+            <Menu className="w-3.5 h-3.5 text-[#b1bad3]" />
+            <span>{currentSportLabel}</span>
+            <ChevronDown className="w-3.5 h-3.5 text-[#557086]" />
+          </button>
+
+          {isSportDropdownOpen && (
+            <div className="absolute right-0 mt-1.5 w-44 rounded-xl bg-[#1a2c38] border border-[#213743] shadow-2xl py-1.5 z-40 animate-fade-in">
+              {sportsOptions.map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => {
+                    playClick();
+                    setSelectedSport(opt.id);
+                    setIsSportDropdownOpen(false);
+                  }}
+                  className={`w-full px-3.5 py-1.5 text-left text-xs font-semibold flex items-center justify-between hover:bg-[#213743] transition-colors ${
+                    selectedSport === opt.id ? 'text-[#00A3FF] font-bold bg-[#0f212e]' : 'text-[#b1bad3] hover:text-white'
+                  }`}
+                >
+                  <span>{opt.label}</span>
+                  {selectedSport === opt.id && <span className="text-[#00A3FF]">✓</span>}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 4. Table / Content Container (Matching Screenshot Elevated Box) */}
+      <div className="rounded-2xl bg-[#1a2c38] border border-[#213743] overflow-hidden shadow-xl">
+        {filteredBets.length === 0 ? (
+          <div className="text-center py-16 text-[#557086] text-xs font-medium space-y-2">
+            <div>No {activeTab} bets found for this filter.</div>
+            <button
+              onClick={() => { playClick(); setCurrentPage('home'); }}
+              className="px-4 py-2 rounded-xl bg-[#00A3FF] hover:bg-[#0092e6] text-white font-bold text-xs"
+            >
+              Explore Matches & Place Bet
+            </button>
+          </div>
+        ) : (
+          <>
+            {/* Desktop Table View (Hidden on mobile) */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-xs text-left">
-                <thead className="bg-[#0b1620] text-gray-400 font-mono text-[11px] border-b border-white/5">
+                <thead className="bg-[#1a2c38] text-[#557086] font-semibold text-xs border-b border-[#213743]">
                   <tr>
-                    <th className="py-3 px-4">Placed</th>
-                    <th className="py-3 px-4">Bet</th>
-                    <th className="py-3 px-4 text-center">Odds</th>
-                    <th className="py-3 px-4 text-center">Stake</th>
-                    <th className="py-3 px-4 text-center">Returns</th>
-                    <th className="py-3 px-4 text-right">Result</th>
+                    <th className="py-3.5 px-6 font-semibold">Placed</th>
+                    <th className="py-3.5 px-6 font-semibold">Bet</th>
+                    <th className="py-3.5 px-6 font-semibold text-center">Odds</th>
+                    <th className="py-3.5 px-6 font-semibold text-center">Stake</th>
+                    <th className="py-3.5 px-6 font-semibold text-center">Returns</th>
+                    <th className="py-3.5 px-6 font-semibold text-right">Result</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/[0.04]">
-                  {myBets.open.map((bet) => (
-                    <tr key={bet.id} className="hover:bg-white/[0.02]">
-                      <td className="py-4 px-4 font-mono text-gray-400 text-[11px] whitespace-nowrap">
-                        {bet.placedDate}
-                      </td>
-                      <td className="py-4 px-4">
-                        <div className="font-bold text-white text-sm">{bet.team}</div>
-                        <div className="text-[11px] text-gray-400">
-                          {bet.match} · <span className="text-red-400 font-mono">● {bet.statusNote}</span>
-                        </div>
-                      </td>
-                      <td className="py-4 px-4 text-center font-mono font-bold text-[#00A3FF]">
-                        {bet.odds.toFixed(2)}
-                      </td>
-                      <td className="py-4 px-4 text-center font-mono text-white">
-                        ${bet.stake.toFixed(2)} ₮
-                      </td>
-                      <td className="py-4 px-4 text-center font-mono font-bold text-white">
-                        ${bet.returns.toFixed(2)} ₮
-                      </td>
-                      <td className="py-4 px-4 text-right">
-                        <button
-                          onClick={() => cashOut(bet.id)}
-                          className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs shadow-md transition-all"
+                <tbody className="divide-y divide-[#213743]/60">
+                  {filteredBets.map((bet) => {
+                    const isExpanded = expandedBetId === bet.id;
+
+                    return (
+                      <React.Fragment key={bet.id}>
+                        <tr 
+                          onClick={() => toggleExpand(bet.id)}
+                          className={`hover:bg-[#213743]/50 transition-colors cursor-pointer ${
+                            isExpanded ? 'bg-[#213743]/30' : ''
+                          }`}
                         >
-                          Cash Out (${bet.cashoutAmount.toFixed(2)})
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                          {/* Placed Column */}
+                          <td className="py-4 px-6 font-mono text-xs whitespace-nowrap align-top">
+                            <div className="text-[#b1bad3] font-medium">{bet.date || bet.placedDate.split(' ')[0]}</div>
+                            <div className="text-[#557086] text-[11px]">{bet.time || bet.placedDate.split(' ')[1]}</div>
+                          </td>
+
+                          {/* Bet Column */}
+                          <td className="py-4 px-6 align-top">
+                            <div className="font-bold text-white text-sm leading-snug">
+                              {bet.team}
+                            </div>
+                            <div className="text-xs text-[#b1bad3] flex items-center gap-1.5 flex-wrap pt-0.5">
+                              <span>{bet.match}</span>
+                              {bet.isLive ? (
+                                <>
+                                  <span className="text-[#ff3366] font-bold">●</span>
+                                  <span className="font-mono text-xs text-red-400 font-bold">{bet.minute || "52'"}</span>
+                                  <span className="px-1.5 py-0.2 rounded bg-[#0f212e] text-[#00A3FF] font-mono font-bold text-[10px] border border-[#213743]">
+                                    {bet.score || '1-0'}
+                                  </span>
+                                </>
+                              ) : (
+                                <>
+                                  <span className="text-[#557086]">•</span>
+                                  <span className="text-[#557086] font-mono">{bet.minute || 'FT'}</span>
+                                  <span className="px-1.5 py-0.2 rounded bg-[#0f212e] text-[#b1bad3] font-mono font-semibold text-[10px] border border-[#213743]">
+                                    {bet.score || '2-1'}
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                          </td>
+
+                          {/* Odds Column */}
+                          <td className="py-4 px-6 text-center font-mono font-bold text-[#00A3FF] text-sm align-top">
+                            {bet.odds.toFixed(2)}
+                          </td>
+
+                          {/* Stake Column */}
+                          <td className="py-4 px-6 text-center font-mono text-white text-xs align-top">
+                            ${bet.stake.toFixed(2)}
+                          </td>
+
+                          {/* Returns Column */}
+                          <td className="py-4 px-6 text-center font-mono font-bold text-white text-xs align-top">
+                            ${bet.returns.toFixed(2)}
+                          </td>
+
+                          {/* Result Column with Chevron */}
+                          <td className="py-4 px-6 text-right align-top whitespace-nowrap">
+                            <div className="inline-flex items-center gap-2">
+                              {bet.result === 'Open' ? (
+                                <span className="font-bold text-white text-xs">Open</span>
+                              ) : (
+                                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border ${
+                                  bet.result === 'Won'
+                                    ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                                    : bet.result.includes('Cashed')
+                                    ? 'bg-amber-500/20 text-amber-400 border-amber-500/30'
+                                    : 'bg-red-500/20 text-red-400 border-red-500/30'
+                                }`}>
+                                  {bet.result}
+                                </span>
+                              )}
+                              <ChevronDown className={`w-3.5 h-3.5 text-[#557086] transition-transform ${isExpanded ? 'rotate-180 text-white' : ''}`} />
+                            </div>
+                          </td>
+                        </tr>
+
+                        {/* Expandable Row with Cash Out Action & Detailed Info */}
+                        {isExpanded && (
+                          <tr className="bg-[#14232d]/90 border-b border-[#213743]">
+                            <td colSpan={6} className="px-6 py-4">
+                              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <div className="space-y-1 text-xs">
+                                  <div className="text-[#b1bad3]">
+                                    <span className="text-[#557086]">Bet ID:</span> <span className="font-mono text-white font-bold">{bet.id}</span>
+                                    <span className="mx-2 text-[#557086]">·</span>
+                                    <span className="text-[#557086]">Market:</span> <span className="text-white font-semibold">{bet.market || '1x2 (Full Time)'}</span>
+                                    <span className="mx-2 text-[#557086]">·</span>
+                                    <span className="text-[#557086]">Type:</span> <span className="text-white font-semibold">Single</span>
+                                  </div>
+                                  <div className="text-[11px] text-[#557086]">
+                                    Placed at {bet.placedDate} via Housebets Web Sportsbook • Settles instantly on match completion
+                                  </div>
+                                </div>
+
+                                {/* Cash Out action if Open */}
+                                {bet.result === 'Open' ? (
+                                  <div className="flex items-center gap-3 flex-shrink-0">
+                                    <div className="text-right">
+                                      <div className="text-[10px] text-[#557086] uppercase font-bold">Cash Out Value</div>
+                                      <div className="font-mono text-sm font-bold text-amber-400">${(bet.cashoutAmount || bet.stake * 1.42).toFixed(2)} ₮</div>
+                                    </div>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        cashOut(bet.id);
+                                      }}
+                                      className="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-extrabold text-xs shadow-lg transition-transform active:scale-95 flex items-center gap-1.5"
+                                    >
+                                      <Zap className="w-3.5 h-3.5 fill-current" />
+                                      <span>Cash Out (${(bet.cashoutAmount || bet.stake * 1.42).toFixed(2)})</span>
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <div className="text-xs font-semibold text-[#557086] flex items-center gap-1.5">
+                                    <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+                                    <span>Settled & Credited to Player Vault</span>
+                                  </div>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
-          )}
-        </div>
-      )}
 
-      {/* Tab 2: Settled Bets */}
-      {activeTab === 'settled' && (
-        <div className="rounded-3xl bg-[#0e1c28] border border-white/[0.08] overflow-hidden shadow-lg">
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs text-left">
-              <thead className="bg-[#0b1620] text-gray-400 font-mono text-[11px] border-b border-white/5">
-                <tr>
-                  <th className="py-3 px-4">Placed</th>
-                  <th className="py-3 px-4">Bet</th>
-                  <th className="py-3 px-4 text-center">Odds</th>
-                  <th className="py-3 px-4 text-center">Stake</th>
-                  <th className="py-3 px-4 text-center">Returns</th>
-                  <th className="py-3 px-4 text-right">Result</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/[0.04]">
-                {myBets.settled.map((bet) => (
-                  <tr key={bet.id} className="hover:bg-white/[0.02]">
-                    <td className="py-3.5 px-4 font-mono text-gray-400 text-[11px] whitespace-nowrap">
-                      {bet.placedDate}
-                    </td>
-                    <td className="py-3.5 px-4">
-                      <div className="font-bold text-white">{bet.team}</div>
-                      <div className="text-[11px] text-gray-400">{bet.match} · {bet.statusNote}</div>
-                    </td>
-                    <td className="py-3.5 px-4 text-center font-mono font-bold text-gray-300">
-                      {bet.odds.toFixed(2)}
-                    </td>
-                    <td className="py-3.5 px-4 text-center font-mono text-gray-300">
-                      ${bet.stake.toFixed(2)} ₮
-                    </td>
-                    <td className="py-3.5 px-4 text-center font-mono font-bold text-white">
-                      ${bet.returns.toFixed(2)} ₮
-                    </td>
-                    <td className="py-3.5 px-4 text-right">
-                      <span className={`inline-block px-2.5 py-1 rounded-lg text-[10px] font-bold ${
-                        bet.result === 'Won'
-                          ? 'bg-emerald-500/20 text-emerald-400'
-                          : bet.result.includes('Cashed')
-                          ? 'bg-amber-500/20 text-amber-400'
-                          : 'bg-red-500/20 text-red-400'
-                      }`}>
-                        {bet.result}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
+            {/* Mobile Card View (390px Viewport) */}
+            <div className="md:hidden divide-y divide-[#213743]/70">
+              {filteredBets.map((bet) => {
+                const isExpanded = expandedBetId === bet.id;
 
-      {/* Tab 3: Dedicated Bet Slip View */}
-      {activeTab === 'slip' && (
-        <div className="rounded-3xl bg-[#0e1c28] border border-white/[0.08] p-5 space-y-4 max-w-xl mx-auto shadow-lg">
-          <div className="flex items-center justify-between">
-            <h3 className="font-bold text-white text-sm">Singles Slip (1 Selection)</h3>
-            {singlesInSlip.length > 0 && (
-              <button onClick={clearSlip} className="text-gray-400 hover:text-red-400 text-xs">
-                Clear all
-              </button>
-            )}
-          </div>
+                return (
+                  <div key={bet.id} className="p-3.5 space-y-2.5">
+                    {/* Card Top: Placed Date + Status */}
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-[#557086] font-mono text-[11px]">{bet.placedDate}</span>
+                      {bet.result === 'Open' ? (
+                        <span className="px-2 py-0.5 rounded bg-[#00A3FF]/20 text-[#00A3FF] font-bold text-[10px] border border-[#00A3FF]/30">
+                          Open Bet
+                        </span>
+                      ) : (
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
+                          bet.result === 'Won'
+                            ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                            : bet.result.includes('Cashed')
+                            ? 'bg-amber-500/20 text-amber-400 border-amber-500/30'
+                            : 'bg-red-500/20 text-red-400 border-red-500/30'
+                        }`}>
+                          {bet.result}
+                        </span>
+                      )}
+                    </div>
 
-          {/* Odds Changed Alert */}
-          {oddsChangedNotice && (
-            <div className="p-3 rounded-2xl bg-amber-500/15 border border-amber-500/40 text-amber-300 space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold">
-                <AlertTriangle className="w-4 h-4 text-amber-400" />
-                <span>Odds changed from {oddsChangedNotice.oldOdd.toFixed(2)} to {oddsChangedNotice.newOdd.toFixed(2)}</span>
-              </div>
-              <button
-                onClick={acceptChangedOdds}
-                className="w-full py-1.5 rounded-xl bg-amber-400 text-black font-extrabold text-xs"
-              >
-                Accept New Odds
-              </button>
+                    {/* Team Selection */}
+                    <div>
+                      <div className="text-sm font-bold text-white">{bet.team}</div>
+                      <div className="text-xs text-[#b1bad3] flex items-center gap-1 flex-wrap pt-0.5">
+                        <span>{bet.match}</span>
+                        {bet.isLive && (
+                          <>
+                            <span className="text-[#ff3366] font-bold">●</span>
+                            <span className="text-red-400 font-mono font-bold text-xs">{bet.minute || "52'"}</span>
+                            <span className="px-1.5 py-0.2 rounded bg-[#0f212e] text-[#00A3FF] font-mono font-bold text-[10px] border border-[#213743]">
+                              {bet.score || '1-0'}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Metrics Row: Odds, Stake, Returns */}
+                    <div className="grid grid-cols-3 gap-2 p-2 rounded-xl bg-[#0f212e] border border-[#213743] text-center">
+                      <div>
+                        <div className="text-[10px] text-[#557086] font-semibold">Odds</div>
+                        <div className="font-mono text-xs font-bold text-[#00A3FF]">{bet.odds.toFixed(2)}</div>
+                      </div>
+                      <div>
+                        <div className="text-[10px] text-[#557086] font-semibold">Stake</div>
+                        <div className="font-mono text-xs font-bold text-white">${bet.stake.toFixed(2)}</div>
+                      </div>
+                      <div>
+                        <div className="text-[10px] text-[#557086] font-semibold">Returns</div>
+                        <div className="font-mono text-xs font-bold text-white">${bet.returns.toFixed(2)}</div>
+                      </div>
+                    </div>
+
+                    {/* Cash out button for Open bet on mobile */}
+                    {bet.result === 'Open' && (
+                      <button
+                        onClick={() => cashOut(bet.id)}
+                        className="w-full py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-extrabold text-xs shadow-md flex items-center justify-center gap-1.5 active:scale-95 transition-transform"
+                      >
+                        <Zap className="w-3.5 h-3.5 fill-current" />
+                        <span>Cash Out ${(bet.cashoutAmount || bet.stake * 1.42).toFixed(2)} ₮</span>
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
             </div>
-          )}
-
-          {currentBet ? (
-            <div className="p-4 rounded-2xl bg-[#112232] border border-white/10 space-y-3">
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="text-sm font-extrabold text-white">{currentBet.teamName}</div>
-                  <div className="text-xs text-gray-400">{currentBet.marketName} · {currentBet.matchTitle}</div>
-                </div>
-                <span className="font-mono text-sm font-bold text-[#00A3FF]">{currentBet.odd.toFixed(2)}</span>
-              </div>
-
-              <div className="flex items-center bg-[#071017] rounded-xl border border-white/10 px-3 py-2.5">
-                <span className="text-xs text-gray-500 font-bold mr-1">$</span>
-                <input
-                  type="number"
-                  value={currentBet.stake}
-                  onChange={(e) => updateStake(currentBet.id, e.target.value)}
-                  className="w-full bg-transparent text-white font-mono font-bold text-xs focus:outline-none"
-                />
-                <div className="text-right text-xs font-mono text-gray-400 whitespace-nowrap">
-                  Returns <span className="text-white font-bold">${currentReturn} ₮</span>
-                </div>
-              </div>
-
-              <button
-                onClick={placeSingleBet}
-                className="w-full py-3 rounded-xl bg-[#00A3FF] text-white font-black text-xs uppercase tracking-wider shadow-md"
-              >
-                Place bet (${currentBet.stake} ₮)
-              </button>
-            </div>
-          ) : (
-            <p className="text-xs text-gray-400 text-center py-6">Your bet slip is empty</p>
-          )}
-
-          {/* Test Controls */}
-          <div className="pt-2 border-t border-white/10">
-            <button
-              onClick={triggerSimulateOddsChange}
-              disabled={!currentBet}
-              className="w-full py-1.5 rounded-lg bg-[#142636] text-gray-300 text-xs font-medium"
-            >
-              ⚡ Test: Trigger "Odds changed: player must accept"
-            </button>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </div>
     </div>
   );
 };

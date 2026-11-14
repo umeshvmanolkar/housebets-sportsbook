@@ -18,6 +18,7 @@ export const MobileBetslipDrawer = ({ isInsideFrame = false }) => {
     cashOut,
     activePanelTab,
     setActivePanelTab,
+    setCurrentPage,
     playClick
   } = useSportsbook();
 
@@ -167,7 +168,19 @@ export const MobileBetslipDrawer = ({ isInsideFrame = false }) => {
           ) : (
             /* My bets tab */
             <div className="space-y-3">
-              <span className="text-xs font-bold text-white block">Open Bets</span>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-white block">Open Bets ({myBets.open.length})</span>
+                <button
+                  onClick={() => {
+                    playClick();
+                    setCurrentPage('bets');
+                    setIsMobileDrawerOpen(false);
+                  }}
+                  className="text-[11px] text-[#00A3FF] font-bold hover:underline"
+                >
+                  View All (1 open · 7 settled) →
+                </button>
+              </div>
               {myBets.open.map((bet) => (
                 <div key={bet.id} className="p-3 rounded-2xl bg-[#112232] border border-white/10 space-y-2">
                   <div className="flex justify-between text-xs">

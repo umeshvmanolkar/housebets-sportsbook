@@ -16,6 +16,8 @@ import { TeamCrest } from './Logos';
 
 export const Betslip = () => {
   const {
+    currentPage,
+    setCurrentPage,
     isBetslipPanelOpen,
     setIsBetslipPanelOpen,
     activePanelTab,
@@ -68,16 +70,20 @@ export const Betslip = () => {
             </button>
 
             <button
-              onClick={() => { playClick(); setActivePanelTab('mybets'); }}
+              onClick={() => { 
+                playClick(); 
+                setCurrentPage('bets'); 
+                setIsBetslipPanelOpen(false); 
+              }}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
-                activePanelTab === 'mybets'
+                currentPage === 'bets'
                   ? 'bg-[#1475e1] text-white shadow-sm'
                   : 'text-[#b1bad3] hover:text-white'
               }`}
             >
               <span>My bets</span>
               <span className={`w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center ${
-                activePanelTab === 'mybets' ? 'bg-white text-[#1475e1]' : 'bg-white/10 text-gray-300'
+                currentPage === 'bets' ? 'bg-white text-[#1475e1]' : 'bg-white/10 text-gray-300'
               }`}>
                 {myBets.open.length}
               </span>

@@ -27,10 +27,11 @@ export const Sidebar = () => {
   // Content is STRICTLY and ONLY the items from the official Housebets starter screenshot
   const primaryNav = [
     { id: 'casino', label: 'Casino', icon: '🎴', page: 'home', isSports: false },
-    { id: 'sports', label: 'Sports', icon: '🏀', page: 'home', isSports: true, active: true },
+    { id: 'sports', label: 'Sports', icon: '🏀', page: 'home', isSports: true },
     { id: 'streams', label: 'Live Streams', icon: '📹', page: 'live', isSports: false },
     { id: 'schedule', label: 'Schedule', icon: '📅', page: 'home', isSports: false },
     { id: 'originals', label: 'Originals', icon: '🎲', page: 'home', isSports: false },
+    { id: 'bets', label: 'My Bets', icon: '📑', page: 'bets', isBets: true },
   ];
 
   const sportsList = [
@@ -57,7 +58,8 @@ export const Sidebar = () => {
       {/* Top Group: Casino, Sports, Streams, Calendar, Originals */}
       <div className="space-y-1 w-full px-2">
         {primaryNav.map((item) => {
-          const isItemActive = (item.isSports && (currentPage === 'home' || currentPage === 'live' || currentPage === 'football' || currentPage === 'match'));
+          const isItemActive = (item.isBets && currentPage === 'bets') || 
+            (item.isSports && (currentPage === 'home' || currentPage === 'live' || currentPage === 'football' || currentPage === 'match'));
 
           return (
             <div key={item.id} className="relative group w-full">
