@@ -140,7 +140,32 @@ export const SportsHome = () => {
         </button>
       </div>
 
-      {/* 3. Top Matches (The EXACT cards from the user's reference screenshot) */}
+      {/* 3. Favourites Section (Above Top Matches) */}
+      <div className="space-y-1.5 pt-1">
+        <span className="text-xs font-bold text-[#b1bad3] block px-0.5">Favourites</span>
+        <div className="flex flex-wrap items-center gap-2">
+          {favourites.map((fav) => (
+            <div
+              key={fav.id}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#1a2c38] border border-[#213743] text-xs font-semibold text-white shadow-sm"
+            >
+              <span className="text-amber-400">★</span>
+              {fav.name.toLowerCase().includes('arsenal') ? (
+                <TeamCrest teamName="Arsenal" className="w-3.5 h-3.5 inline-block" />
+              ) : null}
+              <span>{fav.name}</span>
+              <button
+                onClick={() => toggleFollow(fav)}
+                className="text-[#557086] hover:text-white p-0.5 transition-colors"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 4. Top Matches (The EXACT cards from the user's reference screenshot) */}
       <div className="space-y-2.5 pt-1">
         <div className="flex items-center justify-between px-0.5">
           <div className="flex items-center gap-2">
@@ -266,31 +291,6 @@ export const SportsHome = () => {
                   );
                 })}
               </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* 4. Favourites Section */}
-      <div className="space-y-1.5 pt-2">
-        <span className="text-xs font-bold text-[#b1bad3] block px-0.5">Favourites</span>
-        <div className="flex flex-wrap items-center gap-2">
-          {favourites.map((fav) => (
-            <div
-              key={fav.id}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#1a2c38] border border-[#213743] text-xs font-semibold text-white shadow-sm"
-            >
-              <span className="text-amber-400">★</span>
-              {fav.name.toLowerCase().includes('arsenal') ? (
-                <TeamCrest teamName="Arsenal" className="w-3.5 h-3.5 inline-block" />
-              ) : null}
-              <span>{fav.name}</span>
-              <button
-                onClick={() => toggleFollow(fav)}
-                className="text-[#557086] hover:text-white p-0.5 transition-colors"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
             </div>
           ))}
         </div>
