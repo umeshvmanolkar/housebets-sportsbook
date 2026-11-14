@@ -20,7 +20,8 @@ export const LivePage = () => {
     toggleSelection,
     favourites,
     toggleFollow,
-    playClick
+    playClick,
+    isMobile
   } = useSportsbook();
 
   const [activeSportFilter, setActiveSportFilter] = useState('all');
@@ -133,109 +134,212 @@ export const LivePage = () => {
 
               {/* Match Rows */}
               <div className="space-y-2">
-                {lg.matches.map((m) => (
-                  <div
-                    key={m.id}
-                    className="p-3 sm:p-4 rounded-xl bg-[#1a2c38] border border-[#213743] hover:border-[#2f4553] transition-all flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-sm"
-                  >
-                    {/* Left: Clock, Teams, Score */}
+                {lg.matches.map((m) => {
+                  return isMobile ? (
+                    /* Mobile Stacked Card (Fits 100% inside 390px without overflow or text wrap clipping) */
                     <div
-                      onClick={() => {
-                        playClick();
-                        setSelectedMatchId(m.id);
-                        setCurrentPage('match');
-                      }}
-                      className="flex items-center gap-4 flex-1 cursor-pointer"
+                      key={m.id}
+                      className="p-3 rounded-xl bg-[#1a2c38] border border-[#213743] shadow-sm space-y-2.5"
                     >
-                      {/* Score Clock */}
-                      <div className="min-w-14 text-center">
-                        <span className="px-1.5 py-0.5 rounded bg-red-500/20 text-[#f43f5e] font-mono font-bold text-[9px] uppercase tracking-wider block">
-                          LIVE
-                        </span>
-                        <span className="text-[10px] text-[#b1bad3] font-mono mt-0.5 block">{m.minute}</span>
+                      {/* Top: Clock, Live Badge, and More Markets count */}
+                      <div className="flex items-center justify-between text-xs">
+                        <div className="flex items-center gap-1.5">
+                          <span className="px-1.5 py-0.5 rounded bg-red-500/20 text-[#f43f5e] font-mono font-bold text-[9px] uppercase tracking-wider">
+                            LIVE
+                          </span>
+                          <span className="text-[10px] text-[#b1bad3] font-mono font-medium">{m.minute}</span>
+                        </div>
+
+                        <button
+                          onClick={() => {
+                            playClick();
+                            setSelectedMatchId(m.id);
+                            setCurrentPage('match');
+                          }}
+                          className="text-[10px] font-mono text-[#557086] hover:text-white"
+                        >
+                          +{m.moreMarketsCount} &gt;
+                        </button>
                       </div>
 
-                      {/* Teams & Scores */}
-                      <div className="flex-1 space-y-1.5">
-                        <div className="flex items-center justify-between text-xs font-bold text-white">
-                          <div className="flex items-center gap-2">
-                            <TeamCrest teamName={m.homeTeam.name} className="w-4 h-4 flex-shrink-0" />
-                            <span className="hover:text-[#00A3FF] transition-colors">{m.homeTeam.name}</span>
-                          </div>
-                          <span className="font-mono text-sm font-black">{m.homeTeam.score}</span>
-                        </div>
-
-                        <div className="flex items-center justify-between text-xs font-bold text-white">
-                          <div className="flex items-center gap-2">
-                            <TeamCrest teamName={m.awayTeam.name} className="w-4 h-4 flex-shrink-0" />
-                            <span className="hover:text-[#00A3FF] transition-colors">{m.awayTeam.name}</span>
-                          </div>
-                          <span className="font-mono text-sm font-black">{m.awayTeam.score}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Right: Odds Buttons or Suspended State */}
-                    <div className="flex items-center gap-2">
-                      {m.isSuspended ? (
-                        /* Suspended state */
-                        <div className="px-6 py-2.5 rounded-lg bg-[#0f212e] text-amber-400 border border-amber-500/20 text-xs font-bold flex items-center gap-2 min-w-[260px] justify-center">
-                          <Lock className="w-3.5 h-3.5" />
-                          <span>Suspended</span>
-                        </div>
-                      ) : (
-                        [
-                          { key: 'home', opt: m.matchResult.home },
-                          { key: 'draw', opt: m.matchResult.draw },
-                          { key: 'away', opt: m.matchResult.away }
-                        ].map(({ key, opt }) => {
-                          const isSelected = singlesInSlip.some((s) => s.id === opt.id);
-                          return (
-                            <button
-                              key={key}
-                              onClick={() =>
-                                toggleSelection({
-                                  id: opt.id,
-                                  matchId: m.id,
-                                  matchTitle: `${m.homeTeam.name} v ${m.awayTeam.name}`,
-                                  scoreMinute: `${m.homeTeam.score}-${m.awayTeam.score} ${m.minute}`,
-                                  marketName: 'Match result',
-                                  selectionName: opt.label,
-                                  odd: opt.odd,
-                                  isSuspended: m.isSuspended
-                                })
-                              }
-                              className={`px-3 py-2 rounded-lg text-xs flex items-center justify-between gap-3 min-w-[95px] sm:min-w-[110px] transition-all font-medium border ${
-                                isSelected
-                                  ? 'bg-[#1475e1] border-[#1475e1] text-white font-black shadow-glow-blue'
-                                  : 'bg-[#0f212e] hover:bg-[#213743] text-[#b1bad3] hover:text-white border-white/[0.04]'
-                              }`}
-                            >
-                              <span className="truncate text-[11px] font-bold">{opt.label}</span>
-                              <div className="flex items-center gap-1 font-mono font-bold">
-                                {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
-                                <span className={isSelected ? 'text-white' : 'text-[#00A3FF]'}>
-                                  {opt.odd.toFixed(2)}
-                                </span>
-                              </div>
-                            </button>
-                          );
-                        })
-                      )}
-
-                      <button
+                      {/* Teams & Scores (Full width for clear team names & scores) */}
+                      <div
                         onClick={() => {
                           playClick();
                           setSelectedMatchId(m.id);
                           setCurrentPage('match');
                         }}
-                        className="px-2 py-2 text-[11px] font-mono text-[#557086] hover:text-white"
+                        className="space-y-1.5 cursor-pointer py-0.5"
                       >
-                        +{m.moreMarketsCount} &gt;
-                      </button>
+                        <div className="flex items-center justify-between text-xs font-bold text-white">
+                          <div className="flex items-center gap-2 min-w-0 pr-2">
+                            <TeamCrest teamName={m.homeTeam.name} className="w-4 h-4 flex-shrink-0" />
+                            <span className="truncate">{m.homeTeam.name}</span>
+                          </div>
+                          <span className="font-mono text-sm font-black flex-shrink-0">{m.homeTeam.score}</span>
+                        </div>
+
+                        <div className="flex items-center justify-between text-xs font-bold text-white">
+                          <div className="flex items-center gap-2 min-w-0 pr-2">
+                            <TeamCrest teamName={m.awayTeam.name} className="w-4 h-4 flex-shrink-0" />
+                            <span className="truncate">{m.awayTeam.name}</span>
+                          </div>
+                          <span className="font-mono text-sm font-black flex-shrink-0">{m.awayTeam.score}</span>
+                        </div>
+                      </div>
+
+                      {/* Bottom: 3 Full-Width Odds Buttons or Suspended State */}
+                      {m.isSuspended ? (
+                        <div className="w-full py-2.5 rounded-lg bg-[#0f212e] text-amber-400 border border-amber-500/20 text-xs font-bold flex items-center justify-center gap-2">
+                          <Lock className="w-3.5 h-3.5" />
+                          <span>Suspended</span>
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-3 gap-1.5 pt-1">
+                          {[
+                            { key: 'home', label: m.homeTeam.shortName || m.homeTeam.name.split(' ')[0], opt: m.matchResult.home },
+                            { key: 'draw', label: 'Draw', opt: m.matchResult.draw },
+                            { key: 'away', label: m.awayTeam.shortName || m.awayTeam.name.split(' ')[0], opt: m.matchResult.away }
+                          ].map(({ key, label, opt }) => {
+                            const isSelected = singlesInSlip.some((s) => s.id === opt.id);
+                            return (
+                              <button
+                                key={key}
+                                onClick={() =>
+                                  toggleSelection({
+                                    id: opt.id,
+                                    matchId: m.id,
+                                    matchTitle: `${m.homeTeam.name} v ${m.awayTeam.name}`,
+                                    scoreMinute: `${m.homeTeam.score}-${m.awayTeam.score} ${m.minute}`,
+                                    marketName: 'Match result',
+                                    selectionName: opt.label,
+                                    odd: opt.odd,
+                                    isSuspended: m.isSuspended
+                                  })
+                                }
+                                className={`py-1.5 px-1 rounded-lg text-center flex flex-col items-center justify-center min-h-[44px] transition-all border ${
+                                  isSelected
+                                    ? 'bg-[#1475e1] border-[#1475e1] text-white font-extrabold shadow-glow-blue'
+                                    : 'bg-[#0f212e] hover:bg-[#213743] text-white border-white/[0.04]'
+                                }`}
+                              >
+                                <span className="text-[10px] text-[#b1bad3] truncate max-w-full font-medium">
+                                  {label}
+                                </span>
+                                <span className={`font-mono text-xs font-bold ${isSelected ? 'text-white' : 'text-[#00A3FF]'}`}>
+                                  {opt.odd.toFixed(2)}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
-                  </div>
-                ))}
+                  ) : (
+                    /* Desktop Row Layout */
+                    <div
+                      key={m.id}
+                      className="p-3 sm:p-4 rounded-xl bg-[#1a2c38] border border-[#213743] hover:border-[#2f4553] transition-all flex items-center justify-between gap-4 shadow-sm"
+                    >
+                      {/* Left: Clock, Teams, Score */}
+                      <div
+                        onClick={() => {
+                          playClick();
+                          setSelectedMatchId(m.id);
+                          setCurrentPage('match');
+                        }}
+                        className="flex items-center gap-4 flex-1 cursor-pointer"
+                      >
+                        {/* Score Clock */}
+                        <div className="w-16 flex-shrink-0 text-left">
+                          <span className="inline-block px-1.5 py-0.5 rounded bg-red-500/20 text-[#f43f5e] font-mono font-bold text-[9px] uppercase tracking-wider">
+                            LIVE
+                          </span>
+                          <div className="text-[11px] text-[#b1bad3] font-mono font-medium mt-0.5">{m.minute}</div>
+                        </div>
+
+                        {/* Teams & Scores */}
+                        <div className="flex-1 space-y-1.5">
+                          <div className="flex items-center justify-between text-xs sm:text-sm font-bold text-white">
+                            <div className="flex items-center gap-2.5">
+                              <TeamCrest teamName={m.homeTeam.name} className="w-4 h-4 flex-shrink-0" />
+                              <span className="hover:text-[#00A3FF] transition-colors truncate">{m.homeTeam.name}</span>
+                            </div>
+                            <span className="font-mono text-sm font-black pr-4">{m.homeTeam.score}</span>
+                          </div>
+
+                          <div className="flex items-center justify-between text-xs sm:text-sm font-bold text-white">
+                            <div className="flex items-center gap-2.5">
+                              <TeamCrest teamName={m.awayTeam.name} className="w-4 h-4 flex-shrink-0" />
+                              <span className="hover:text-[#00A3FF] transition-colors truncate">{m.awayTeam.name}</span>
+                            </div>
+                            <span className="font-mono text-sm font-black pr-4">{m.awayTeam.score}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Right: Odds Buttons or Suspended State */}
+                      <div className="flex items-center gap-2">
+                        {m.isSuspended ? (
+                          <div className="px-6 py-2.5 rounded-lg bg-[#0f212e] text-amber-400 border border-amber-500/20 text-xs font-bold flex items-center gap-2 w-[320px] justify-center">
+                            <Lock className="w-3.5 h-3.5" />
+                            <span>Suspended</span>
+                          </div>
+                        ) : (
+                          <div className="grid grid-cols-3 gap-2 w-[320px]">
+                            {[
+                              { key: 'home', label: m.homeTeam.shortName || m.homeTeam.name.split(' ')[0], opt: m.matchResult.home },
+                              { key: 'draw', label: 'Draw', opt: m.matchResult.draw },
+                              { key: 'away', label: m.awayTeam.shortName || m.awayTeam.name.split(' ')[0], opt: m.matchResult.away }
+                            ].map(({ key, label, opt }) => {
+                              const isSelected = singlesInSlip.some((s) => s.id === opt.id);
+                              return (
+                                <button
+                                  key={key}
+                                  onClick={() =>
+                                    toggleSelection({
+                                      id: opt.id,
+                                      matchId: m.id,
+                                      matchTitle: `${m.homeTeam.name} v ${m.awayTeam.name}`,
+                                      scoreMinute: `${m.homeTeam.score}-${m.awayTeam.score} ${m.minute}`,
+                                      marketName: 'Match result',
+                                      selectionName: opt.label,
+                                      odd: opt.odd,
+                                      isSuspended: m.isSuspended
+                                    })
+                                  }
+                                  className={`px-3 py-2 rounded-lg text-center transition-all flex flex-col items-center justify-center min-h-[46px] border ${
+                                    isSelected
+                                      ? 'bg-[#1475e1] border-[#1475e1] text-white font-extrabold shadow-glow-blue'
+                                      : 'bg-[#0f212e] hover:bg-[#213743] text-white border-white/[0.04]'
+                                  }`}
+                                >
+                                  <span className="text-[10px] text-[#b1bad3] truncate max-w-full font-medium">
+                                    {label}
+                                  </span>
+                                  <span className={`font-mono text-xs font-bold ${isSelected ? 'text-white' : 'text-[#00A3FF]'}`}>
+                                    {opt.odd.toFixed(2)}
+                                  </span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+
+                        <button
+                          onClick={() => {
+                            playClick();
+                            setSelectedMatchId(m.id);
+                            setCurrentPage('match');
+                          }}
+                          className="px-2 py-2 text-[11px] font-mono text-[#557086] hover:text-white"
+                        >
+                          +{m.moreMarketsCount} &gt;
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           );
