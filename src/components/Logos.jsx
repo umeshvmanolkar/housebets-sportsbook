@@ -273,6 +273,83 @@ export const TeamCrest = ({ teamName, className = "w-6 h-6" }) => {
     );
   }
 
+  // 18. Atlético Madrid
+  if (name.includes('atlético') || name.includes('atletico')) {
+    return (
+      <svg viewBox="0 0 100 100" className={className} fill="none">
+        <path d="M50,8 L85,18 L80,72 C78,85 50,94 50,94 C50,94 20,85 20,72 L15,18 Z" fill="#CB3524" stroke="#272E61" strokeWidth="3" />
+        {/* White Stripes */}
+        <rect x="33" y="36" width="9" height="42" fill="#ffffff" />
+        <rect x="58" y="36" width="9" height="42" fill="#ffffff" />
+        {/* Blue Top Section with Bear / Stars */}
+        <path d="M17,19 L83,19 L80,36 L20,36 Z" fill="#272E61" />
+        <circle cx="50" cy="27" r="3" fill="#ffffff" />
+        <circle cx="36" cy="27" r="2.5" fill="#ffffff" />
+        <circle cx="64" cy="27" r="2.5" fill="#ffffff" />
+      </svg>
+    );
+  }
+
+  // 19. Sevilla
+  if (name.includes('sevilla')) {
+    return (
+      <svg viewBox="0 0 100 100" className={className} fill="none">
+        <path d="M50,8 L85,18 L80,72 C78,85 50,94 50,94 C50,94 20,85 20,72 L15,18 Z" fill="#ffffff" stroke="#D4001F" strokeWidth="3" />
+        {/* Red stripes on right */}
+        <path d="M50,45 L80,45 L78,72 C76,80 50,90 50,90 Z" fill="#D4001F" opacity="0.85" />
+        <rect x="58" y="45" width="8" height="35" fill="#ffffff" />
+        {/* Golden ball */}
+        <circle cx="50" cy="32" r="10" fill="#F1A035" />
+      </svg>
+    );
+  }
+
+  // 20. Juventus
+  if (name.includes('juventus')) {
+    return (
+      <svg viewBox="0 0 100 100" className={className} fill="none">
+        <path d="M50,8 L84,18 L80,72 C78,85 50,94 50,94 C50,94 20,85 20,72 L16,18 Z" fill="#000000" stroke="#C49A45" strokeWidth="3" />
+        {/* White iconic double J */}
+        <path d="M38,28 L46,28 L46,62 C46,68 40,70 34,68 L34,60 C38,61 40,60 40,56 L40,28 Z" fill="#ffffff" />
+        <path d="M54,28 L62,28 L62,56 C62,64 56,66 50,64 L50,56 C54,57 56,56 56,52 L56,28 Z" fill="#ffffff" />
+      </svg>
+    );
+  }
+
+  // 21. Roma
+  if (name.includes('roma')) {
+    return (
+      <svg viewBox="0 0 100 100" className={className} fill="none">
+        <path d="M50,8 L85,18 L80,72 C78,85 50,94 50,94 C50,94 20,85 20,72 L15,18 Z" fill="#8E1F2F" stroke="#F19C1D" strokeWidth="3" />
+        <path d="M20,50 L80,50 L77,72 C75,82 50,92 50,92 C50,92 25,82 23,72 Z" fill="#F19C1D" />
+        <text x="50" y="42" textAnchor="middle" fill="#F19C1D" fontWeight="900" fontSize="18" fontFamily="serif">ASR</text>
+      </svg>
+    );
+  }
+
+  // 22. Bayer Leverkusen
+  if (name.includes('leverkusen')) {
+    return (
+      <svg viewBox="0 0 100 100" className={className} fill="none">
+        <circle cx="50" cy="50" r="44" fill="#E32221" stroke="#000000" strokeWidth="4" />
+        <circle cx="50" cy="50" r="34" fill="#000000" />
+        <circle cx="50" cy="50" r="28" fill="#ffffff" />
+        <text x="50" y="56" textAnchor="middle" fill="#E32221" fontWeight="900" fontSize="16">B04</text>
+      </svg>
+    );
+  }
+
+  // 23. Borussia Dortmund
+  if (name.includes('dortmund')) {
+    return (
+      <svg viewBox="0 0 100 100" className={className} fill="none">
+        <circle cx="50" cy="50" r="45" fill="#FDE100" stroke="#000000" strokeWidth="4" />
+        <text x="50" y="46" textAnchor="middle" fill="#000000" fontWeight="900" fontSize="16" fontFamily="sans-serif">BVB</text>
+        <text x="50" y="66" textAnchor="middle" fill="#000000" fontWeight="900" fontSize="16" fontFamily="sans-serif">09</text>
+      </svg>
+    );
+  }
+
   // Fallback generic sport crest
   return (
     <div className={`${className} rounded-full bg-[#1a2c38] border border-white/10 flex items-center justify-center font-bold text-xs text-white`}>

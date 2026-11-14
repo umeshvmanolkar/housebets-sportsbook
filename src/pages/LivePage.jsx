@@ -98,48 +98,53 @@ export const LivePage = () => {
         })}
       </div>
 
-      {/* League Accordions & Match Rows */}
+      {/* League Accordions & Match Rows (Box Effect matching media_1794672727230_cbd9a64a.jpg) */}
       <div className="space-y-4">
         {leagues.map((lg) => {
           if (lg.matches.length === 0) return null;
           const isLgFollowed = favourites.some((f) => f.name === lg.name);
 
           return (
-            <div key={lg.name} className="space-y-2">
-              {/* League Header */}
-              <div className="flex items-center justify-between px-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm">{lg.flag}</span>
-                  <span className="text-xs font-extrabold text-white">{lg.name}</span>
-                  <span className="text-[10px] text-gray-500 font-mono">{lg.matches.length} matches</span>
+            <div
+              key={lg.name}
+              className="rounded-2xl bg-[#1a2c38] border border-[#213743] shadow-card-elevated overflow-hidden"
+            >
+              {/* Box Header: League Info & Controls */}
+              <div className="px-4 py-3 flex items-center justify-between border-b border-[#213743]/80 bg-[#1a2c38]">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-base leading-none">{lg.flag}</span>
+                  <span className="text-xs sm:text-sm font-extrabold text-white">{lg.name}</span>
+                  <span className="text-[11px] text-[#557086] font-mono font-medium">
+                    {lg.matches.length} {lg.matches.length === 1 ? 'match' : 'matches'}
+                  </span>
                   <button
                     onClick={() => toggleFollow({ name: lg.name, type: 'competition', icon: lg.flag })}
-                    className="p-1 text-gray-500 hover:text-amber-400 transition-colors"
+                    className="p-1 text-[#557086] hover:text-amber-400 transition-colors"
                   >
                     <Star className={`w-3.5 h-3.5 ${isLgFollowed ? 'fill-amber-400 text-amber-400' : ''}`} />
                   </button>
                 </div>
 
                 <div className="flex items-center gap-3 text-xs">
-                  <span className="text-gray-400 font-medium hidden sm:inline">Match result</span>
+                  <span className="text-[#8a9ca8] font-medium hidden sm:inline mr-2">Match result</span>
                   <button
                     onClick={() => { playClick(); setCurrentPage('football'); }}
-                    className="text-gray-400 hover:text-white transition-colors flex items-center gap-0.5 text-[11px]"
+                    className="text-[#8a9ca8] hover:text-white transition-colors flex items-center gap-0.5 text-[11px] sm:text-xs font-semibold"
                   >
                     <span>View all</span>
-                    <ChevronRight className="w-3 h-3" />
+                    <ChevronRight className="w-3.5 h-3.5 text-[#557086]" />
                   </button>
                 </div>
               </div>
 
-              {/* Match Rows */}
-              <div className="space-y-2">
+              {/* Match Rows inside the League Box with subtle dividers */}
+              <div className="divide-y divide-[#213743]/70">
                 {lg.matches.map((m) => {
                   return isMobile ? (
-                    /* Mobile Stacked Card (Fits 100% inside 390px without overflow or text wrap clipping) */
+                    /* Mobile Stacked Match Row inside the League Box */
                     <div
                       key={m.id}
-                      className="p-3 rounded-xl bg-[#1a2c38] border border-[#213743] shadow-sm space-y-2.5"
+                      className="p-3 sm:p-3.5 space-y-2.5 hover:bg-[#213743]/30 transition-colors"
                     >
                       {/* Top: Clock, Live Badge, and More Markets count */}
                       <div className="flex items-center justify-between text-xs">
@@ -162,7 +167,7 @@ export const LivePage = () => {
                         </button>
                       </div>
 
-                      {/* Teams & Scores (Full width for clear team names & scores) */}
+                      {/* Teams & Scores */}
                       <div
                         onClick={() => {
                           playClick();
@@ -236,10 +241,10 @@ export const LivePage = () => {
                       )}
                     </div>
                   ) : (
-                    /* Desktop Row Layout */
+                    /* Desktop Row Layout inside the League Box */
                     <div
                       key={m.id}
-                      className="p-3 sm:p-4 rounded-xl bg-[#1a2c38] border border-[#213743] hover:border-[#2f4553] transition-all flex items-center justify-between gap-4 shadow-sm"
+                      className="p-3.5 sm:p-4 hover:bg-[#213743]/40 transition-colors flex items-center justify-between gap-4"
                     >
                       {/* Left: Clock, Teams, Score */}
                       <div
@@ -347,23 +352,30 @@ export const LivePage = () => {
       </div>
 
       {/* Starting Soon Section (Contest Requirement: "Nothing live: show Starting soon") */}
-      <div className="space-y-2 pt-4 border-t border-white/5">
+      <div className="space-y-2 pt-2">
         <div className="flex items-center gap-2 px-1">
           <Clock className="w-4 h-4 text-[#00A3FF]" />
           <h3 className="text-xs font-bold text-gray-300 uppercase tracking-wide">Starting soon</h3>
         </div>
 
-        <div className="space-y-2">
+        <div className="rounded-2xl bg-[#1a2c38] border border-[#213743] shadow-card-elevated overflow-hidden divide-y divide-[#213743]/70">
           {startingSoonMatches.slice(0, 2).map((m) => (
             <div
               key={m.id}
-              className="p-3.5 rounded-2xl bg-[#0e1c28] border border-white/[0.08] flex items-center justify-between"
+              onClick={() => {
+                playClick();
+                setSelectedMatchId(m.id);
+                setCurrentPage('match');
+              }}
+              className="p-3.5 sm:p-4 hover:bg-[#213743]/40 transition-colors flex items-center justify-between cursor-pointer"
             >
               <div className="flex items-center gap-3">
-                <span className="text-[10px] font-mono text-gray-400">{m.date}</span>
-                <span className="text-xs font-bold text-white">{m.homeTeam.name} vs {m.awayTeam.name}</span>
+                <span className="text-[11px] font-mono text-[#557086]">{m.date}</span>
+                <span className="text-xs sm:text-sm font-bold text-white hover:text-[#00A3FF] transition-colors">
+                  {m.homeTeam.name} vs {m.awayTeam.name}
+                </span>
               </div>
-              <span className="text-xs font-mono text-[#00A3FF]">+{m.moreMarketsCount} markets</span>
+              <span className="text-xs font-mono text-[#00A3FF] font-medium">+{m.moreMarketsCount} markets</span>
             </div>
           ))}
         </div>

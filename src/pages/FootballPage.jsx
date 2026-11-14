@@ -94,20 +94,26 @@ export const FootballPage = () => {
         </button>
       </div>
 
-      {/* Leagues List */}
+      {/* Leagues List (Box Effect matching Live reference) */}
       <div className="space-y-4">
         {FOOTBALL_LEAGUES.map((league) => {
           const leagueMatches = MATCHES_DATA.filter((m) => m.league === league.name);
           const isLgStarred = isFollowed(league.name);
+          if (leagueMatches.length === 0) return null;
 
           return (
-            <div key={league.id} className="space-y-2">
-              {/* League Header */}
-              <div className="flex items-center justify-between px-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm">{league.flag}</span>
-                  <span className="text-xs font-extrabold text-white">{league.name}</span>
-                  <span className="text-[10px] text-[#557086] font-mono">{leagueMatches.length} matches</span>
+            <div
+              key={league.id}
+              className="rounded-2xl bg-[#1a2c38] border border-[#213743] shadow-card-elevated overflow-hidden"
+            >
+              {/* League Box Header */}
+              <div className="px-4 py-3 flex items-center justify-between border-b border-[#213743]/80 bg-[#1a2c38]">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-base leading-none">{league.flag}</span>
+                  <span className="text-xs sm:text-sm font-extrabold text-white">{league.name}</span>
+                  <span className="text-[11px] text-[#557086] font-mono font-medium">
+                    {leagueMatches.length} {leagueMatches.length === 1 ? 'match' : 'matches'}
+                  </span>
                   
                   <button
                     onClick={() => toggleFollow({ name: league.name, type: 'competition', icon: league.flag })}
@@ -117,19 +123,23 @@ export const FootballPage = () => {
                   </button>
                 </div>
 
-                <button className="text-xs text-[#b1bad3] hover:text-white transition-colors">
-                  View all &gt;
-                </button>
+                <div className="flex items-center gap-4 text-xs">
+                  <span className="text-[#8a9ca8] font-medium hidden sm:inline mr-1">Match result</span>
+                  <button className="text-[#8a9ca8] hover:text-white transition-colors flex items-center gap-1 text-xs font-semibold">
+                    <span>View all</span>
+                    <ChevronDown className="w-3.5 h-3.5 -rotate-90 text-[#557086]" />
+                  </button>
+                </div>
               </div>
 
-              {/* Match Rows */}
-              <div className="space-y-2">
+              {/* Match Rows inside League Box */}
+              <div className="divide-y divide-[#213743]/70">
                 {leagueMatches.map((m) => {
                   return isMobile ? (
-                    /* Mobile Stacked Card (Fits 100% inside 390px without overflow) */
+                    /* Mobile Stacked Card inside League Box */
                     <div
                       key={m.id}
-                      className="p-3 rounded-xl bg-[#1a2c38] border border-[#213743] shadow-sm space-y-2.5"
+                      className="p-3 sm:p-3.5 space-y-2.5 hover:bg-[#213743]/30 transition-colors"
                     >
                       {/* Top: Status/Clock & More Markets */}
                       <div className="flex items-center justify-between text-xs">
@@ -234,10 +244,10 @@ export const FootballPage = () => {
                       )}
                     </div>
                   ) : (
-                    /* Desktop Row Layout */
+                    /* Desktop Row Layout inside League Box */
                     <div
                       key={m.id}
-                      className="p-3 sm:p-4 rounded-xl bg-[#1a2c38] border border-[#213743] hover:border-[#2f4553] transition-all flex items-center justify-between gap-4 shadow-sm"
+                      className="p-3.5 sm:p-4 hover:bg-[#213743]/40 transition-colors flex items-center justify-between gap-4"
                     >
                       {/* Left: Clock, Teams, Logos */}
                       <div

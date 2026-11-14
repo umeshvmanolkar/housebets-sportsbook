@@ -391,6 +391,81 @@ export const MATCHES_DATA = [
     },
     winProbability: { home: 78, draw: 15, away: 7 },
     moreMarketsCount: 36
+  },
+
+  // Match 10: Atlético Madrid vs Sevilla (LaLiga, Live 37' 1-0, Suspended - matching screenshot)
+  {
+    id: 'match-atm-sev',
+    sport: 'soccer',
+    league: 'LaLiga',
+    country: 'Spain',
+    leagueFlag: '🇪🇸',
+    isLive: true,
+    minute: "37'",
+    period: '1st Half',
+    date: 'Live Now',
+    bettorVolume: '22,400',
+    bettorSentiment: '78% of 1x2 bets on Atlético',
+    isSuspended: true,
+    homeTeam: { name: 'Atlético Madrid', shortName: 'ATM', score: 1, isFollowed: false },
+    awayTeam: { name: 'Sevilla', shortName: 'SEV', score: 0, isFollowed: false },
+    matchResult: {
+      home: { label: 'Atlético Madrid', odd: 1.45, id: 'atm-sev-1' },
+      draw: { label: 'Draw', odd: 4.10, id: 'atm-sev-x' },
+      away: { label: 'Sevilla', odd: 7.50, id: 'atm-sev-2' }
+    },
+    winProbability: { home: 72, draw: 18, away: 10 },
+    moreMarketsCount: 8
+  },
+
+  // Match 11: Juventus vs Roma (Serie A, Live 49' 1-1, 2.40 / 3.10 / 3.20 - matching screenshot)
+  {
+    id: 'match-juv-rom',
+    sport: 'soccer',
+    league: 'Serie A',
+    country: 'Italy',
+    leagueFlag: '🇮🇹',
+    isLive: true,
+    minute: "49'",
+    period: '2nd Half',
+    date: 'Live Now',
+    bettorVolume: '19,800',
+    bettorSentiment: '65% of 1x2 bets on Juventus',
+    isSuspended: false,
+    homeTeam: { name: 'Juventus', shortName: 'JUV', score: 1, isFollowed: false },
+    awayTeam: { name: 'Roma', shortName: 'ROM', score: 1, isFollowed: false },
+    matchResult: {
+      home: { label: 'Juventus', odd: 2.40, id: 'juv-rom-1' },
+      draw: { label: 'Draw', odd: 3.10, id: 'juv-rom-x' },
+      away: { label: 'Roma', odd: 3.20, id: 'juv-rom-2' }
+    },
+    winProbability: { home: 44, draw: 32, away: 24 },
+    moreMarketsCount: 6
+  },
+
+  // Match 12: Bayer Leverkusen vs Borussia Dortmund (Bundesliga, Live 64' 2-1 - matching screenshot)
+  {
+    id: 'match-b04-bvb',
+    sport: 'soccer',
+    league: 'Bundesliga',
+    country: 'Germany',
+    leagueFlag: '🇩🇪',
+    isLive: true,
+    minute: "64'",
+    period: '2nd Half',
+    date: 'Live Now',
+    bettorVolume: '26,100',
+    bettorSentiment: '71% of 1x2 bets on Leverkusen',
+    isSuspended: false,
+    homeTeam: { name: 'Bayer Leverkusen', shortName: 'B04', score: 2, isFollowed: false },
+    awayTeam: { name: 'Borussia Dortmund', shortName: 'BVB', score: 1, isFollowed: false },
+    matchResult: {
+      home: { label: 'Leverkusen', odd: 1.85, id: 'b04-bvb-1' },
+      draw: { label: 'Draw', odd: 3.70, id: 'b04-bvb-x' },
+      away: { label: 'Dortmund', odd: 4.10, id: 'b04-bvb-2' }
+    },
+    winProbability: { home: 60, draw: 24, away: 16 },
+    moreMarketsCount: 9
   }
 ];
 
