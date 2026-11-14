@@ -95,17 +95,17 @@ const MainLayout = () => {
 
   // 2. Desktop Mode (1440px) & Responsive Layout
   return (
-    <div className="min-h-screen bg-[#0f212e] text-[#e2e8f0] flex flex-col">
+    <div className="h-screen bg-[#0f212e] text-[#e2e8f0] flex flex-col overflow-hidden">
       {/* Top Main Navigation Header */}
       <Header onOpenContestModal={() => setIsContestModalOpen(true)} />
 
       {/* Main Site Shell (Left nav, Center content, Right side panel) */}
-      <div className="flex-1 flex max-w-[1720px] w-full mx-auto overflow-hidden">
+      <div className="flex-1 flex max-w-[1780px] w-full mx-auto overflow-hidden">
         {/* Left Nav (Slim Icon Rail) */}
         <Sidebar />
 
         {/* Center Main Stage (Dynamic 5 Pages) */}
-        <main className="flex-1 overflow-y-auto px-3 sm:px-6 py-4">
+        <main className="flex-1 overflow-y-auto px-3 sm:px-6 py-4 scrollbar-none">
           {renderCurrentPage()}
         </main>
 
